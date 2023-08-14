@@ -1,26 +1,26 @@
 // /components/DecisionsDisplay.js
-import React, { useEffect, useState } from "react";
+import React from "react";
 import mongoose from "mongoose";
-import PointsCommisionDesision from "../models/PointsCommisionDesision";
+import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
 import Star from "../common/Star";
 import Image from "next/image";
 
-export default function DecisionsDisplay() {
-  let decisions;
+async function fetchData() {
+  // Consider moving the connection logic outside this function so that
+  // you don't connect every time you fetch data
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-  async function fetchData() {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+  const decisionsList = await PointsCommissionDecision.find();
+  // .populate("studentId"); // Uncomment if you're populating student data
 
-    const decisionsList = await PointsCommisionDesision.find().populate(
-      "studentId"
-    ); // Assuming you want to populate the student details
-    decisions = decisionsList;
-  }
+  return decisionsList;
+}
 
-  fetchData();
+export default async function DecisionsDisplay() {
+  let decisions = await fetchData();
 
   return (
     <div className="dashboard__main">

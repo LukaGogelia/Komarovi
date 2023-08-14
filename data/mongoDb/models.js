@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   clubIds: [Schema.Types.ObjectId],
 });
 
-const User = model("User", UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 // Club model
 const ClubSchema = new Schema({
@@ -24,7 +24,7 @@ const ClubSchema = new Schema({
   members: [Schema.Types.ObjectId],
 });
 
-const Club = model("Club", ClubSchema);
+const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
 
 // House model
 const HouseSchema = new Schema({
@@ -35,7 +35,7 @@ const HouseSchema = new Schema({
   members: [Schema.Types.ObjectId],
 });
 
-const House = model("House", HouseSchema);
+const House = mongoose.models.House || mongoose.model("House", HouseSchema);
 
 // Grade Entry model
 const GradeEntrySchema = new Schema({
@@ -47,7 +47,8 @@ const GradeEntrySchema = new Schema({
   date: Date,
 });
 
-const GradeEntry = model("GradeEntry", GradeEntrySchema);
+const GradeEntry =
+  mongoose.models.GradeEntry || mongoose.model("GradeEntry", GradeEntrySchema);
 
 // Exam Entry model
 const ExamEntrySchema = new Schema({
@@ -61,7 +62,8 @@ const ExamEntrySchema = new Schema({
   pass: Boolean,
 });
 
-const ExamEntry = model("ExamEntry", ExamEntrySchema);
+const ExamEntry =
+  mongoose.models.ExamEntry || mongoose.model("ExamEntry", ExamEntrySchema);
 
 // Exam model
 const ExamSchema = new Schema({
@@ -83,7 +85,7 @@ const ExamSchema = new Schema({
   passCount: Number,
 });
 
-const Exam = model("Exam", ExamSchema);
+const Exam = mongoose.models.Exam || mongoose.model("Exam", ExamSchema);
 
 const PointsCommissionDecisionSchema = new Schema({
   studentId: {
@@ -117,10 +119,9 @@ const PointsCommissionDecisionSchema = new Schema({
   },
 });
 
-const PointsCommissionDecision = model(
-  "PointsCommissionDecision",
-  PointsCommissionDecisionSchema
-);
+const PointsCommissionDecision =
+  mongoose.models.PointsCommissionDecision ||
+  mongoose.model("PointsCommissionDecision", PointsCommissionDecisionSchema);
 
 // Export models
 module.exports = {
