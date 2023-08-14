@@ -2,19 +2,33 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
-// User model
 const UserSchema = new Schema({
   firstName: String,
   lastName: String,
   email: String,
-  password: String,
+  password: String, // Ensure to hash
   phone: String,
   roles: [String],
   houseId: Schema.Types.ObjectId,
   clubIds: [Schema.Types.ObjectId],
+  bookmarkedNews: [{ type: Schema.Types.ObjectId, ref: "News" }],
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
+
+// News model
+const NewsSchema = new Schema({
+  title: String,
+  content: String,
+  authorId: Schema.Types.ObjectId,
+  datePosted: { type: Date, default: Date.now },
+  category: String,
+  bookmarksCount: { type: Number, default: 0 },
+  bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  isDeleted: { type: Boolean, default: false },
+});
+
+const News = mongoose.models.News || mongoose.model("News", NewsSchema);
 
 // Club model
 const ClubSchema = new Schema({

@@ -13,8 +13,9 @@ async function fetchData() {
     useUnifiedTopology: true,
   });
 
-  const decisionsList = await PointsCommissionDecision.find();
-  // .populate("studentId"); // Uncomment if you're populating student data
+  const decisionsList = await PointsCommissionDecision.find().populate(
+    "studentId"
+  );
 
   return decisionsList;
 }
