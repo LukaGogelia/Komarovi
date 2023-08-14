@@ -20,15 +20,24 @@ const User = mongoose.models.User || mongoose.model("User", UserSchema);
 const NewsSchema = new Schema({
   title: String,
   content: String,
-  authorId: Schema.Types.ObjectId,
+  authorId: { type: Schema.Types.ObjectId, ref: "User" },
   datePosted: { type: Date, default: Date.now },
-  category: String,
+  categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   bookmarksCount: { type: Number, default: 0 },
   bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   isDeleted: { type: Boolean, default: false },
 });
 
 const News = mongoose.models.News || mongoose.model("News", NewsSchema);
+
+// Category model
+const CategorySchema = new Schema({
+  name: String,
+  slug: { type: String, unique: true },
+});
+
+const Category =
+  mongoose.models.Category || mongoose.model("Category", CategorySchema);
 
 // Club model
 const ClubSchema = new Schema({
@@ -146,4 +155,6 @@ module.exports = {
   ExamEntry,
   Exam,
   PointsCommissionDecision,
+  News,
+  Category,
 };

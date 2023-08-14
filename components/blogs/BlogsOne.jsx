@@ -1,19 +1,27 @@
-"use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import { blogs, categories } from "@/data/blog";
+import React from "react";
+import mongoose from "mongoose";
+import { blogs } from "@/data/blog";
 import Link from "next/link";
-export default function BlogsOne() {
-  const [pageItems, setPageItems] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState("All Categories");
-  useEffect(() => {
-    if (currentCategory == "All Categories") {
-      setPageItems(blogs);
-    } else {
-      let filtered = blogs.filter((elm) => elm.category == currentCategory);
-      setPageItems(filtered);
-    }
-  }, [currentCategory]);
+
+const pageItems = blogs;
+
+import { Category } from "@/data/mongoDb/models.js";
+
+// require("../../data/mongoDb/database.js");
+async function getCategories() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const categories = await Category.find();
+
+  return categories;
+}
+export default async function BlogsOne() {
+  const categories = await getCategories();
+
   return (
     <>
       <section className="page-header -type-1">
@@ -42,16 +50,32 @@ export default function BlogsOne() {
           <div className="tabs -pills js-tabs">
             <div className="tabs__controls d-flex justify-center flex-wrap y-gap-20 x-gap-10 js-tabs-controls">
               {categories.map((elm, i) => (
-                <div key={i} onClick={() => setCurrentCategory(elm)}>
-                  <button
-                    className={`tabs__button px-15 py-8 rounded-8 js-tabs-button ${
-                      currentCategory == elm ? "is-active" : ""
-                    } `}
-                    data-tab-target=".-tab-item-1"
-                    type="button"
+                <div
+                  key={i}
+                  // onClick={() => setCurrentCategory(elm)}
+                >
+                  <Link
+                    href={
+                      elm.slug !== ""
+                        ? {
+                            pathname: "/news",
+                            query: { category: elm.slug },
+                          }
+                        : { pathname: "/news" }
+                    }
                   >
-                    {elm}
-                  </button>
+                    <button
+                      className={`tabs__button px-15 py-8 rounded-8 js-tabs-button 
+                      ${
+                        ""
+                        // category === elm ? "is-active" : ""
+                      } `}
+                      data-tab-target=".-tab-item-1"
+                      type="button"
+                    >
+                      {elm.name}
+                    </button>
+                  </Link>
                 </div>
               ))}
             </div>
