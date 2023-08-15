@@ -1,26 +1,55 @@
 import Image from "next/image";
 import React from "react";
 import mongoose from "mongoose";
-import { blogs } from "@/data/blog";
+
 import Link from "next/link";
 
-const pageItems = blogs;
-
-import { Category } from "@/data/mongoDb/models.js";
+import { Category, News } from "@/data/mongoDb/models.js";
 
 // require("../../data/mongoDb/database.js");
-async function getCategories() {
+async function getData(props) {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
-  const categories = await Category.find();
+  const categories = await Category.find({});
 
-  return categories;
+  const query = { isDeleted: false };
+
+  let categoryId;
+
+  if (props) {
+    const { selectedCategory } = props;
+    // You need to await the Category.find() query and get the _id
+    const category = await Category.findOne({ slug: selectedCategory });
+    if (category) {
+      categoryId = category._id;
+    }
+  }
+
+  // If categoryId is found, add it to the query
+  if (categoryId) {
+    query.category = categoryId;
+  }
+
+  const newsItems = await News.find(
+    query,
+    "_id title imageSmall datePosted category"
+  )
+    .populate("category", "name") // Make sure 'name' is the correct field you want to fetch from the category
+    .exec();
+
+  return { categories, newsItems };
 }
-export default async function BlogsOne() {
-  const categories = await getCategories();
+
+export default async function BlogsOne({ searchParams }) {
+  const { categories, newsItems } = await getData(
+    searchParams && searchParams.category
+      ? { selectedCategory: searchParams.category }
+      : null
+  );
+  console.log(searchParams);
 
   return (
     <>
@@ -30,7 +59,14 @@ export default async function BlogsOne() {
             <div className="row justify-center text-center">
               <div className="col-auto">
                 <div>
-                  <h1 className="page-header__title">Latest News</h1>
+                  <h1 className="page-header__title">
+                    Latest
+                    {searchParams.category &&
+                      ` ${searchParams.category[0].toUpperCase()}${searchParams.category.slice(
+                        1
+                      )}`}{" "}
+                    News
+                  </h1>
                 </div>
 
                 <div>
@@ -66,10 +102,10 @@ export default async function BlogsOne() {
                   >
                     <button
                       className={`tabs__button px-15 py-8 rounded-8 js-tabs-button 
-                      ${
-                        ""
-                        // category === elm ? "is-active" : ""
-                      } `}
+                        ${
+                          ""
+                          // category === elm ? "is-active" : ""
+                        } `}
                       data-tab-target=".-tab-item-1"
                       type="button"
                     >
@@ -83,26 +119,32 @@ export default async function BlogsOne() {
             <div className="tabs__content pt-40 js-tabs-content">
               <div className="tabs__pane -tab-item-1 is-active">
                 <div className="row y-gap-30">
-                  {pageItems.map((elm, i) => (
+                  {newsItems.map((elm, i) => (
                     <div key={i} className="col-lg-4 col-md-6">
                       <div className="blogCard -type-1">
                         <div className="blogCard__image">
                           <Image
-                            width={530}
-                            height={450}
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                            }}
+                            cover
+                            width="410"
+                            height="350"
+                            // overflow="hidden"
                             className="w-1/1 rounded-8"
-                            src={elm.imageSrc}
+                            src={elm.imageSmall}
                             alt="image"
                           />
                         </div>
                         <div className="blogCard__content mt-20">
                           <div className="blogCard__category">
-                            {elm.category.toUpperCase()}
+                            {elm.category.name}
                           </div>
                           <h4 className="blogCard__title text-20 lh-15 fw-500 mt-5">
                             <Link
                               className="linkCustom"
-                              href={`/blogs/${elm.id}`}
+                              href={`/news/${elm._id}`}
                             >
                               {elm.title}
                             </Link>

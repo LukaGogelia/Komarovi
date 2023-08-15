@@ -13,7 +13,7 @@ export const metadata = {
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
 
-export default function page() {
+export default function page({ searchParams }) {
   return (
     <div className="main-content  ">
       <Preloader />
@@ -22,7 +22,7 @@ export default function page() {
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks />
 
-        <BlogsOne />
+        <BlogsOne searchParams={searchParams} />
 
         <FooterOne />
       </div>

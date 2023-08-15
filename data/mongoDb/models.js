@@ -20,11 +20,13 @@ const User = mongoose.models.User || mongoose.model("User", UserSchema);
 const NewsSchema = new Schema({
   title: String,
   content: String,
+  imageSmall: String,
+  imageLarge: String,
   authorId: { type: Schema.Types.ObjectId, ref: "User" },
   datePosted: { type: Date, default: Date.now },
-  categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
-  bookmarksCount: { type: Number, default: 0 },
-  bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  category: { type: Schema.Types.ObjectId, ref: "Category" },
+  // bookmarksCount: { type: Number, default: 0 },
+  // bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   isDeleted: { type: Boolean, default: false },
 });
 
