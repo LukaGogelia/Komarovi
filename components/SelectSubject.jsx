@@ -1,4 +1,3 @@
-"use client";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -20,22 +19,11 @@ const SelectSubject = ({ onRateChange }) => {
     setDdElement(elm);
     setRate(elm);
     onRateChange(elm); // Call the passed in function
+    setDdOpen(false); // Close the dropdown
   };
 
   return (
-    <div
-      className="py-20  border-bottom-light text-center"
-      //   style={{
-      //     display: "flex",
-      //     justifyContent: "space-around",
-      //     flexWrap: "wrap",
-      //     alignItems: "center",
-      //     paddingTop: "10px",
-      //     textAlign: "center",
-      //     marginTop: "auto",
-      //     marginBottom: "auto",
-      //   }}
-    >
+    <div className="py-20 border-bottom-light text-center">
       <div>
         <h3
           className="text-16 lh-1 fw-500 text-dark-1 mb-10"
@@ -46,7 +34,7 @@ const SelectSubject = ({ onRateChange }) => {
       </div>
 
       <div
-        className="select js-multiple-select col-lg-6 col-md-3 col-sm-2 "
+        className="select js-multiple-select col-lg-6 col-md-3 col-sm-2"
         data-select-value=""
         style={{ margin: "auto" }}
       >

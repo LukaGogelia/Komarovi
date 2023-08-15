@@ -1,5 +1,3 @@
-"use client";
-import { useState } from "react";
 import { resentCourses } from "@/data/courses";
 import { states } from "@/data/dashboard";
 import { teamMembers } from "@/data/instractors";
@@ -10,15 +8,12 @@ import Charts from "./Charts";
 import PieChartComponent from "./PieCharts";
 import Image from "next/image";
 import Link from "next/link";
-import Gauge from "../Gauge";
-import SelectSubject from "../SelectSubject";
+import ApplyGauge from "../ApplyGauge";
+import GradeIndicator from "../GradeIndicator";
+import { fetchData } from "./Reviews";
 
-export default function DashboardOne() {
-  const [value, setValue] = useState(50);
-
-  const handleRateChange = (rate) => {
-    setValue(Number(rate));
-  };
+export default async function DashboardOne() {
+  const { lastThreeDecisions } = await fetchData();
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
@@ -40,7 +35,7 @@ export default function DashboardOne() {
           }}
         >
           <div
-            className=" y-gap-30 col-lg-8 col-md-12 col-sm-12"
+            className=" y-gap-30 col-lg-8 col-md-12 col-sm-12 x-gap-30"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -48,7 +43,10 @@ export default function DashboardOne() {
             }}
           >
             {states.map((elm, i) => (
-              <div key={i} className="responsive-card">
+              <div
+                key={i}
+                className="responsive-card col-lg-6 col-md-8 col-sm-12 "
+              >
                 <div className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4">
                   <div>
                     <div className="lh-1 fw-500">{elm.title}</div>
@@ -66,28 +64,7 @@ export default function DashboardOne() {
             ))}
           </div>
 
-          <div className="col-xl-4 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100 ">
-              <div
-                style={{ display: "flex", flexDirection: "column" }}
-                // className="d-flex justify-between items-center py-20 px-30 border-bottom-light"
-              >
-                <SelectSubject onRateChange={handleRateChange} />
-                <div
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    paddingTop: "2.3rem",
-                  }}
-                >
-                  <div style={{ alignItems: "center" }}>
-                    <Gauge value={value} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ApplyGauge />
         </div>
 
         <div className="row y-gap-30 pt-30">
@@ -96,58 +73,13 @@ export default function DashboardOne() {
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
                 <h2 className="text-17 lh-1 fw-500">Earning Statistics</h2>
                 <div className="">
-                  <div
-                    id="ddtwobutton"
-                    onClick={() => {
-                      document
-                        .getElementById("ddtwobutton")
-                        .classList.toggle("-is-dd-active");
-                      document
-                        .getElementById("ddtwocontent")
-                        .classList.toggle("-is-el-visible");
-                    }}
-                    className="dropdown js-dropdown js-category-active"
-                  >
-                    <div
-                      className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-1 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                      data-el-toggle=".js-category-toggle"
-                      data-el-toggle-active=".js-category-active"
-                    >
-                      <span className="js-dropdown-title">This Week</span>
-                      <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                    </div>
-
-                    <div
-                      id="ddtwocontent"
-                      className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                    >
-                      <div className="text-14 y-gap-15 js-dropdown-list">
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Animation
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Design
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Illustration
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Business
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <select className="select__select js-select-tag" name="name2">
+                    <option value="20">20</option>
+                    <option value="10">10</option>
+                    <option value="73">73</option>
+                    <option value="62">62</option>
+                    <option value="90">90</option>
+                  </select>
                 </div>
               </div>
               <div className="py-40 px-30">
@@ -157,68 +89,7 @@ export default function DashboardOne() {
           </div>
 
           <div className="col-xl-4 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
-              <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Traffic</h2>
-                <div className="">
-                  <div
-                    id="dd3button"
-                    onClick={() => {
-                      document
-                        .getElementById("dd3button")
-                        .classList.toggle("-is-dd-active");
-                      document
-                        .getElementById("dd3content")
-                        .classList.toggle("-is-el-visible");
-                    }}
-                    className="dropdown js-dropdown js-category-active"
-                  >
-                    <div
-                      className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-1 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                      data-el-toggle=".js-category-toggle"
-                      data-el-toggle-active=".js-category-active"
-                    >
-                      <span className="js-dropdown-title">This Week</span>
-                      <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                    </div>
-
-                    <div
-                      id="dd3content"
-                      className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                    >
-                      <div className="text-14 y-gap-15 js-dropdown-list">
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Animation
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Design
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Illustration
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Business
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-40 px-30">
-                <PieChartComponent />
-              </div>
-            </div>
+            <GradeIndicator />
           </div>
         </div>
 
@@ -288,14 +159,17 @@ export default function DashboardOne() {
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Recent Courses</h2>
-                <a href="#" className="text-14 text-purple-1 underline">
+                <h2 className="text-17 lh-1 fw-500">Recent house points</h2>
+                <Link
+                  href="/dshb-reviews"
+                  className="text-14 text-purple-1 underline"
+                >
                   View All
-                </a>
+                </Link>
               </div>
               <div className="py-30 px-30">
                 <div className="y-gap-40">
-                  {resentCourses.map((elm, i) => (
+                  {lastThreeDecisions.map((decision, i) => (
                     <div
                       key={i}
                       className={`d-flex ${i != 0 ? "border-top-light" : ""} `}
@@ -304,34 +178,27 @@ export default function DashboardOne() {
                         <Image
                           width={90}
                           height={80}
-                          src={elm.imageSrc}
-                          alt="image"
+                          src={
+                            decision.studentId.avatarSrc ||
+                            "/path/to/default/avatar.png"
+                          }
+                          alt="student-avatar"
                         />
                       </div>
                       <div className="ml-15">
-                        <h4 className="text-15 lh-16 fw-500">{elm.title}</h4>
+                        <h4 className="text-15 lh-16 fw-500">
+                          {decision.studentId.name}
+                        </h4>
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
-                          <div className="d-flex items-center">
-                            <Image
-                              width={16}
-                              height={16}
-                              className="size-16 object-cover mr-8"
-                              src={elm.authorImg}
-                              alt="icon"
-                            />
-                            <div className="text-14 lh-1">{elm.title}</div>
+                          <div className="text-14 lh-1">
+                            {new Date(decision.date).toLocaleDateString()}{" "}
+                            {/* Format the date */}
                           </div>
-                          <div className="d-flex items-center">
-                            <i className="icon-document text-16 mr-8"></i>
-                            <div className="text-14 lh-1">
-                              {elm.lessonCount} lesson
-                            </div>
+                          <div className="text-14 lh-1">
+                            Points: {decision.pointsAwarded}
                           </div>
-                          <div className="d-flex items-center">
-                            <i className="icon-clock-2 text-16 mr-8"></i>
-                            <div className="text-14 lh-1">{`${Math.floor(
-                              elm.duration / 60
-                            )}h ${Math.floor(elm.duration % 60)}m`}</div>
+                          <div className="text-14 lh-1">
+                            Status: {decision.status}
                           </div>
                         </div>
                       </div>

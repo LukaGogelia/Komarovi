@@ -1,11 +1,10 @@
-// /components/DecisionsDisplay.js
 import React from "react";
 import mongoose from "mongoose";
 import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
 import Star from "../common/Star";
 import Image from "next/image";
 
-async function fetchData() {
+export async function fetchData() {
   // Consider moving the connection logic outside this function so that
   // you don't connect every time you fetch data
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
@@ -16,12 +15,12 @@ async function fetchData() {
   const decisionsList = await PointsCommissionDecision.find().populate(
     "studentId"
   );
-
-  return decisionsList;
+  const lastThreeDecisions = decisionsList.slice(-5);
+  return { decisionsList, lastThreeDecisions };
 }
 
 export default async function DecisionsDisplay() {
-  let decisions = await fetchData();
+  const { decisionsList, lastThreeDecisions } = await fetchData();
 
   return (
     <div className="dashboard__main">
@@ -44,7 +43,7 @@ export default async function DecisionsDisplay() {
 
               <div className="py-30 px-30">
                 <div className="row y-gap-30">
-                  {decisions.map((decision, i) => (
+                  {decisionsList.map((decision, i) => (
                     <div key={i} className="md:direction-column">
                       <div
                         className={`d-flex ${
