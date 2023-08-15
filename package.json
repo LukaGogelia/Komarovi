@@ -38,12 +38,15 @@
     "react-leaflet": "^4.2.1",
     "react-modal-video": "^2.0.1",
     "react-particles": "^2.10.1",
-    "recharts": "^2.7.2",
+    "react-spring": "^9.7.2",
+    "recharts": "^2.7.3",
     "sass": "^1.63.4",
     "sharp": "^0.32.4",
     "svg": "^0.1.0",
     "swiper": "^8.0.0",
-    "tsparticles": "^2.11.0"
+    "tsc": "^2.0.4",
+    "tsparticles": "^2.11.0",
+    "victory": "^36.6.11"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",
