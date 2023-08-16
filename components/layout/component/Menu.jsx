@@ -255,7 +255,7 @@ export default function Menu({ allClasses, headerPosition }) {
             <li>
               <Link
                 data-barba
-                href="#"
+                href="/news"
                 className={menuItem == "Blogs" ? "activeMenu" : ""}
               >
                 News
