@@ -75,7 +75,14 @@ const Gauge = ({ value = 50 }) => {
         </Pie>
         <line x1={cx} y1={cy} x2={x} y2={y} stroke="black" strokeWidth="4" />
         <circle cx={cx} cy={cy} r={5} fill="black" />
-        <text x={cx} y={cy + 80} textAnchor="middle" fontSize="14px">
+        <text
+          x={cx}
+          y={cy + 80}
+          textAnchor="middle"
+          fontSize="14px" // Adjust the font size to match your h2 styling
+          fontWeight="bold"
+          fill="#336CFB"
+        >
           {`Attendance Rate: ${value}%`}
         </text>
         <text
