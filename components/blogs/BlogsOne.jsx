@@ -6,7 +6,6 @@ import Link from "next/link";
 
 import { Category, News } from "@/data/mongoDb/models.js";
 
-// require("../../data/mongoDb/database.js");
 async function getData(props) {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
     useNewUrlParser: true,
@@ -21,14 +20,12 @@ async function getData(props) {
 
   if (props) {
     const { selectedCategory } = props;
-    // You need to await the Category.find() query and get the _id
     const category = await Category.findOne({ slug: selectedCategory });
     if (category) {
       categoryId = category._id;
     }
   }
 
-  // If categoryId is found, add it to the query
   if (categoryId) {
     query.category = categoryId;
   }
@@ -37,7 +34,7 @@ async function getData(props) {
     query,
     "_id title imageSmall datePosted category"
   )
-    .populate("category", "name") // Make sure 'name' is the correct field you want to fetch from the category
+    .populate("category", "name")
     .exec();
 
   return { categories, newsItems };
@@ -86,10 +83,7 @@ export default async function BlogsOne({ searchParams }) {
           <div className="tabs -pills js-tabs">
             <div className="tabs__controls d-flex justify-center flex-wrap y-gap-20 x-gap-10 js-tabs-controls">
               {categories.map((elm, i) => (
-                <div
-                  key={i}
-                  // onClick={() => setCurrentCategory(elm)}
-                >
+                <div key={i}>
                   <Link
                     href={
                       elm.slug !== ""
@@ -101,10 +95,12 @@ export default async function BlogsOne({ searchParams }) {
                     }
                   >
                     <button
-                      className={`tabs__button px-15 py-8 rounded-8 js-tabs-button 
+                      className={`tabs__button px-15 py-8 rounded-8 js-tabs-button
                         ${
-                          ""
-                          // category === elm ? "is-active" : ""
+                          searchParams.category === elm.slug ||
+                          (!searchParams.category && elm.slug === "")
+                            ? "is-active"
+                            : ""
                         } `}
                       data-tab-target=".-tab-item-1"
                       type="button"
@@ -131,7 +127,6 @@ export default async function BlogsOne({ searchParams }) {
                             cover
                             width="410"
                             height="350"
-                            // overflow="hidden"
                             className="w-1/1 rounded-8"
                             src={elm.imageSmall}
                             alt="image"

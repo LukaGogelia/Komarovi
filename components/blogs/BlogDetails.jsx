@@ -1,13 +1,28 @@
-"use client";
-
 import React from "react";
-import { blogs, tags } from "@/data/blog";
+import { tags } from "@/data/blog";
 import Image from "next/image";
-export default function BlogDetails({ id }) {
-  const data = blogs.filter((elm) => elm.id == id)[0] || blogs[0];
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+import { News } from "@/data/mongoDb/models";
+import mongoose from "mongoose";
+
+async function getData(id) {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const query = {};
+  query._id = id;
+
+  const newsItems = await News.findOne(
+    query,
+    "_id title imageSmall datePosted category"
+  ).populate("category", "name");
+
+  return newsItems;
+}
+
+export default async function BlogDetails({ id }) {
+  const data = await getData(id);
   return (
     <>
       <section className="page-header -type-1">
@@ -17,7 +32,7 @@ export default function BlogDetails({ id }) {
               <div className="col-auto">
                 <div>
                   <div className="text-14 text-purple-1 uppercase fw-500 mb-8">
-                    {data.category.toUpperCase()}
+                    {data.category.name.toUpperCase()}
                   </div>
 
                   <h1 className="page-header__title lh-14">
@@ -26,7 +41,9 @@ export default function BlogDetails({ id }) {
                     {data.title.split(" ").slice(4, -1).join(" ")}
                   </h1>
 
-                  <p className="page-header__text">{data.date}</p>
+                  <p className="page-header__text">
+                    {data.datePosted.toISOString()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -38,7 +55,7 @@ export default function BlogDetails({ id }) {
         <div className="container">
           <div
             className="ratio ratio-16:9 rounded-8 bg-image js-lazy"
-            style={{ backgroundImage: `url(${data.imageSrc})` }}
+            style={{ backgroundImage: `url(${data.imageSmall})` }}
             data-bg="img/blog/blog-single/images.png"
           ></div>
         </div>
@@ -122,7 +139,7 @@ export default function BlogDetails({ id }) {
                       <Image
                         width={530}
                         height={450}
-                        src="/assets/img/blog/blog-single/1.png"
+                        src={data.imageSmall}
                         alt="image"
                         className="w-1/1 initial-img rounded-8"
                       />
@@ -131,7 +148,7 @@ export default function BlogDetails({ id }) {
                       <Image
                         width={530}
                         height={450}
-                        src="/assets/img/blog/blog-single/2.png"
+                        src={data.imageSmall}
                         alt="image"
                         className="w-1/1 initial-img rounded-8"
                       />
@@ -314,10 +331,10 @@ export default function BlogDetails({ id }) {
               </div>
             </div>
 
-            <div className="row justify-center pt-30">
+            {/* <div className="row justify-center pt-30">
               <div className="col-xl-8 col-lg-9 col-md-11">
                 <div className="blogPost -comments">
-                  <div className="blogPost__content">
+                     <div className="blogPost__content">
                     <h2 className="text-20 fw-500">Reviews</h2>
 
                     <ul className="comments__list mt-30">
@@ -480,10 +497,10 @@ export default function BlogDetails({ id }) {
                         Submit Review
                       </button>
                     </div>
-                  </form>
+                    </form>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
