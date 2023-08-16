@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
 import Star from "../common/Star";
 import Image from "next/image";
+import { ExamEntry } from "../../data/mongoDb/models.js";
 
 export async function fetchData() {
   // Consider moving the connection logic outside this function so that
@@ -20,7 +21,7 @@ export async function fetchData() {
 }
 
 export default async function DecisionsDisplay() {
-  const { decisionsList, lastThreeDecisions } = await fetchData();
+  const { decisionsList } = await fetchData();
 
   return (
     <div className="dashboard__main">

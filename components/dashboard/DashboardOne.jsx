@@ -11,9 +11,127 @@ import Link from "next/link";
 import ApplyGauge from "../ApplyGauge";
 import GradeIndicator from "../GradeIndicator";
 import { fetchData } from "./Reviews";
+import { QuizEntry } from "@/data/mongoDb/models";
+import mongoose from "mongoose";
+import { Quiz } from "@/data/mongoDb/models";
+import { ObjectId } from "mongodb";
+
+export async function fetchQuizData() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const mathId = await Quiz.find({ subject: "math" }, "_id");
+  const physicsId = await Quiz.find({ subject: "physics" }, "_id");
+  const extractIds = (arr) => arr.map((item) => item._id);
+  const mathArray = extractIds(mathId);
+  const physicsArray = extractIds(physicsId);
+
+  // const ObjectId = mongoose.Types.ObjectId;
+  // const mathArray = mathId.map((item) => ObjectId(item._id));
+  // const physicsArray = physicsId.map((item) => ObjectId(item._id));
+
+  // Retrieve Quiz entries for the student and math subject
+  const mathList = await QuizEntry.find({
+    studentId: "64db5e53c84450e9247d9940",
+    quizId: { $in: mathArray },
+  }).populate({
+    path: "quizId",
+    select: "totalPoints quizNumber",
+  });
+
+  const physicsList = await QuizEntry.find({
+    studentId: "64db5e53c84450e9247d9940",
+    quizId: { $in: physicsArray },
+  }).populate({
+    path: "quizId",
+    select: "totalPoints quizNumber",
+  });
+
+  // Calculate the percentage for math
+  const mathPercentage = mathList.map(
+    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
+  );
+
+  // Calculate the percentage for physics
+  const physicsPercentage = physicsList.map(
+    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
+  );
+
+  // console.log(mathList);
+  // console.log(physicsList);
+
+  // console.log("Math Array:", mathArray);
+  // console.log("Physics Array:", physicsArray);
+  // console.log("Math Entries Found:", mathList.length);
+  // console.log("Physics Entries Found:", physicsList.length);
+  console.log(mathPercentage);
+  console.log(physicsPercentage);
+
+  // console.log(mathArray[0]);
+  // console.log(physicsArray[0]);
+
+  mongoose.disconnect();
+
+  const Map = [
+    "",
+    "1st",
+    "2nd",
+    "3rd",
+    "4th",
+    "5th",
+    "6th",
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+  ];
+
+  const arr = [];
+  const names = [
+    "Quiz 1",
+    "Quiz 2",
+    "Quiz 3",
+    "Quiz 4",
+    "Quiz 5",
+    "Quiz 6",
+    "Quiz 7",
+    "Quiz 8",
+    "Quiz 9",
+    "Quiz 10",
+  ]; // Replace with the appropriate names
+
+  for (let i = 1; i < 11; i++) {
+    let obj = { name: names[i - 1] };
+    let mathQuiz = mathList.find((em) => em.quizId.quizNumber === i);
+    if (mathQuiz) {
+      obj.math = (mathQuiz.totalPoints / mathQuiz.quizId.totalPoints) * 100;
+    }
+    let physicsQuiz = physicsList.find((em) => em.quizId.quizNumber === i);
+    if (physicsQuiz) {
+      obj.physics =
+        (physicsQuiz.totalPoints / physicsQuiz.quizId.totalPoints) * 100;
+    }
+
+    if (Object.keys(obj).length > 1) {
+      arr.push(obj);
+    }
+
+    console.log(arr);
+  }
+
+  return arr;
+}
 
 export default async function DashboardOne() {
   const { lastThreeDecisions } = await fetchData();
+  const arr = await fetchQuizData();
+
+  // const simpleData = { openQuestionPoints: QuizList.openQuestionPoints };
+
+  // 64db5e53c84450e9247d9974
+
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
@@ -71,8 +189,8 @@ export default async function DashboardOne() {
           <div className="col-xl-8 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Earning Statistics</h2>
-                <div className="">
+                <h2 className="text-17 lh-1 fw-500">Quiz Performance</h2>
+                {/* <div className="">
                   <select className="select__select js-select-tag" name="name2">
                     <option value="20">20</option>
                     <option value="10">10</option>
@@ -80,14 +198,13 @@ export default async function DashboardOne() {
                     <option value="62">62</option>
                     <option value="90">90</option>
                   </select>
-                </div>
+                </div> */}
               </div>
               <div className="py-40 px-30">
-                <Charts />
+                <Charts arr={arr} />
               </div>
             </div>
           </div>
-
           <div className="col-xl-4 col-md-6">
             <GradeIndicator />
           </div>
@@ -178,10 +295,7 @@ export default async function DashboardOne() {
                         <Image
                           width={90}
                           height={80}
-                          src={
-                            decision.studentId.avatarSrc ||
-                            "/path/to/default/avatar.png"
-                          }
+                          src={decision.studentId.avatarSrc}
                           alt="student-avatar"
                         />
                       </div>
