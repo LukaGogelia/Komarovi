@@ -22,8 +22,8 @@ const SelectSubject = ({ onRateChange }) => {
   };
 
   return (
-    <div className={`py-20 border-bottom-light text-center `}>
-      <div>
+    <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
+      <div style={{ textAlign: "center", margin: "auto" }}>
         <h3
           className="text-16 lh-1 fw-500 text-dark-1 mb-10"
           style={{ textAlign: "center" }}
@@ -33,11 +33,10 @@ const SelectSubject = ({ onRateChange }) => {
       </div>
 
       <div
-        className={`select js-multiple-select col-lg-6 col-md-3 col-sm-2 ${
-          darkMode ? "-dark-bg-dark-2 " : ""
+        className={`select js-multiple-select col-lg-6 col-md-6 col-sm-4 ${
+          darkMode ? " " : ""
         }`}
-        data-select-value=""
-        style={{ margin: "auto" }}
+        style={{ textAlign: "center", margin: "auto" }}
       >
         <button
           onClick={() => setDdOpen((prev) => !prev)}
@@ -48,7 +47,14 @@ const SelectSubject = ({ onRateChange }) => {
           <span className="js-button-title">
             {selectedValue ? selectedValue : "Default"}
           </span>
-          <FontAwesomeIcon icon={faChevronDown} />
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            style={{
+              transform: ddOpen ? "rotate(180deg)" : "",
+              transition: "transform 0.3s ease",
+              fontSize: "9px",
+            }}
+          />
         </button>
         <div
           className={`select__dropdown js-dropdown ${
@@ -65,17 +71,7 @@ const SelectSubject = ({ onRateChange }) => {
                 data-value={option.label}
                 key={i}
               >
-                <div className="form-checkbox pointer-events-none">
-                  <input
-                    required
-                    checked={selectedValue === option.label}
-                    type="checkbox"
-                    readOnly
-                  />
-                  <div className="form-checkbox__mark">
-                    <div className="form-checkbox__icon icon-check"></div>
-                  </div>
-                </div>
+                {/* Checkbox removed */}
                 <span className="ml-10">{option.label}</span>
               </div>
             ))}

@@ -1,22 +1,20 @@
-import { resentCourses } from "@/data/courses";
 import { states } from "@/data/dashboard";
 import { teamMembers } from "@/data/instractors";
 import { notifications } from "@/data/notifications";
 import React from "react";
 import FooterNine from "../layout/footers/FooterNine";
-import Charts from "./Charts";
-import PieChartComponent from "./PieCharts";
 import Image from "next/image";
 import Link from "next/link";
 import ApplyGauge from "../ApplyGauge";
 import GradeIndicator from "../GradeIndicator";
 import { fetchData } from "./Reviews";
+import QuizPerformance from "./QuizPerformance";
+import { Quiz } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
-import { Quiz } from "@/data/mongoDb/models";
-import { ObjectId } from "mongodb";
+import Cards from "./Cards";
 
-export async function fetchQuizData() {
+export async function useFetchQuizData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -28,17 +26,12 @@ export async function fetchQuizData() {
   const mathArray = extractIds(mathId);
   const physicsArray = extractIds(physicsId);
 
-  // const ObjectId = mongoose.Types.ObjectId;
-  // const mathArray = mathId.map((item) => ObjectId(item._id));
-  // const physicsArray = physicsId.map((item) => ObjectId(item._id));
-
-  // Retrieve Quiz entries for the student and math subject
   const mathList = await QuizEntry.find({
     studentId: "64db5e53c84450e9247d9940",
     quizId: { $in: mathArray },
   }).populate({
     path: "quizId",
-    select: "totalPoints quizNumber",
+    select: "totalPoints quizNumber academicYear", // Add date here
   });
 
   const physicsList = await QuizEntry.find({
@@ -46,47 +39,21 @@ export async function fetchQuizData() {
     quizId: { $in: physicsArray },
   }).populate({
     path: "quizId",
-    select: "totalPoints quizNumber",
+    select: "totalPoints quizNumber academicYear", // Add date here
   });
-
   // Calculate the percentage for math
   const mathPercentage = mathList.map(
     (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
   );
 
-  // Calculate the percentage for physics
   const physicsPercentage = physicsList.map(
     (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
   );
 
-  // console.log(mathList);
-  // console.log(physicsList);
-
-  // console.log("Math Array:", mathArray);
-  // console.log("Physics Array:", physicsArray);
-  // console.log("Math Entries Found:", mathList.length);
-  // console.log("Physics Entries Found:", physicsList.length);
-  console.log(mathPercentage);
-  console.log(physicsPercentage);
-
-  // console.log(mathArray[0]);
-  // console.log(physicsArray[0]);
+  //   console.log(mathPercentage);
+  //   console.log(physicsPercentage);
 
   mongoose.disconnect();
-
-  const Map = [
-    "",
-    "1st",
-    "2nd",
-    "3rd",
-    "4th",
-    "5th",
-    "6th",
-    "7th",
-    "8th",
-    "9th",
-    "10th",
-  ];
 
   const arr = [];
   const names = [
@@ -107,30 +74,38 @@ export async function fetchQuizData() {
     let mathQuiz = mathList.find((em) => em.quizId.quizNumber === i);
     if (mathQuiz) {
       obj.math = (mathQuiz.totalPoints / mathQuiz.quizId.totalPoints) * 100;
+      obj.mathYear = mathQuiz.quizId.academicYear; // Add date here
     }
     let physicsQuiz = physicsList.find((em) => em.quizId.quizNumber === i);
     if (physicsQuiz) {
       obj.physics =
         (physicsQuiz.totalPoints / physicsQuiz.quizId.totalPoints) * 100;
+      obj.physicsYear = physicsQuiz.quizId.academicYear; // Add date here
     }
 
     if (Object.keys(obj).length > 1) {
       arr.push(obj);
     }
-
-    console.log(arr);
   }
 
   return arr;
 }
-
 export default async function DashboardOne() {
   const { lastThreeDecisions } = await fetchData();
-  const arr = await fetchQuizData();
+  const arr = await useFetchQuizData();
 
-  // const simpleData = { openQuestionPoints: QuizList.openQuestionPoints };
+  const academicYearsSet = new Set();
+  arr.forEach((item) => {
+    academicYearsSet.add(item.mathYear);
+    academicYearsSet.add(item.physicsYear);
+  });
 
-  // 64db5e53c84450e9247d9974
+  // Convert the set to an array and create the options array
+  const options = Array.from(academicYearsSet).map((year) => {
+    return { label: year };
+  });
+
+  options.push({ label: "All" });
 
   return (
     <div className="dashboard__main">
@@ -152,59 +127,12 @@ export default async function DashboardOne() {
             flexWrap: "wrap",
           }}
         >
-          <div
-            className=" y-gap-30 col-lg-8 col-md-12 col-sm-12 x-gap-30"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-            }}
-          >
-            {states.map((elm, i) => (
-              <div
-                key={i}
-                className="responsive-card col-lg-6 col-md-8 col-sm-12 "
-              >
-                <div className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4">
-                  <div>
-                    <div className="lh-1 fw-500">{elm.title}</div>
-                    <div className="text-24 lh-1 fw-700 text-dark-1 mt-20">
-                      ${elm.value}
-                    </div>
-                    <div className="lh-1 mt-25">
-                      <span className="text-purple-1">${elm.new}</span> New
-                      Sales
-                    </div>
-                  </div>
-                  <i className={`text-40 ${elm.iconClass} text-purple-1`}></i>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Cards />
 
           <ApplyGauge />
         </div>
-
         <div className="row y-gap-30 pt-30">
-          <div className="col-xl-8 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
-              <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Quiz Performance</h2>
-                {/* <div className="">
-                  <select className="select__select js-select-tag" name="name2">
-                    <option value="20">20</option>
-                    <option value="10">10</option>
-                    <option value="73">73</option>
-                    <option value="62">62</option>
-                    <option value="90">90</option>
-                  </select>
-                </div> */}
-              </div>
-              <div className="py-40 px-30">
-                <Charts arr={arr} />
-              </div>
-            </div>
-          </div>
+          <QuizPerformance options={options} arr={arr} />
           <div className="col-xl-4 col-md-6">
             <GradeIndicator />
           </div>

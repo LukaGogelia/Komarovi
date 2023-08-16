@@ -20,6 +20,19 @@ const Gauge = ({ value = 50 }) => {
     extraTextColor = "transparent";
   }
 
+  let attendanceTextColor;
+
+  if (value < 60) {
+    COLORS = ["#DC143C", "lightblue"];
+    attendanceTextColor = "#DC143C";
+  } else if (value < 70) {
+    COLORS = ["#CC9304", "lightblue"];
+    attendanceTextColor = "#CC9304";
+  } else {
+    COLORS = ["#336CFB", "lightblue"];
+    attendanceTextColor = "#336CFB";
+  }
+
   const lerp = (start, end, t) => {
     return start * (1 - t) + end * t;
   };
@@ -81,7 +94,7 @@ const Gauge = ({ value = 50 }) => {
           textAnchor="middle"
           fontSize="14px" // Adjust the font size to match your h2 styling
           fontWeight="bold"
-          fill="#336CFB"
+          fill={attendanceTextColor}
         >
           {`Attendance Rate: ${value}%`}
         </text>
