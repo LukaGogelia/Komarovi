@@ -3,15 +3,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-const SearchToggle = ({ allClasses, color }) => {
+const SearchToggle = ({ allClasses }) => {
   const [activeSearch, setActiveSearch] = useState(false);
   return (
     <>
       <div className={allClasses ? allClasses : ""}>
         <button
           onClick={() => setActiveSearch((pre) => !pre)}
-          className={`d-flex items-center ${color ? color : "text-white"} `}
+          className={`d-flex items-center`}
           data-el-toggle=".js-search-toggle"
+          style={{ color: "#6440FB" }}
         >
           <i className="text-20 icon icon-search"></i>
         </button>
@@ -22,17 +23,22 @@ const SearchToggle = ({ allClasses, color }) => {
           }`}
         >
           <div
-            className="header-search pt-90 bg-white shadow-4 "
-            style={{ height: "650px" }}
+            className="header-search pt-90  shadow-4 "
+            style={{ height: "650px", backgroundColor: "#2B1C55" }}
           >
             <div className="container">
               <div className="header-search__field">
-                <div className="icon icon-search text-dark-1"></div>
+                <div className="icon icon-search"></div>
                 <input
                   required
                   type="text"
-                  className="col-12 text-18 lh-12 text-dark-1 fw-500"
+                  className="col-12 text-18 lh-12 fw-500"
                   placeholder="What do you want to learn?"
+                  style={{
+                    backgroundColor: "#140342",
+                    color: "white",
+                    borderColor: "#140342",
+                  }}
                 />
 
                 <button
@@ -50,27 +56,30 @@ const SearchToggle = ({ allClasses, color }) => {
               </div>
 
               <div className="header-search__content mt-30">
-                <div className="text-17 text-dark-1 fw-500">
+                <div className="text-17  fw-500" style={{ color: "black" }}>
                   Popular Right Now
                 </div>
 
-                <div className="d-flex y-gap-5 flex-column mt-20">
-                  <Link href={`/courses/${5}`} className="text-dark-1">
+                <div
+                  className="d-flex y-gap-5 flex-column mt-20"
+                  style={{ color: "black" }}
+                >
+                  <Link href={`/courses/${5}`} className="">
                     The Ultimate Drawing Course - Beginner to Advanced
                   </Link>
-                  <Link href="/courses-single-2/3" className="text-dark-1">
+                  <Link href="/courses-single-2/3" className="">
                     Character Art School: Complete Character Drawing Course
                   </Link>
-                  <Link href="/courses-single-3/3" className="text-dark-1">
+                  <Link href="/courses-single-3/3" className="">
                     Complete Blender Creator: Learn 3D Modelling for Beginners
                   </Link>
-                  <Link href="/courses-single-4/3" className="text-dark-1">
+                  <Link href="/courses-single-4/3" className="">
                     User Experience Design Essentials - Adobe XD UI UX Design
                   </Link>
-                  <Link href="/courses-single-5/3" className="text-dark-1">
+                  <Link href="/courses-single-5/3" className="">
                     Graphic Design Masterclass - Learn GREAT Design
                   </Link>
-                  <Link href="/courses-single-6/3" className="text-dark-1">
+                  <Link href="/courses-single-6/3" className="">
                     Adobe Photoshop CC – Essentials Training Course
                   </Link>
                 </div>

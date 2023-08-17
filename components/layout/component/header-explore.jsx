@@ -8,7 +8,7 @@ export const HeaderExplore = ({ allClasses }) => {
     <>
       <div
         className={`${allClasses ? allClasses : ""}`}
-        style={{ color: "black" }}
+        style={{ color: "#6440FB" }}
       >
         <Link
           href="#"

@@ -73,12 +73,13 @@ export default function HeaderSeven() {
               <div className="header-right__icons text-white d-flex items-center">
                 <button
                   onClick={handleDarkmode}
-                  className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                  className="js-darkmode-toggle d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                  style={{ color: "#6440FB" }}
                 >
                   <i className="text-24 icon icon-night"></i>
                 </button>
 
-                <SearchToggle color={"black"} />
+                <SearchToggle />
 
                 <CartToggle
                   parentClassess={"relative pl-30 sm:pl-15"}
