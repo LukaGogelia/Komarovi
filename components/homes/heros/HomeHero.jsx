@@ -9,8 +9,10 @@ import hero_bg from "../../../public/assets/img/home-1/hero/bg.png";
 import masthead_icon_1 from "../../../public/assets/img/masthead/icons/1.svg";
 import masthead_icon_2 from "../../../public/assets/img/masthead/icons/2.svg";
 import masthead_icon_3 from "../../../public/assets/img/masthead/icons/3.svg";
+import TestimonialsFour from "../testimonials/TestimonialsFour";
 // move img and icon
 import move_img_1 from "../../../public/assets/img/masthead/1.png";
+import SkillsOne from "../skills/SkillsOne";
 
 import move_img_2 from "../../../public/assets/img/masthead/2.png";
 import move_img_3 from "../../../public/assets/img/masthead/3.png";
@@ -89,84 +91,23 @@ const HomeHero = () => {
 
   return (
     <>
-      <section className="masthead -type-1 js-mouse-move-container">
+      <section
+        className="masthead -type-1 js-mouse-move-container"
+        style={{ height: "67rem" }}
+      >
         <div className="masthead__bg">
           <Image src={hero_bg} alt="image" />
         </div>
-
         <div className="container">
           <div className="row y-gap-30 justify-between items-end">
-            <div className="col-xl-6 col-lg-6 col-sm-10">
-              <div
-                className="masthead__content"
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                <h1 className="masthead__title">
-                  {title}{" "}
-                  <span className="text-green-1 underline">
-                    {text_underline}
-                  </span>
-                </h1>
-                <p
-                  data-aos="fade-up"
-                  data-aos-duration="100"
-                  className="masthead__text"
-                >
-                  {info_hero}
-                </p>
-                <div
-                  data-aos="fade-up"
-                  data-aos-duration="200"
-                  className="masthead__buttons row x-gap-10 y-gap-10"
-                >
-                  <div className="col-12 col-sm-auto">
-                    <Link
-                      data-barba
-                      href="/signup"
-                      className="button -md -purple-1 text-white"
-                    >
-                      Join For Free
-                    </Link>
-                  </div>
-                  <div className="col-12 col-sm-auto">
-                    <Link
-                      data-barba
-                      href="/courses-list-1"
-                      className="button -md -outline-green-1 text-green-1"
-                    >
-                      Find Courses
-                    </Link>
-                  </div>
-                </div>
-                <div
-                  data-aos="fade-up"
-                  data-aos-duration="300"
-                  className="masthead-info row y-gap-15 sm:d-none"
-                >
-                  {masthead_info.map((item, i) => (
-                    <div
-                      key={i}
-                      className="masthead-info__item d-flex items-center text-white"
-                    >
-                      <div className="masthead-info__icon mr-10">
-                        <Image src={item.icon} alt="icon" />
-                      </div>
-                      <div className="masthead-info__title lh-1">
-                        {item.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <SkillsOne />
 
             <div
               className="col-xl-6 col-lg-6"
               data-aos="fade-up"
               data-aos-delay="700"
             >
-              <div className="masthead-image">
+              {/* <div className="masthead-image">
                 <div className="masthead-image__el1">
                   <Image
                     className="js-mouse-move"
@@ -249,7 +190,7 @@ const HomeHero = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -7,11 +7,15 @@ import { testimonialsTwoFour } from "../../../data/tesimonials";
 import TestimonialCard from "@/components/common/TestimonialCard";
 export default function TestimonialsFour() {
   const [showSlider, setShowSlider] = useState(false);
+
   useEffect(() => {
     setShowSlider(true);
   }, []);
   return (
-    <section className="layout-pt-lg layout-pb-lg bg-dark-5">
+    <section
+      className="layout-pt-lg layout-pb-lg bg-dark-5"
+      style={{ backgroundColor: "#140342" }}
+    >
       <div className="container">
         <div className="row justify-center text-center">
           <div className="col-auto">

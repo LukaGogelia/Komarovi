@@ -3,7 +3,10 @@ import Image from "next/image";
 import { brands } from "@/data/brands";
 export default function BrandsTwo() {
   return (
-    <section className="layout-pt-sm layout-pb-sm bg-light-6">
+    <section
+      className="layout-pt-sm layout-pb-sm bg-light-6"
+      style={{ backgroundColor: "#F5F7FE" }}
+    >
       <div className="container">
         <div className="row y-gap-30 justify-between sm:justify-start items-center">
           {brands.map((elm, i) => (

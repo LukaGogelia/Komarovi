@@ -14,7 +14,10 @@ export default function CoursesSlider() {
     setShowSlider(true);
   }, []);
   return (
-    <section className="layout-pt-lg layout-pb-lg section-bg">
+    <section
+      className="layout-pt-lg layout-pb-lg section-bg"
+      style={{ marginTop: "2rem", marginBottom: "7rem" }}
+    >
       <div className="section-bg__item bg-light-6"></div>
 
       <div className="container">

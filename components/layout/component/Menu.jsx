@@ -11,15 +11,16 @@ export default function Menu({ allClasses, headerPosition }) {
   const [menuItem, setMenuItem] = useState("");
   const [submenu, setSubmenu] = useState("");
   const pathname = usePathname();
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     menuList.forEach((elm) => {
       elm?.links?.forEach((elm2) => {
-        if (elm2.href?.split('/')[1]  == pathname.split('/')[1] ) {
+        if (elm2.href?.split("/")[1] == pathname.split("/")[1]) {
           setMenuItem(elm.title);
         } else {
           elm2?.links?.map((elm3) => {
-            if (elm3.href?.split('/')[1]  == pathname.split('/')[1] ) {
+            if (elm3.href?.split("/")[1] == pathname.split("/")[1]) {
               setMenuItem(elm.title);
               setSubmenu(elm2.title);
             }
@@ -34,6 +35,7 @@ export default function Menu({ allClasses, headerPosition }) {
       className={`header-menu js-mobile-menu-toggle ${
         headerPosition ? headerPosition : ""
       }`}
+      style={{ color: "#6440FB" }}
     >
       <div className="header-menu__content">
         <div className="mobile-bg js-mobile-bg"></div>
@@ -47,7 +49,7 @@ export default function Menu({ allClasses, headerPosition }) {
           </Link>
         </div>
 
-        <div className="menu js-navList">
+        <div className={`menu js-navList`}>
           <ul className={`${allClasses ? allClasses : ""}`}>
             <li className="menu-item-has-children">
               <Link
@@ -69,7 +71,9 @@ export default function Menu({ allClasses, headerPosition }) {
                   <li
                     key={i}
                     className={
-                      pathname.split('/')[1] == elm.href.split('/')[1] ? "activeMenu" : "inActiveMenu"
+                      pathname.split("/")[1] == elm.href.split("/")[1]
+                        ? "activeMenu"
+                        : "inActiveMenu"
                     }
                   >
                     <Link href={elm.href}>{elm.label}</Link>
@@ -89,9 +93,12 @@ export default function Menu({ allClasses, headerPosition }) {
 
               <div className="mega xl:d-none">
                 <div className="mega__menu">
-                  <div className="row x-gap-40">
-                    <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">
+                  <div className="row x-gap-40" style={{ color: "black" }}>
+                    <div className={`col`}>
+                      <h4
+                        className={`text-17 fw-500 mb-20`}
+                        style={{ color: "black" }}
+                      >
                         Course List Layouts
                       </h4>
 
@@ -100,9 +107,9 @@ export default function Menu({ allClasses, headerPosition }) {
                           <li
                             key={i}
                             className={
-                              pathname.split('/')[1]  == elm.href.split('/')[1] 
+                              pathname.split("/")[1] == elm.href.split("/")[1]
                                 ? "activeMenu"
-                                : "inActiveMegaMenu"
+                                : "inActiveMenu"
                             }
                           >
                             <Link data-barba href={elm.href}>
@@ -114,7 +121,10 @@ export default function Menu({ allClasses, headerPosition }) {
                     </div>
 
                     <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">
+                      <h4
+                        className="text-17 fw-500 mb-20"
+                        style={{ color: "black" }}
+                      >
                         Course Single Layouts
                       </h4>
 
@@ -123,9 +133,9 @@ export default function Menu({ allClasses, headerPosition }) {
                           <li
                             key={i}
                             className={
-                              pathname.split('/')[1]  == elm.href.split('/')[1] 
+                              pathname.split("/")[1] == elm.href.split("/")[1]
                                 ? "activeMenu"
-                                : "inActiveMegaMenu"
+                                : "inActiveMenu"
                             }
                           >
                             <Link data-barba href={elm.href}>
@@ -137,16 +147,21 @@ export default function Menu({ allClasses, headerPosition }) {
                     </div>
 
                     <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">About Courses</h4>
+                      <h4
+                        className="text-17 fw-500 mb-20"
+                        style={{ color: "black" }}
+                      >
+                        About Courses
+                      </h4>
 
                       <ul className="mega__list">
                         {menuList[1].links[2].links.map((elm, i) => (
                           <li
                             key={i}
                             className={
-                              pathname.split('/')[1]  == elm.href.split('/')[1] 
+                              pathname.split("/")[1] == elm.href.split("/")[1]
                                 ? "activeMenu"
-                                : "inActiveMegaMenu"
+                                : "inActiveMenu"
                             }
                           >
                             <Link data-barba href={elm.href}>
@@ -158,16 +173,21 @@ export default function Menu({ allClasses, headerPosition }) {
                     </div>
 
                     <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">Dashboard Pages</h4>
+                      <h4
+                        className="text-17 fw-500 mb-20"
+                        style={{ color: "black" }}
+                      >
+                        Dashboard Pages
+                      </h4>
 
                       <ul className="mega__list">
                         {menuList[1].links[3].links.map((elm, i) => (
                           <li
                             key={i}
                             className={
-                              pathname.split('/')[1]  == elm.href.split('/')[1] 
+                              pathname.split("/")[1] == elm.href.split("/")[1]
                                 ? "activeMenu"
-                                : "inActiveMegaMenu"
+                                : "inActiveMenu"
                             }
                           >
                             <Link data-barba href={elm.href}>
@@ -179,16 +199,21 @@ export default function Menu({ allClasses, headerPosition }) {
                     </div>
 
                     <div className="col">
-                      <h4 className="text-17 fw-500 mb-20">Popular Courses</h4>
+                      <h4
+                        className="text-17 fw-500 mb-20"
+                        style={{ color: "black" }}
+                      >
+                        Popular Courses
+                      </h4>
 
                       <ul className="mega__list">
                         {menuList[1].links[4].links.map((elm, i) => (
                           <li
                             key={i}
                             className={
-                              pathname.split('/')[1]  == elm.href.split('/')[1] 
+                              pathname.split("/")[1] == elm.href.split("/")[1]
                                 ? "activeMenu"
-                                : "inActiveMegaMenu"
+                                : "inActiveMenu"
                             }
                           >
                             <Link data-barba href={elm.href}>
@@ -198,21 +223,6 @@ export default function Menu({ allClasses, headerPosition }) {
                         ))}
                       </ul>
                     </div>
-                  </div>
-
-                  <div className="mega-banner bg-purple-1 ml-40">
-                    <div className="text-24 lh-15 text-white fw-700">
-                      Join more than
-                      <br />
-                      <span className="text-green-1">8 million learners</span>
-                      worldwide
-                    </div>
-                    <Link
-                      href="#"
-                      className="button -md -green-1 text-dark-1 fw-500 col-12"
-                    >
-                      Start Learning For Free
-                    </Link>
                   </div>
                 </div>
               </div>
@@ -227,7 +237,10 @@ export default function Menu({ allClasses, headerPosition }) {
                 Events <i className="icon-chevron-right text-13 ml-10"></i>
               </Link>
               <ul className="subnav">
-                <li className="menu__backButton js-nav-list-back">
+                <li
+                  className="menu__backButton js-nav-list-back"
+                  style={{ color: "black" }}
+                >
                   <Link href="#">
                     <i className="icon-chevron-left text-13 mr-10"></i> Events
                   </Link>
@@ -237,7 +250,9 @@ export default function Menu({ allClasses, headerPosition }) {
                   <li
                     key={i}
                     className={
-                      pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                      pathname.split("/")[1] == elm.href.split("/")[1]
+                        ? "activeMenu"
+                        : "inActiveMenu"
                     }
                   >
                     <Link data-barba href={elm.href}>
@@ -267,7 +282,9 @@ export default function Menu({ allClasses, headerPosition }) {
                   <li
                     key={i}
                     className={
-                      pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                      pathname.split("/")[1] == elm.href.split("/")[1]
+                        ? "activeMenu"
+                        : "inActiveMenu"
                     }
                   >
                     <Link data-barba href={elm.href}>
@@ -315,7 +332,9 @@ export default function Menu({ allClasses, headerPosition }) {
                       <li
                         key={i}
                         className={
-                          pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                          pathname.split("/")[1] == elm.href.split("/")[1]
+                            ? "activeMenu"
+                            : "inActiveMenu"
                         }
                       >
                         <Link key={i} data-barba href={elm.href}>
@@ -347,7 +366,9 @@ export default function Menu({ allClasses, headerPosition }) {
                       <li
                         key={i}
                         className={
-                          pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                          pathname.split("/")[1] == elm.href.split("/")[1]
+                            ? "activeMenu"
+                            : "inActiveMenu"
                         }
                       >
                         <Link key={i} data-barba href={elm.href}>
@@ -378,7 +399,9 @@ export default function Menu({ allClasses, headerPosition }) {
                       <li
                         key={i}
                         className={
-                          pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                          pathname.split("/")[1] == elm.href.split("/")[1]
+                            ? "activeMenu"
+                            : "inActiveMenu"
                         }
                       >
                         <Link key={i} data-barba href={elm.href}>
@@ -395,7 +418,9 @@ export default function Menu({ allClasses, headerPosition }) {
                     <li
                       key={i}
                       className={
-                        pathname.split('/')[1]  == elm.href.split('/')[1]  ? "activeMenu" : "inActiveMenu"
+                        pathname.split("/")[1] == elm.href.split("/")[1]
+                          ? "activeMenu"
+                          : "inActiveMenu"
                       }
                     >
                       <Link key={i} data-barba href={elm.href}>
@@ -406,12 +431,14 @@ export default function Menu({ allClasses, headerPosition }) {
               </ul>
             </li>
 
-            <li
-              
-            >
-              <Link data-barba href="/contact-1"  className={
-                pathname == "/contact-1" ? "activeMenu" : "inActiveMenuTwo"
-              }>
+            <li>
+              <Link
+                data-barba
+                href="/contact-1"
+                className={
+                  pathname == "/contact-1" ? "activeMenu" : "inActiveMenuTwo"
+                }
+              >
                 Contact
               </Link>
             </li>

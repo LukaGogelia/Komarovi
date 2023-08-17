@@ -11,14 +11,22 @@ export default function TestimonialsSix() {
   const [showSlider, setShowSlider] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [roteteSwiper, setRoteteSwiper] = useState(4);
+  const [darkMode, setDarkMode] = useState(true);
+
   useEffect(() => {
     setShowSlider(true);
   }, []);
+
   const handleSlideChange = (slide) => {
     setRoteteSwiper((1 - slide.activeIndex / 1) * 4);
   };
   return (
-    <section className="layout-pt-lg bg-dark-2">
+    <section
+      className={`layout-pt-lg bg-dark-2  ${
+        darkMode ? "-dark-bg-dark-2 " : ""
+      }`}
+      style={{ backgroundColor: "#6440FB" }}
+    >
       <div className="container">
         <div className="row y-gap-30 items-center">
           <div className="col-lg-6 col-md-10">
@@ -80,10 +88,13 @@ export default function TestimonialsSix() {
                       >
                         <div className="testimonials -type-1">
                           <div className="testimonials__content">
-                            <h4 className="testimonials__title">
+                            <h4 className={`testimonials__title`}>
                               {elm.comment}
                             </h4>
-                            <p className="testimonials__text">
+                            <p
+                              className="testimonials__text"
+                              style={{ color: "black" }}
+                            >
                               “{elm.description}”
                             </p>
 

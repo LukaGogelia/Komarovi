@@ -11,7 +11,7 @@ export default function EventsSeven() {
             <div className="sectionTitle ">
               <h2 className="sectionTitle__title ">Upcoming Events</h2>
 
-              <p className="sectionTitle__text ">
+              <p className="sectionTitle__text">
                 10,000+ unique online course list designs
               </p>
             </div>
@@ -54,7 +54,10 @@ export default function EventsSeven() {
                     <div className="icon-calendar-2"></div>
                     <div className="ml-8">{elm.date}</div>
                   </div>
-                  <h4 className="text-17 lh-15 fw-500">
+                  <h4
+                    className="text-17 lh-15 fw-500"
+                    style={{ color: "black" }}
+                  >
                     {" "}
                     <Link className="linkCustom" href={`/events/${elm.id}`}>
                       {elm.desc}

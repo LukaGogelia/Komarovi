@@ -12,11 +12,13 @@ import Image from "next/image";
 
 export default function SkillsOne() {
   const [showSlider, setShowSlider] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+
   useEffect(() => {
     setShowSlider(true);
   }, []);
   return (
-    <section className="layout-pt-lg layout-pb-lg">
+    <section className={`layout-pt-lg layout-pb-lg`}>
       <div className="container">
         <div className="row y-gap-20 justify-center text-center">
           <div className="col-auto">
@@ -68,11 +70,13 @@ export default function SkillsOne() {
                     <SwiperSlide key={i}>
                       <div className="swiper-slide h-100 overflow-visible">
                         <div
-                          className="infoCard -type-1"
+                          className={`infoCard -type-1  ${
+                            darkMode ? "-dark-bg-dark-2 " : ""
+                          }`}
                           data-aos="fade-left"
                           data-aos-duration={(i + 1) * 300}
                         >
-                          <div className="infoCard__image">
+                          <div className={`infoCard__image`}>
                             <Image
                               width={150}
                               height={100}
