@@ -13,6 +13,54 @@ import { Quiz } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
+import { GradeEntry } from "@/data/mongoDb/models";
+export async function fetchGradesData() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  // Find the grade entries
+  const gradeEntries = await GradeEntry.find({
+    studentId: "64db5e53c84450e9247d9966",
+  });
+
+  // Extract the subjects into objects with the "label" key
+  const subjectList = gradeEntries.map((entry) => ({ label: entry.subject }));
+
+  const gradeCounts = new Array(10).fill(0);
+  const gradeNames = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
+
+  // Count the occurrences of each grade in the entries
+  gradeEntries.forEach((entry) => {
+    const grade = entry.grade;
+    if (grade >= 1 && grade <= 10) {
+      gradeCounts[10 - grade]++;
+    }
+  });
+
+  // Convert the counts into the desired object format
+  const gradeList = gradeCounts.map((count, index) => ({
+    name: gradeNames[9 - index], // Mapping from the index to the corresponding grade name
+    value: count,
+  }));
+
+  // Close the connection
+  await mongoose.disconnect();
+
+  return { subjectList, gradeList, gradeEntries };
+}
 
 export async function useFetchQuizData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
@@ -94,6 +142,8 @@ export default async function DashboardOne() {
   const { lastThreeDecisions } = await fetchData();
   const arr = await useFetchQuizData();
 
+  const { subjectList, gradeList, gradeEntries } = await fetchGradesData();
+
   const academicYearsSet = new Set();
   arr.forEach((item) => {
     academicYearsSet.add(item.mathYear);
@@ -162,7 +212,11 @@ export default async function DashboardOne() {
         <div className="row y-gap-30 pt-30">
           <QuizPerformance options={options} arr={arr} />
           <div className="col-xl-4 col-md-6">
-            <GradeIndicator />
+            <GradeIndicator
+              subjectList={subjectList}
+              gradeList={gradeList}
+              gradeEntries={gradeEntries}
+            />
           </div>
         </div>
 
