@@ -4,11 +4,15 @@ import FindCourse from "@/components/homes/FindCourse";
 import LearningJourney from "@/components/common/LearningJourney";
 import LearningPathSeven from "@/components/homes/LearningPath/LearningPathSeven";
 
-import Statictis from "@/components/homes/Statistics/Statictis";
+const Statictis = dynamic(() =>
+  import("@/components/homes/Statistics/Statictis")
+);
 import CategoriesSeven from "@/components/homes/categories/CategoriesSeven";
-import BrandsTwo from "@/components/homes/brands/BrandsTwo";
-import EventsSeven from "@/components/homes/events/EventsSeven";
-import HeroSeven from "@/components/homes/heros/HeroSeven";
+const BrandsTwo = dynamic(() => import("@/components/homes/brands/BrandsTwo"));
+const EventsSeven = dynamic(() =>
+  import("@/components/homes/events/EventsSeven")
+);
+const HeroSeven = dynamic(() => import("@/components/homes/heros/HeroSeven"));
 import SkillsOne from "@/components/homes/skills/SkillsOne";
 import Pricing from "@/components/common/Pricing";
 import TestimonialsSix from "@/components/homes/testimonials/TestimonialsSix";

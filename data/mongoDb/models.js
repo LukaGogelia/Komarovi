@@ -167,5 +167,6 @@ module.exports = {
   GradeEntry,
   QuizEntry,
   Quiz,
+  News,
   PointsCommissionDecision,
 };

@@ -73,8 +73,8 @@ export default function HeaderSeven() {
               <div className="header-right__icons text-white d-flex items-center">
                 <button
                   onClick={handleDarkmode}
-                  className="js-darkmode-toggle d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                  style={{ color: "#6440FB" }}
+                  className="js-darkmode-toggle d-flex items-center justify-center size-50 rounded-16 "
+                  style={{ color: "#6440FB", paddingRight: "2rem" }}
                 >
                   <i className="text-24 icon icon-night"></i>
                 </button>
@@ -88,7 +88,7 @@ export default function HeaderSeven() {
 
                 <div className="d-none xl:d-block pl-30 sm:pl-15">
                   <button
-                    className="text-dark-1 items-center"
+                    className=" items-center"
                     onClick={() => setActiveMobileMenu(true)}
                     data-el-toggle=".js-mobile-menu-toggle"
                   >
