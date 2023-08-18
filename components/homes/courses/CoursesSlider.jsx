@@ -2,11 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 
-import CourceCardSlider from "../courseCards/CourseCardSlider";
+const CourceCardSlider = dynamic(() =>
+  import("../courseCards/CourseCardSlider")
+);
 import { coursesData } from "@/data/courses";
 import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 export default function CoursesSlider() {
   const [showSlider, setShowSlider] = useState(false);

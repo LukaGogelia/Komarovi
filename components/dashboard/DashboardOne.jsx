@@ -2,16 +2,17 @@ import { states } from "@/data/dashboard";
 import { teamMembers } from "@/data/instractors";
 import { notifications } from "@/data/notifications";
 import React from "react";
-import FooterNine from "../layout/footers/FooterNine";
+const FooterNine = dynamic(() => import("../layout/footers/FooterNine"));
 import Image from "next/image";
 import Link from "next/link";
-import ApplyGauge from "../ApplyGauge";
-import GradeIndicator from "../GradeIndicator";
+const ApplyGauge = dynamic(() => import("../ApplyGauge"));
+const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 import { fetchData } from "./Reviews";
-import QuizPerformance from "./QuizPerformance";
+const QuizPerformance = dynamic(() => import("./QuizPerformance"));
 import { Quiz } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
+import dynamic from "next/dynamic";
 
 export async function useFetchQuizData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {

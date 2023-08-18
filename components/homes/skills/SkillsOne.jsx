@@ -8,7 +8,8 @@ import SwiperCore from "swiper";
 import "swiper/css";
 import React from "react";
 import { skillsOne } from "../../../data/skills";
-import Image from "next/image";
+import dynamic from "next/dynamic";
+const Image = dynamic(() => import("next/image"));
 
 export default function SkillsOne() {
   const [showSlider, setShowSlider] = useState(false);

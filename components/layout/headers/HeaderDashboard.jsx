@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import CartToggle from "../component/CartToggle";
+const CartToggle = dynamic(() => import("../component/CartToggle"));
 import { sidebarItems } from "../../../data/homeSidebarItems";
 import { notifications } from "@/data/notifications";
-import Messages from "../component/Messages";
-import MyCourses from "../component/MyCourses";
+const Messages = dynamic(() => import("../component/Messages"));
+const MyCourses = dynamic(() => import("../component/MyCourses"));
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 export default function HeaderDashboard() {
   const [messageOpen, setMessageOpen] = useState(false);

@@ -3,22 +3,22 @@ import gsap from "gsap";
 import Link from "next/link";
 import { ShapeRendering } from "../../../svg/index";
 import React, { useEffect } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 
-import hero_bg from "../../../public/assets/img/home-1/hero/bg.png";
-import masthead_icon_1 from "../../../public/assets/img/masthead/icons/1.svg";
-import masthead_icon_2 from "../../../public/assets/img/masthead/icons/2.svg";
-import masthead_icon_3 from "../../../public/assets/img/masthead/icons/3.svg";
-import TestimonialsFour from "../testimonials/TestimonialsFour";
-// move img and icon
-import move_img_1 from "../../../public/assets/img/masthead/1.png";
-import SkillsOne from "../skills/SkillsOne";
-
-import move_img_2 from "../../../public/assets/img/masthead/2.png";
-import move_img_3 from "../../../public/assets/img/masthead/3.png";
-import move_icon_1 from "../../../public/assets/img/masthead/1.svg";
-import move_icon_2 from "../../../public/assets/img/masthead/4.png";
-import move_icon_3 from "../../../public/assets/img/masthead/2.svg";
+const hero_bg = dynamic(() =>
+  import("../../../public/assets/img/home-1/hero/bg.png")
+);
+const masthead_icon_1 = dynamic(() =>
+  import("../../../public/assets/img/masthead/icons/1.svg")
+);
+const masthead_icon_2 = dynamic(() =>
+  import("../../../public/assets/img/masthead/icons/2.svg")
+);
+const masthead_icon_3 = dynamic(() =>
+  import("../../../public/assets/img/masthead/icons/3.svg")
+);
+const SkillsOne = dynamic(() => import("../skills/SkillsOne"));
+import dynamic from "next/dynamic";
 
 const masthead_info = [
   {

@@ -5,7 +5,6 @@ import MobileFooter from "./MobileFooter";
 import { menuList } from "../../../data/menu";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 

@@ -1,8 +1,9 @@
 import React from "react";
-import Links from "../component/Links";
-import Socials from "@/components/common/Socials";
-import FooterLinks from "../component/FooterLinks";
+const Links = dynamic(() => import("../component/Links"));
+const Socials = dynamic(() => import("@/components/common/Socials"));
+const FooterLinks = dynamic(() => import("../component/FooterLinks"));
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 export default function FooterThree() {
   return (

@@ -4,9 +4,10 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { useContextElement } from "@/context/Context";
 import { useState, useEffect } from "react";
-import ShopCart from "./ShopCart";
-import CourseCart from "./CourseCart";
-import EventCart from "./EventCart";
+const ShopCart = dynamic(() => import("./ShopCart"));
+const CourseCart = dynamic(() => import("./CourseCart"));
+const EventCart = dynamic(() => import("./EventCart"));
+import dynamic from "next/dynamic";
 
 const CartToggle = ({ allClasses, parentClassess }) => {
   const { cartProducts, cartCourses, cartEvents } = useContextElement();

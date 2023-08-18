@@ -1,7 +1,12 @@
-import Preloader from "@/components/common/Preloader";
-import DashboardOne from "@/components/dashboard/DashboardOne";
-import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+const Preloader = dynamic(() => import("@/components/common/Preloader"));
+const DashboardOne = dynamic(() =>
+  import("@/components/dashboard/DashboardOne")
+);
+const Sidebar = dynamic(() => import("@/components/dashboard/Sidebar"));
+const HeaderDashboard = dynamic(() =>
+  import("@/components/layout/headers/HeaderDashboard")
+);
+import dynamic from "next/dynamic";
 import React from "react";
 
 export const metadata = {

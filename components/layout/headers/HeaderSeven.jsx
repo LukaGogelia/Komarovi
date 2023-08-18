@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CartToggle from "../component/CartToggle";
+const CartToggle = dynamic(() => import("../component/CartToggle"));
 import { HeaderExplore } from "../component/header-explore";
-import Menu from "../component/Menu";
-import MobileMenu from "../component/MobileMenu";
-import SearchToggle from "../component/SearchToggle";
+const Menu = dynamic(() => import("../component/Menu"));
+const MobileMenu = dynamic(() => import("../component/MobileMenu"));
+const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 export default function HeaderSeven() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);

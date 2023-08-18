@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import MobileFooter from "./MobileFooter";
-import Image from "next/image";
+const MobileFooter = dynamic(() => import("./MobileFooter"));
 import { menuList } from "@/data/menu";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 
 export default function Menu({ allClasses, headerPosition }) {
   const [menuItem, setMenuItem] = useState("");
