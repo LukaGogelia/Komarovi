@@ -5,9 +5,8 @@ import { ShapeRendering } from "../../../svg/index";
 import React, { useEffect } from "react";
 import Image from "next/image";
 
-const hero_bg = dynamic(() =>
-  import("../../../public/assets/img/home-1/hero/bg.png")
-);
+import hero_bg from "../../../public/assets/img/home-1/hero/bg.png";
+
 const masthead_icon_1 = dynamic(() =>
   import("../../../public/assets/img/masthead/icons/1.svg")
 );

@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 const Statictis = dynamic(() =>
   import("@/components/homes/Statistics/Statictis")
 );
-import CategoriesSeven from "@/components/homes/categories/CategoriesSeven";
 const BrandsTwo = dynamic(() => import("@/components/homes/brands/BrandsTwo"));
 const EventsSeven = dynamic(() =>
   import("@/components/homes/events/EventsSeven")

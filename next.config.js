@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 module.exports = {
-  // fastRefresh: true,
-  // concurrentFeatures: true,
-  // productionBrowserSourceMaps: false, // Disable source maps in development
-  // optimizeFonts: false, // Disable font optimization
-  // minify: false,
+  i18n: {
+    // These are all the locales you want to support in your application
+    locales: ["en-US", "ka"],
+    // This is the default locale you want to be used when visiting a non-locale prefixed path e.g. `/hello`
+    defaultLocale: "ka",
+  },
 };

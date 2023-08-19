@@ -9,12 +9,20 @@ const Messages = dynamic(() => import("../component/Messages"));
 const MyCourses = dynamic(() => import("../component/MyCourses"));
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
 
 export default function HeaderDashboard() {
   const [messageOpen, setMessageOpen] = useState(false);
 
+  const { i18n } = useTranslation();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handleLanguageToggle = (e) => {
+    const language = e.target.checked ? "ka" : "en";
+    i18n.changeLanguage(language);
   };
 
   const [isfullScreen, setIsfullScreen] = useState(false);
@@ -193,6 +201,16 @@ export default function HeaderDashboard() {
                 </div>
 
                 <div className="d-flex items-center sm:d-none">
+                  <div className="relative">
+                    <div className="form-switch d-flex items-center">
+                      <div className="switch">
+                        <input type="checkbox" />
+                        <span className="switch__slider"></span>
+                      </div>
+                      <div className="text-13 lh-1 text-dark-1 ml-10">ქარ</div>
+                    </div>
+                  </div>
+
                   <div className="relative">
                     <button
                       onClick={handleDarkmode}

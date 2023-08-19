@@ -229,6 +229,7 @@ export default function ProductDetails({ id }) {
                   data-tab-target=".-tab-item-1"
                   type="button"
                   onClick={() => setActiveTab(1)}
+                  style={{ color: "#6A7A8E" }}
                 >
                   Description
                 </button>
@@ -239,6 +240,7 @@ export default function ProductDetails({ id }) {
                   data-tab-target=".-tab-item-2"
                   type="button"
                   onClick={() => setActiveTab(2)}
+                  style={{ color: "#6A7A8E" }}
                 >
                   Reviews (2)
                 </button>
