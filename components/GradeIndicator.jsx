@@ -3,6 +3,23 @@ import React, { useState, useMemo } from "react";
 import PieChartComponent from "./dashboard/PieCharts";
 import SubjectDropdown from "./SubjectDropdown";
 
+const numberToWord = (number) => {
+  const words = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
+  return words[number];
+};
+
 export default function GradeIndicator({
   subjectList,
   gradeList,
@@ -16,15 +33,10 @@ export default function GradeIndicator({
 
   const filteredGrades = useMemo(() => {
     if (selectedSubject) {
-      // Filter the gradeEntries by the selected subject
       const filteredGradeEntries = gradeEntries.filter(
         (entry) => entry.subject === selectedSubject
       );
-
-      // Initialize grade counts for the filtered entries
       const gradeCounts = new Array(10).fill(0);
-
-      // Count the occurrences of each grade in the filtered entries
       filteredGradeEntries.forEach((entry) => {
         const grade = entry.grade;
         if (grade >= 1 && grade <= 10) {
@@ -32,14 +44,33 @@ export default function GradeIndicator({
         }
       });
 
-      // Convert the counts into the desired object format
-      return gradeCounts.map((count, index) => ({
-        name: (10 - index).toString(),
-        value: count,
-      }));
+      return gradeCounts
+        .map((count, index) => ({
+          name: numberToWord(10 - index),
+          value: count,
+        }))
+        .filter((grade) => grade.value > 0);
     }
 
-    return gradeList; // default to gradeList if no subject is selected
+    return gradeList;
+  }, [selectedSubject, gradeEntries]);
+
+  const averageGrade = useMemo(() => {
+    const filteredGradeEntries = selectedSubject
+      ? gradeEntries.filter((entry) => entry.subject === selectedSubject)
+      : gradeEntries;
+
+    const totalGrades = filteredGradeEntries.reduce(
+      (sum, entry) => sum + entry.grade,
+      0
+    );
+    const numberOfGrades = filteredGradeEntries.length;
+
+    if (numberOfGrades > 0) {
+      return totalGrades / numberOfGrades;
+    }
+
+    return null;
   }, [selectedSubject, gradeEntries]);
 
   return (
@@ -58,9 +89,12 @@ export default function GradeIndicator({
           onSubjectChange={handleSubjectChange}
         />
       </div>
-
       <div className="py-40 px-30">
-        <PieChartComponent data={filteredGrades} />
+        <PieChartComponent
+          key={selectedSubject}
+          data={filteredGrades}
+          averageGrade={averageGrade}
+        />
       </div>
     </div>
   );
