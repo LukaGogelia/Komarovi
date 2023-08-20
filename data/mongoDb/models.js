@@ -2,12 +2,65 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
+// RegistrationCode model
+const RegistrationCodeSchema = new Schema({
+  code: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  family: {
+    type: Schema.Types.ObjectId,
+    ref: "Family",
+    required: true,
+  },
+  expirationDate: {
+    type: Date,
+    default: function () {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() + 9);
+      return currentDate;
+    },
+  },
+  roles: [
+    {
+      type: String,
+    },
+  ],
+});
+
+const RegistrationCode =
+  mongoose.models.RegistrationCode ||
+  mongoose.model("RegistrationCode", RegistrationCodeSchema);
+
+const FamilySchema = new Schema({
+  mother: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+  father: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+  children: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+});
+
+const Family = mongoose.models.Family || mongoose.model("Family", FamilySchema);
+
 const UserSchema = new Schema({
   firstName: String,
   lastName: String,
   email: String,
-  password: String, // Ensure to hash
+  password: String, // Ensure to hash this before saving
   phone: String,
+  nationalIdNumber: String, // New field for national ID number
   roles: [String],
   houseId: Schema.Types.ObjectId,
   clubIds: [Schema.Types.ObjectId],
@@ -20,15 +73,26 @@ const User = mongoose.models.User || mongoose.model("User", UserSchema);
 const NewsSchema = new Schema({
   title: String,
   content: String,
-  authorId: Schema.Types.ObjectId,
+  imageSmall: String,
+  imageLarge: String,
+  authorId: { type: Schema.Types.ObjectId, ref: "User" },
   datePosted: { type: Date, default: Date.now },
-  category: String,
-  bookmarksCount: { type: Number, default: 0 },
-  bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  category: { type: Schema.Types.ObjectId, ref: "Category" },
+  // bookmarksCount: { type: Number, default: 0 },
+  // bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   isDeleted: { type: Boolean, default: false },
 });
 
 const News = mongoose.models.News || mongoose.model("News", NewsSchema);
+
+// Category model
+const CategorySchema = new Schema({
+  name: String,
+  slug: { type: String, unique: true },
+});
+
+const Category =
+  mongoose.models.Category || mongoose.model("Category", CategorySchema);
 
 // Club model
 const ClubSchema = new Schema({
@@ -169,4 +233,8 @@ module.exports = {
   Quiz,
   News,
   PointsCommissionDecision,
+  News,
+  Category,
+  RegistrationCode,
+  Family,
 };

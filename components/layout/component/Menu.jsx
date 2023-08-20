@@ -263,15 +263,16 @@ export default function Menu({ allClasses, headerPosition }) {
               </ul>
             </li>
 
-            <li className="menu-item-has-children">
+            <li>
               <Link
                 data-barba
-                href="#"
+                href="/news"
                 className={menuItem == "Blogs" ? "activeMenu" : ""}
               >
-                Blog <i className="icon-chevron-right text-13 ml-10"></i>
+                News
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
-              <ul className="subnav">
+              {/* <ul className="subnav">
                 <li className="menu__backButton js-nav-list-back">
                   <Link href="#">
                     <i className="icon-chevron-left text-13 mr-10"></i> Blog
@@ -292,7 +293,7 @@ export default function Menu({ allClasses, headerPosition }) {
                     </Link>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </li>
 
             <li className="menu-item-has-children">

@@ -1,12 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import { JWT } from "jose";
+import React, { useState } from "react";
+import axios from "axios";
+axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
+  "jwtToken"
+)}`;
 
 export default function LoginForm() {
-  const handleSubmit = (e) => {
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [stayLoggedIn, setStayLoggedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const payload = {
+      identifier,
+      password,
+      stayLoggedIn, // true or false
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/login",
+        payload
+      );
+
+      // Save JWT to localStorage
+      localStorage.setItem("jwtToken", response.data.token);
+
+      setSuccessMessage("Login successful!");
+      // Handle the response data as required, e.g., save tokens, navigate to another page, etc.
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Login failed!");
+    }
   };
+
   return (
     <div className="form-page__content lg:py-50">
       <div className="container">
@@ -14,32 +47,36 @@ export default function LoginForm() {
           <div className="col-xl-6 col-lg-8">
             <div className="px-50 py-50 md:px-25 md:py-25 bg-white shadow-1 rounded-16">
               <h3 className="text-30 lh-13">Login</h3>
-              <p className="mt-10">
-                Don't have an account yet?
-                <Link href="/signup" className="text-purple-1">
-                  Sign up for free
-                </Link>
-              </p>
+
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+              {successMessage && (
+                <p className="text-green-500">{successMessage}</p>
+              )}
 
               <form
                 className="contact-form respondForm__form row y-gap-20 pt-30"
                 onSubmit={handleSubmit}
               >
                 <div className="col-12">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-                    Username Or Email
-                  </label>
-                  <input required type="text" name="title" placeholder="Name" />
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    placeholder="Email, Phone or ID number"
+                    autoComplete="username"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                  />
                 </div>
                 <div className="col-12">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-                    Password
-                  </label>
                   <input
-                    required
                     type="password"
-                    name="title"
+                    name="password"
+                    id="password"
                     placeholder="Password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="col-12">
@@ -52,7 +89,29 @@ export default function LoginForm() {
                     Login
                   </button>
                 </div>
+                <div className="col-12">
+                  <input
+                    type="checkbox"
+                    name="stayLoggedIn"
+                    id="stayLoggedIn"
+                    className="custom-checkbox"
+                    checked={stayLoggedIn} // <-- Set checked attribute based on state
+                    onChange={(e) => setStayLoggedIn(e.target.checked)}
+                  />
+                  <label htmlFor="stayLoggedIn" className="custom-label">
+                    Stay logged in for 30 days
+                  </label>
+                </div>
               </form>
+
+              {/* You can uncomment the below sections if you want to use them. */}
+              {/* 
+              <p className="mt-10">
+                Don't have an account yet?
+                <Link href="/signup" className="text-purple-1">
+                  Sign up for free
+                </Link>
+              </p>
 
               <div className="lh-12 text-dark-1 fw-500 text-center mt-20">
                 Or sign in using
@@ -70,6 +129,7 @@ export default function LoginForm() {
                   </button>
                 </div>
               </div>
+              */}
             </div>
           </div>
         </div>

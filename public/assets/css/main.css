@@ -15760,3 +15760,181 @@ table.table td {
   border-radius: 100%;
   background: white;
 }
+
+
+/* Your existing CSS file */
+.-dark-mode .tox-tinymce {
+  background-color: #333; /* Or any dark color */
+}
+.-dark-mode .tox-editor-container {
+  color: #fff;
+}
+/* Add more styles to customize the editor's appearance in dark mode */
+
+/* Style for the custom checkbox */
+.custom-checkbox {
+  appearance: none;
+  outline: none;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 2px solid #aaa;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Appearance when checked */
+.custom-checkbox:checked {
+  background-color: rgb(0, 255, 132);
+  border-color: rgb(0, 255, 132);
+}
+
+.custom-label {
+  margin-left: 8px; /* Space between the checkbox and label */
+  cursor: pointer;
+  position: relative;
+}
+
+/* Add a checkmark symbol using Unicode when checkbox is checked */
+.custom-checkbox:checked + .custom-label::before {
+  content: "\2713"; /* Unicode character for checkmark */
+  position: absolute;
+  top: 33%;
+  left: -24.9px; /* Adjust according to the checkbox width and desired position */
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 18px;
+}
+.userAdditionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px solid #eee;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+.roleButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.roleButton:hover {
+  transform: scale(1.05);
+}
+
+.studentButton {
+  background-color: #f47373;
+}
+
+.teacherButton {
+  background-color: #697689;
+}
+
+.careManagerButton {
+  background-color: #37d67a;
+}
+
+.headTeacherButton {
+  background-color: #2ccce4;
+}
+
+.adminButton {
+  background-color: #555555;
+}
+
+.customUserButton {
+  background-color: #ffc107;
+}
+
+.divider {
+  height: 2px;
+  width: 100%;
+  background-color: #eee;
+  margin: 15px 0;
+}
+
+.deprecated {
+  font-size: 12px;
+  color: red;
+  align-self: flex-start;
+  margin-left: 20px;
+}
+
+/* Button styles */
+.custom-button {
+  border-radius: 25px; /* Adjust as per your need for rounded design */
+  color: white; /* Text color */
+  padding: 10px 20px;
+  font-weight: bold;
+  margin: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+  opacity: 0.8;
+}
+
+.add-student {
+  background-color: #4caf50; /* Green */
+}
+
+.add-teacher {
+  background-color: #008cba; /* Blue */
+}
+
+.add-care-manager {
+  background-color: #f44336; /* Red */
+}
+
+.add-head-teacher {
+  background-color: #555555; /* Gray */
+}
+
+.add-admin {
+  background-color: #e7e7e7;
+  color: black; /* Gray with black text */
+}
+
+.create-user {
+  background-color: #ffd700; /* Gold */
+}
+
+.carrot-flip {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day:hover {
+  background-color: rgb(117, 84, 253);
+  color: white;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__header {
+  color: rgb(117, 84, 253);
+}
+
+.react-datepicker__navigation--previous,
+.react-datepicker__navigation--next {
+  top: 10px;
+}
+
+.react-datepicker__navigation--previous:before {
+  border-right-color: rgb(117, 84, 253);
+}
+
+.react-datepicker__navigation--next:before {
+  border-left-color: rgb(117, 84, 253);
+}

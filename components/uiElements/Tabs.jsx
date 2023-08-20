@@ -5,6 +5,7 @@ import React, { useState } from "react";
 export default function Tabs() {
   const [currentTabOne, setCurrentTabOne] = useState(1);
   const [currentTabTwo, setCurrentTabTwo] = useState(1);
+  const [isCardOpen, setCardOpen] = useState(true);
   return (
     <div className="col-lg-5">
       <div className="text-18 lh-1 text-dark-1 fw-500 mb-30">Tabs</div>

@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 
+const nextConfig = {
+  images: {
+    domains: ["i.ibb.co"],
+  },
+};
+
+
 module.exports = {
   i18n: {
     // These are all the locales you want to support in your application

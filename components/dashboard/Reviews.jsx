@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
 import Star from "../common/Star";
 import Image from "next/image";
+
 import { ExamEntry } from "../../data/mongoDb/models.js";
+
+// require("./../../data/mongoDb/database.js");
+
 
 export async function fetchData() {
   // Consider moving the connection logic outside this function so that

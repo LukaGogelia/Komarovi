@@ -41,7 +41,7 @@ export default function AuthImageMove() {
   return (
     <div className="form-page__img bg-dark-1">
       <div className="form-page-composition">
-        <div className="-bg">
+        {/* <div className="-bg">
           <Image
             width={1250}
             height={1000}
@@ -91,8 +91,8 @@ export default function AuthImageMove() {
             className="js-mouse-move"
             src="/assets/img/home-9/hero/3.png"
             alt="icon"
-          />
-        </div>
+          /> 
+        </div>*/}
       </div>
     </div>
   );
