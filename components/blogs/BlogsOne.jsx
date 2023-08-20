@@ -1,19 +1,53 @@
-"use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import { blogs, categories } from "@/data/blog";
+import React from "react";
+import mongoose from "mongoose";
+
 import Link from "next/link";
-export default function BlogsOne() {
-  const [pageItems, setPageItems] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState("All Categories");
-  useEffect(() => {
-    if (currentCategory == "All Categories") {
-      setPageItems(blogs);
-    } else {
-      let filtered = blogs.filter((elm) => elm.category == currentCategory);
-      setPageItems(filtered);
+
+import { Category, News } from "@/data/mongoDb/models.js";
+
+async function getData(props) {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const categories = await Category.find({});
+
+  const query = { isDeleted: false };
+
+  let categoryId;
+
+  if (props) {
+    const { selectedCategory } = props;
+    const category = await Category.findOne({ slug: selectedCategory });
+    if (category) {
+      categoryId = category._id;
     }
-  }, [currentCategory]);
+  }
+
+  if (categoryId) {
+    query.category = categoryId;
+  }
+
+  const newsItems = await News.find(
+    query,
+    "_id title imageSmall datePosted category"
+  )
+    .populate("category", "name")
+    .exec();
+
+  return { categories, newsItems };
+}
+
+export default async function BlogsOne({ searchParams }) {
+  const { categories, newsItems } = await getData(
+    searchParams && searchParams.category
+      ? { selectedCategory: searchParams.category }
+      : null
+  );
+  console.log(searchParams);
+
   return (
     <>
       <section className="page-header -type-1">
@@ -22,7 +56,14 @@ export default function BlogsOne() {
             <div className="row justify-center text-center">
               <div className="col-auto">
                 <div>
-                  <h1 className="page-header__title">Latest News</h1>
+                  <h1 className="page-header__title">
+                    Latest
+                    {searchParams.category &&
+                      ` ${searchParams.category[0].toUpperCase()}${searchParams.category.slice(
+                        1
+                      )}`}{" "}
+                    News
+                  </h1>
                 </div>
 
                 <div>
@@ -42,16 +83,31 @@ export default function BlogsOne() {
           <div className="tabs -pills js-tabs">
             <div className="tabs__controls d-flex justify-center flex-wrap y-gap-20 x-gap-10 js-tabs-controls">
               {categories.map((elm, i) => (
-                <div key={i} onClick={() => setCurrentCategory(elm)}>
-                  <button
-                    className={`tabs__button px-15 py-8 rounded-8 js-tabs-button ${
-                      currentCategory == elm ? "is-active" : ""
-                    } `}
-                    data-tab-target=".-tab-item-1"
-                    type="button"
+                <div key={i}>
+                  <Link
+                    href={
+                      elm.slug !== ""
+                        ? {
+                            pathname: "/news",
+                            query: { category: elm.slug },
+                          }
+                        : { pathname: "/news" }
+                    }
                   >
-                    {elm}
-                  </button>
+                    <button
+                      className={`tabs__button px-15 py-8 rounded-8 js-tabs-button
+                        ${
+                          searchParams.category === elm.slug ||
+                          (!searchParams.category && elm.slug === "")
+                            ? "is-active"
+                            : ""
+                        } `}
+                      data-tab-target=".-tab-item-1"
+                      type="button"
+                    >
+                      {elm.name}
+                    </button>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -59,26 +115,31 @@ export default function BlogsOne() {
             <div className="tabs__content pt-40 js-tabs-content">
               <div className="tabs__pane -tab-item-1 is-active">
                 <div className="row y-gap-30">
-                  {pageItems.map((elm, i) => (
+                  {newsItems.map((elm, i) => (
                     <div key={i} className="col-lg-4 col-md-6">
                       <div className="blogCard -type-1">
                         <div className="blogCard__image">
                           <Image
-                            width={530}
-                            height={450}
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                            }}
+                            cover
+                            width="410"
+                            height="350"
                             className="w-1/1 rounded-8"
-                            src={elm.imageSrc}
+                            src={elm.imageSmall}
                             alt="image"
                           />
                         </div>
                         <div className="blogCard__content mt-20">
                           <div className="blogCard__category">
-                            {elm.category.toUpperCase()}
+                            {elm.category.name}
                           </div>
                           <h4 className="blogCard__title text-20 lh-15 fw-500 mt-5">
                             <Link
                               className="linkCustom"
-                              href={`/blogs/${elm.id}`}
+                              href={`/news/${elm._id}`}
                             >
                               {elm.title}
                             </Link>
