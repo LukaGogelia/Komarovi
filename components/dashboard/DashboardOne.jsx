@@ -1,178 +1,220 @@
-"use client";
-
-import { resentCourses } from "@/data/courses";
 import { states } from "@/data/dashboard";
 import { teamMembers } from "@/data/instractors";
 import { notifications } from "@/data/notifications";
 import React from "react";
-import FooterNine from "../layout/footers/FooterNine";
-import Charts from "./Charts";
-import PieChartComponent from "./PieCharts";
+const FooterNine = dynamic(() => import("../layout/footers/FooterNine"));
 import Image from "next/image";
 import Link from "next/link";
+const ApplyGauge = dynamic(() => import("../ApplyGauge"));
+const GradeIndicator = dynamic(() => import("../GradeIndicator"));
+import { fetchData } from "./Reviews";
+const QuizPerformance = dynamic(() => import("./QuizPerformance"));
+import { Quiz } from "@/data/mongoDb/models";
+import { QuizEntry } from "@/data/mongoDb/models";
+import mongoose from "mongoose";
+import dynamic from "next/dynamic";
+import { GradeEntry } from "@/data/mongoDb/models";
+export async function fetchGradesData() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-export default function DashboardOne() {
+  // Find the grade entries
+  const gradeEntries = await GradeEntry.find({
+    studentId: "64db5e53c84450e9247d9966",
+  });
+
+  // Extract the subjects into objects with the "label" key
+  const subjectList = gradeEntries.map((entry) => ({ label: entry.subject }));
+
+  const gradeCounts = new Array(10).fill(0);
+  const gradeNames = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
+
+  // Count the occurrences of each grade in the entries
+  gradeEntries.forEach((entry) => {
+    const grade = entry.grade;
+    if (grade >= 1 && grade <= 10) {
+      gradeCounts[10 - grade]++;
+    }
+  });
+
+  // Convert the counts into the desired object format
+  const gradeList = gradeCounts.map((count, index) => ({
+    name: gradeNames[9 - index], // Mapping from the index to the corresponding grade name
+    value: count,
+  }));
+
+  // Close the connection
+  await mongoose.disconnect();
+
+  return { subjectList, gradeList, gradeEntries };
+}
+
+export async function useFetchQuizData() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const mathId = await Quiz.find({ subject: "math" }, "_id");
+  const physicsId = await Quiz.find({ subject: "physics" }, "_id");
+  const extractIds = (arr) => arr.map((item) => item._id);
+  const mathArray = extractIds(mathId);
+  const physicsArray = extractIds(physicsId);
+
+  const mathList = await QuizEntry.find({
+    studentId: "64db5e53c84450e9247d9940",
+    quizId: { $in: mathArray },
+  }).populate({
+    path: "quizId",
+    select: "totalPoints quizNumber academicYear", // Add date here
+  });
+
+  const physicsList = await QuizEntry.find({
+    studentId: "64db5e53c84450e9247d9940",
+    quizId: { $in: physicsArray },
+  }).populate({
+    path: "quizId",
+    select: "totalPoints quizNumber academicYear", // Add date here
+  });
+  // Calculate the percentage for math
+  const mathPercentage = mathList.map(
+    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
+  );
+
+  const physicsPercentage = physicsList.map(
+    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
+  );
+
+  //   console.log(mathPercentage);
+  //   console.log(physicsPercentage);
+
+  mongoose.disconnect();
+
+  const arr = [];
+  const names = [
+    "Quiz 1",
+    "Quiz 2",
+    "Quiz 3",
+    "Quiz 4",
+    "Quiz 5",
+    "Quiz 6",
+    "Quiz 7",
+    "Quiz 8",
+    "Quiz 9",
+    "Quiz 10",
+  ]; // Replace with the appropriate names
+
+  for (let i = 1; i < 11; i++) {
+    let obj = { name: names[i - 1] };
+    let mathQuiz = mathList.find((em) => em.quizId.quizNumber === i);
+    if (mathQuiz) {
+      obj.math = (mathQuiz.totalPoints / mathQuiz.quizId.totalPoints) * 100;
+      obj.mathYear = mathQuiz.quizId.academicYear; // Add date here
+    }
+    let physicsQuiz = physicsList.find((em) => em.quizId.quizNumber === i);
+    if (physicsQuiz) {
+      obj.physics =
+        (physicsQuiz.totalPoints / physicsQuiz.quizId.totalPoints) * 100;
+      obj.physicsYear = physicsQuiz.quizId.academicYear; // Add date here
+    }
+
+    if (Object.keys(obj).length > 1) {
+      arr.push(obj);
+    }
+  }
+
+  return arr;
+}
+export default async function DashboardOne() {
+  const { lastThreeDecisions } = await fetchData();
+  const arr = await useFetchQuizData();
+
+  const { subjectList, gradeList, gradeEntries } = await fetchGradesData();
+
+  const academicYearsSet = new Set();
+  arr.forEach((item) => {
+    academicYearsSet.add(item.mathYear);
+    academicYearsSet.add(item.physicsYear);
+  });
+
+  // Convert the set to an array and create the options array
+  const options = Array.from(academicYearsSet).map((year) => {
+    return { label: year };
+  });
+
+  options.push({ label: "All" });
+
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
         <div className="row pb-50 mb-10">
           <div className="col-auto">
             <h1 className="text-30 lh-12 fw-700">Dashboard</h1>
-            <div className="mt-10">
-              Lorem ipsum dolor sit amet, consectetur.
-            </div>
+            <div className="mt-10">whole page</div>
           </div>
         </div>
 
-        <div className="row y-gap-30">
-          {states.map((elm, i) => (
-            <div key={i} className="col-xl-3 col-md-6">
-              <div className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4">
-                <div>
-                  <div className="lh-1 fw-500">{elm.title}</div>
-                  <div className="text-24 lh-1 fw-700 text-dark-1 mt-20">
-                    ${elm.value}
+        <div
+          className="row y-gap-30"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <div
+            className=" y-gap-30 col-lg-8 col-md-12 col-sm-12 x-gap-30"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+            }}
+          >
+            {states.map((elm, i) => (
+              <div
+                key={i}
+                className="responsive-card col-lg-6 col-md-8 col-sm-12 "
+              >
+                <div className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4">
+                  <div>
+                    <div className="lh-1 fw-500">{elm.title}</div>
+                    <div className="text-24 lh-1 fw-700 text-dark-1 mt-20">
+                      ${elm.value}
+                    </div>
+                    <div className="lh-1 mt-25">
+                      <span className="text-purple-1">${elm.new}</span> New
+                      Sales
+                    </div>
                   </div>
-                  <div className="lh-1 mt-25">
-                    <span className="text-purple-1">${elm.new}</span> New Sales
-                  </div>
+                  <i className={`text-40 ${elm.iconClass} text-purple-1`}></i>
                 </div>
-
-                <i className={`text-40 ${elm.iconClass} text-purple-1`}></i>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
+          <ApplyGauge />
+        </div>
         <div className="row y-gap-30 pt-30">
-          <div className="col-xl-8 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
-              <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Earning Statistics</h2>
-                <div className="">
-                  <div
-                    id="ddtwobutton"
-                    onClick={() => {
-                      document
-                        .getElementById("ddtwobutton")
-                        .classList.toggle("-is-dd-active");
-                      document
-                        .getElementById("ddtwocontent")
-                        .classList.toggle("-is-el-visible");
-                    }}
-                    className="dropdown js-dropdown js-category-active"
-                  >
-                    <div
-                      className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-1 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                      data-el-toggle=".js-category-toggle"
-                      data-el-toggle-active=".js-category-active"
-                    >
-                      <span className="js-dropdown-title">This Week</span>
-                      <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                    </div>
-
-                    <div
-                      id="ddtwocontent"
-                      className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                    >
-                      <div className="text-14 y-gap-15 js-dropdown-list">
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Animation
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Design
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Illustration
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Business
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-40 px-30">
-                <Charts />
-              </div>
-            </div>
-          </div>
-
+          <QuizPerformance options={options} arr={arr} />
           <div className="col-xl-4 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
-              <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Traffic</h2>
-                <div className="">
-                  <div
-                    id="dd3button"
-                    onClick={() => {
-                      document
-                        .getElementById("dd3button")
-                        .classList.toggle("-is-dd-active");
-                      document
-                        .getElementById("dd3content")
-                        .classList.toggle("-is-el-visible");
-                    }}
-                    className="dropdown js-dropdown js-category-active"
-                  >
-                    <div
-                      className="dropdown__button d-flex items-center text-14 bg-white -dark-bg-dark-1 border-light rounded-8 px-20 py-10 text-14 lh-12"
-                      data-el-toggle=".js-category-toggle"
-                      data-el-toggle-active=".js-category-active"
-                    >
-                      <span className="js-dropdown-title">This Week</span>
-                      <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                    </div>
-
-                    <div
-                      id="dd3content"
-                      className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                    >
-                      <div className="text-14 y-gap-15 js-dropdown-list">
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Animation
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Design
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Illustration
-                          </a>
-                        </div>
-
-                        <div>
-                          <a href="#" className="d-block js-dropdown-link">
-                            Business
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-40 px-30">
-                <PieChartComponent />
-              </div>
-            </div>
+            <GradeIndicator
+              subjectList={subjectList}
+              gradeList={gradeList}
+              gradeEntries={gradeEntries}
+            />
           </div>
         </div>
 
@@ -242,14 +284,17 @@ export default function DashboardOne() {
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Recent Courses</h2>
-                <a href="#" className="text-14 text-purple-1 underline">
+                <h2 className="text-17 lh-1 fw-500">Recent house points</h2>
+                <Link
+                  href="/dshb-reviews"
+                  className="text-14 text-purple-1 underline"
+                >
                   View All
-                </a>
+                </Link>
               </div>
               <div className="py-30 px-30">
                 <div className="y-gap-40">
-                  {resentCourses.map((elm, i) => (
+                  {lastThreeDecisions.map((decision, i) => (
                     <div
                       key={i}
                       className={`d-flex ${i != 0 ? "border-top-light" : ""} `}
@@ -258,34 +303,24 @@ export default function DashboardOne() {
                         <Image
                           width={90}
                           height={80}
-                          src={elm.imageSrc}
-                          alt="image"
+                          src={decision.studentId.avatarSrc}
+                          alt="student-avatar"
                         />
                       </div>
                       <div className="ml-15">
-                        <h4 className="text-15 lh-16 fw-500">{elm.title}</h4>
+                        <h4 className="text-15 lh-16 fw-500">
+                          {decision.studentId.name}
+                        </h4>
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
-                          <div className="d-flex items-center">
-                            <Image
-                              width={16}
-                              height={16}
-                              className="size-16 object-cover mr-8"
-                              src={elm.authorImg}
-                              alt="icon"
-                            />
-                            <div className="text-14 lh-1">{elm.title}</div>
+                          <div className="text-14 lh-1">
+                            {new Date(decision.date).toLocaleDateString()}{" "}
+                            {/* Format the date */}
                           </div>
-                          <div className="d-flex items-center">
-                            <i className="icon-document text-16 mr-8"></i>
-                            <div className="text-14 lh-1">
-                              {elm.lessonCount} lesson
-                            </div>
+                          <div className="text-14 lh-1">
+                            Points: {decision.pointsAwarded}
                           </div>
-                          <div className="d-flex items-center">
-                            <i className="icon-clock-2 text-16 mr-8"></i>
-                            <div className="text-14 lh-1">{`${Math.floor(
-                              elm.duration / 60,
-                            )}h ${Math.floor(elm.duration % 60)}m`}</div>
+                          <div className="text-14 lh-1">
+                            Status: {decision.status}
                           </div>
                         </div>
                       </div>

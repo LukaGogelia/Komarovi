@@ -8,6 +8,8 @@ import Link from "next/link";
 
 export default function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+
   const handleCheckboxChange = (event) => {
     setIsYearly(event.target.checked);
   };
@@ -46,7 +48,11 @@ export default function Pricing() {
         <div className="row y-gap-30 justify-between pt-60 lg:pt-40">
           <div className="col-lg-4 col-md-6">
             <div className="priceCard -type-1 rounded-16 bg-white shadow-2">
-              <div className="priceCard__content py-45 px-60 xl:px-40 text-center">
+              <div
+                className={`priceCard__content py-45 px-60 xl:px-40 text-center  ${
+                  darkMode ? "-dark-bg-dark-2 rounded-16" : ""
+                }`}
+              >
                 <div className="priceCard__type text-18 lh-11 fw-500 text-dark-1">
                   {pricingData[0].type}
                 </div>
@@ -82,6 +88,7 @@ export default function Pricing() {
                   <Link
                     className="button px-40 py-20 fw-500 -purple-3 text-purple-1"
                     href="/courses-list-1"
+                    style={{ backgroundColor: "#140342" }}
                   >
                     Get Started Now
                   </Link>
@@ -92,8 +99,14 @@ export default function Pricing() {
 
           <div className="col-lg-4 col-md-6">
             <div className="priceCard -type-1 rounded-16 bg-white shadow-2">
-              <div className="priceCard__content py-45 px-60 xl:px-40 text-center">
-                <div className="priceCard__type text-18 lh-11 fw-500 text-dark-1">
+              <div
+                className={`priceCard__content py-45 px-60 xl:px-40 text-center  ${
+                  darkMode ? "-dark-bg-dark-2 rounded-16" : ""
+                }`}
+              >
+                <div
+                  className={`priceCard__type text-18 lh-11 fw-500 text-dark-1`}
+                >
                   {pricingData[1].type}
                 </div>
                 <div className="priceCard__price text-45 lh-11 fw-700 text-dark-1 mt-15">
@@ -133,6 +146,7 @@ export default function Pricing() {
                   <Link
                     className="button px-40 py-20 fw-500 -purple-3 text-purple-1"
                     href="/courses-list-1"
+                    style={{ backgroundColor: "#140342" }}
                   >
                     Get Started Now
                   </Link>
@@ -143,7 +157,11 @@ export default function Pricing() {
 
           <div className="col-lg-4 col-md-6">
             <div className="priceCard -type-1 rounded-16 bg-white shadow-2">
-              <div className="priceCard__content py-45 px-60 xl:px-40 text-center">
+              <div
+                className={`priceCard__content py-45 px-60 xl:px-40 text-center  ${
+                  darkMode ? "-dark-bg-dark-2 rounded-16" : ""
+                }`}
+              >
                 <div className="priceCard__type text-18 lh-11 fw-500 text-dark-1">
                   {pricingData[2].type}
                 </div>
@@ -184,6 +202,7 @@ export default function Pricing() {
                   <Link
                     className="button px-40 py-20 fw-500 -purple-3 text-purple-1"
                     href="/courses-list-1"
+                    style={{ backgroundColor: "#140342" }}
                   >
                     Get Started Now
                   </Link>

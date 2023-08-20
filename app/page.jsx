@@ -1,25 +1,30 @@
 import dynamic from "next/dynamic";
 
-import FindCourse from "@/components/homes/FindCourse";
-import LearningJourney from "@/components/common/LearningJourney";
-import LearningPathSeven from "@/components/homes/LearningPath/LearningPathSeven";
+const Statictis = dynamic(() =>
+  import("@/components/homes/Statistics/Statictis")
+);
+const BrandsTwo = dynamic(() => import("@/components/homes/brands/BrandsTwo"));
+const EventsSeven = dynamic(() =>
+  import("@/components/homes/events/EventsSeven")
+);
+const HeroSeven = dynamic(() => import("@/components/homes/heros/HeroSeven"));
 
-import Statictis from "@/components/homes/Statistics/Statictis";
-
-import Brands from "@/components/common/Brands";
-
-import CategoriesSeven from "@/components/homes/categories/CategoriesSeven";
-import CoursesSeven from "@/components/homes/courses/CoursesSeven";
-import EventsSeven from "@/components/homes/events/EventsSeven";
-import HeroSeven from "@/components/homes/heros/HeroSeven";
-import InstractorSeven from "@/components/homes/instractors/InstractorSeven";
-import Pricing from "@/components/common/Pricing";
-import Testimonials from "@/components/homes/testimonials/Testimonials";
-import FooterSeven from "@/components/layout/footers/FooterSeven";
-import HeaderSeven from "@/components/layout/headers/HeaderSeven";
+const Pricing = dynamic(() => import("@/components/common/Pricing"));
+const TestimonialsSix = dynamic(() =>
+  import("@/components/homes/testimonials/TestimonialsSix")
+);
+const FooterThree = dynamic(() =>
+  import("@/components/layout/footers/FooterThree")
+);
+const HeaderSeven = dynamic(() =>
+  import("@/components/layout/headers/HeaderSeven")
+);
 import React from "react";
-import Preloader from "@/components/common/Preloader";
-
+const Preloader = dynamic(() => import("@/components/common/Preloader"));
+const HomeHero = dynamic(() => import("@/components/homes/heros/HomeHero"));
+const CoursesSlider = dynamic(() =>
+  import("@/components/homes/courses/CoursesSlider")
+);
 export const metadata = {
   title:
     "Home-7 || Educrat - Professional LMS Online Education Course NextJS Template",
@@ -34,18 +39,19 @@ export default function page() {
       <HeaderSeven />
       <div className="content-wrapper  js-content-wrapper overflow-hidden">
         <HeroSeven />
-        <CoursesSeven />
-        <InstractorSeven />
-        <FindCourse />
-        <LearningPathSeven />
-        <LearningJourney />
-        <Testimonials backgroundComponent={"white"} />
+        <TestimonialsSix />
+        <Statictis />
+
+        <CoursesSlider />
+
         <EventsSeven />
         <Pricing />
-        <Brands />
-        <Statictis />
-        <CategoriesSeven />
-        <FooterSeven />
+        <HomeHero />
+        <div
+          style={{ backgroundColor: "white", height: "4rem", width: "100%" }}
+        />
+        <BrandsTwo />
+        <FooterThree />
       </div>
     </div>
   );

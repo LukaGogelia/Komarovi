@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CartToggle from "../component/CartToggle";
+const CartToggle = dynamic(() => import("../component/CartToggle"));
 import { HeaderExplore } from "../component/header-explore";
-import Menu from "../component/Menu";
-import MobileMenu from "../component/MobileMenu";
-import SearchToggle from "../component/SearchToggle";
+const Menu = dynamic(() => import("../component/Menu"));
+const MobileMenu = dynamic(() => import("../component/MobileMenu"));
+const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 export default function HeaderSeven() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleDarkmode = () => {
+    if (document) {
+      const htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.classList.toggle("-dark-mode");
+
+      // Trigger the custom event
+      const event = new Event("darkmodechange");
+      window.dispatchEvent(event);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +62,7 @@ export default function HeaderSeven() {
           </div>
 
           <div className="col-auto">
-            <Menu allClasses={"menu__nav text-dark-1 -is-active"} />
+            <Menu allClasses={"menu__nav -is-active"} />
             <MobileMenu
               activeMobileMenu={activeMobileMenu}
               setActiveMobileMenu={setActiveMobileMenu}
@@ -60,16 +72,24 @@ export default function HeaderSeven() {
           <div className="col-auto">
             <div className="header-right d-flex items-center">
               <div className="header-right__icons text-white d-flex items-center">
-                <SearchToggle color={"text-dark-1"} />
+                <button
+                  onClick={handleDarkmode}
+                  className="js-darkmode-toggle d-flex items-center justify-center size-50 rounded-16 "
+                  style={{ color: "#6440FB", paddingRight: "2rem" }}
+                >
+                  <i className="text-24 icon icon-night"></i>
+                </button>
+
+                <SearchToggle />
 
                 <CartToggle
                   parentClassess={"relative pl-30 sm:pl-15"}
-                  allClasses={"d-flex items-center text-dark-1"}
+                  allClasses={"d-flex items-center "}
                 />
 
                 <div className="d-none xl:d-block pl-30 sm:pl-15">
                   <button
-                    className="text-dark-1 items-center"
+                    className=" items-center"
                     onClick={() => setActiveMobileMenu(true)}
                     data-el-toggle=".js-mobile-menu-toggle"
                   >

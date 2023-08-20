@@ -11,56 +11,48 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Jan", value: 148 },
-  { name: "Feb", value: 100 },
-  { name: "Marc", value: 205 },
-  { name: "April", value: 110 },
-  { name: "May", value: 165 },
-  { name: "Jun", value: 145 },
-  { name: "July", value: 180 },
-  { name: "Agust", value: 156 },
-  { name: "Sept", value: 148 },
-  { name: "Oct", value: 220 },
-  { name: "Now", value: 180 },
-  { name: "Dec", value: 245 },
-];
-
-const Charts = () => {
+const Charts = ({ arr }) => {
   const chart = (interval) => (
-    <ResponsiveContainer height={250} width="100%">
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="" />
-        <XAxis tick={{ fontSize: 12 }} dataKey="name" interval={interval} />
-        <YAxis
-          tick={{ fontSize: 12 }}
-          domain={[0, 300]}
-          tickCount={7}
-          interval={interval}
-        />
-        <Tooltip />
-        <Line
-          type="monotone"
-          dataKey="value"
-          strokeWidth={2}
-          stroke="#336CFB"
-          fill="#336CFB"
-          activeDot={{ r: 8 }}
-        />
-        {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
-      </LineChart>
-    </ResponsiveContainer>
+    <div
+      style={{
+        marginLeft: "-1.5rem",
+        marginRight: "2rem",
+        marginTop: "3rem",
+      }}
+    >
+      <ResponsiveContainer height={250} width="100%">
+        <LineChart data={arr}>
+          <CartesianGrid strokeDasharray="" />
+          <XAxis tick={{ fontSize: 12 }} dataKey="name" interval={interval} />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            domain={[0, 100]}
+            tickCount={7}
+            interval={interval}
+          />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="math"
+            strokeWidth={2}
+            stroke="#336CFB"
+            fill="#336CFB"
+            activeDot={{ r: 8 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="physics"
+            strokeWidth={2}
+            stroke="#82ca9d"
+            fill="#82ca9d"
+            activeDot={{ r: 8 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 
-  return (
-    <>
-      {chart("preserveEnd")}
-      {/* {chart('preserveStart')}
-      {chart('preserveStartEnd')}
-      {chart('equidistantPreserveStart')}
-      {chart(1)} */}
-    </>
-  );
+  return <>{chart("preserveEnd")}</>;
 };
 
 export default Charts;

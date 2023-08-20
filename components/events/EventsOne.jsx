@@ -4,9 +4,12 @@ import React, { useState, useEffect } from "react";
 import { events, categories } from "@/data/events";
 import Pagination from "../common/Pagination";
 import Link from "next/link";
+
 export default function EventsOne() {
   const [pageItems, setPageItems] = useState([]);
   const [currentCategory, setCurrentCategory] = useState("All Categories");
+  const [darkMode, setDarkMode] = useState(true);
+
   useEffect(() => {
     if (currentCategory == "All Categories") {
       setPageItems(events);
@@ -42,15 +45,19 @@ export default function EventsOne() {
       <section className="layout-pt-md layout-pb-lg">
         <div className="container">
           <div className="tabs -pills js-tabs">
-            <div className="tabs__controls d-flex flex-wrap y-gap-20 justify-center x-gap-10 js-tabs-controls">
+            <div
+              className={`tabs__controls d-flex flex-wrap y-gap-20 justify-center x-gap-10 js-tabs-controls`}
+            >
               {categories.map((elm, i) => (
                 <div key={i} onClick={() => setCurrentCategory(elm)}>
                   <button
                     className={`tabs__button px-15 py-8 rounded-8 js-tabs-button ${
                       currentCategory == elm ? "is-active" : ""
-                    } `}
+                    } 
+                      `}
                     data-tab-target=".-tab-item-1"
                     type="button"
+                    style={{ color: "#6A7A8E" }}
                   >
                     {elm}
                   </button>
@@ -73,10 +80,19 @@ export default function EventsOne() {
                           />
                         </div>
 
-                        <div className="eventCard__bg bg-white">
+                        <div
+                          className={`eventCard__bg bg-white ${
+                            darkMode
+                              ? "-dark-bg-dark-1 -dark-border-white-10"
+                              : ""
+                          }`}
+                        >
                           <div className="eventCard__content y-gap-10">
                             <div className="eventCard__inner">
-                              <h4 className="eventCard__title text-17 fw-500">
+                              <h4
+                                className="eventCard__title text-17"
+                                style={{ color: "#6A7A8E", fontWeight: "600" }}
+                              >
                                 <Link
                                   className="linkCustom"
                                   href={`/events/${elm.id}`}

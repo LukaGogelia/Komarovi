@@ -224,12 +224,10 @@ export default function ShopCheckOut() {
                       }  px-30`}
                     >
                       <div className="py-15 text-grey">
-                      <Link
-                          className="linkCustom"
-                          href={`/shop/${elm.id}`}
-                        >
+                        <Link className="linkCustom" href={`/shop/${elm.id}`}>
                           {elm.name}{" "}
-                        </Link> x {elm.quantity}
+                        </Link>{" "}
+                        x {elm.quantity}
                       </div>
                       <div className="py-15 text-grey">
                         ${(elm.price * elm.quantity).toFixed(2)}
@@ -322,7 +320,10 @@ export default function ShopCheckOut() {
                 </div>
 
                 <div className="mt-30">
-                  <button className="button -md -accent col-12 -uppercase text-white">
+                  <button
+                    className="button -md -accent col-12 -uppercase"
+                    style={{ color: "#6A7A8E" }}
+                  >
                     Place order
                   </button>
                 </div>

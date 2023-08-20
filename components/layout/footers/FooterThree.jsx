@@ -1,12 +1,16 @@
 import React from "react";
-import Links from "../component/Links";
-import Socials from "@/components/common/Socials";
-import FooterLinks from "../component/FooterLinks";
+const Links = dynamic(() => import("../component/Links"));
+const Socials = dynamic(() => import("@/components/common/Socials"));
+const FooterLinks = dynamic(() => import("../component/FooterLinks"));
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 export default function FooterThree() {
   return (
-    <footer className="footer -type-5 pt-60">
+    <footer
+      className="footer -type-5 pt-60"
+      style={{ backgroundColor: "#FFFFFF" }}
+    >
       <div className="container">
         <div className="row y-gap-30 pb-60">
           <div className="col-xl-4 col-lg-5 col-md-6">
@@ -20,7 +24,9 @@ export default function FooterThree() {
             </div>
 
             <div className="mt-30">
-              <div className="text-17 text-dark-1">Call Us</div>
+              <div className="text-17" style={{ color: "black" }}>
+                Call Us
+              </div>
               <div className="text-17 lh-1 fw-500 text-purple-1 mt-5">
                 800 388 80 90
               </div>
@@ -44,9 +50,7 @@ export default function FooterThree() {
             </div>
           </div>
 
-          <FooterLinks
-            allClasses={"text-17 fw-500 text-dark-1 uppercase mb-25"}
-          />
+          <FooterLinks allClasses={"text-17 fw-500 uppercase mb-25"} />
         </div>
 
         <div className="py-30 border-top-light">

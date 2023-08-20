@@ -1,8 +1,14 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { counters } from "@/data/count";
 export default function Statictis() {
+  const [darkMode, setDarkMode] = useState(true);
   return (
-    <section className="layout-pt-lg layout-pb-lg bg-light-7">
+    <section
+      className={`layout-pt-lg layout-pb-lg bg-light-7  ${
+        darkMode ? "-dark-bg-dark-1 " : ""
+      }`}
+    >
       <div className="container">
         <div className="row justify-center text-center">
           <div className="col-xl-6 col-lg-8 col-md-10">

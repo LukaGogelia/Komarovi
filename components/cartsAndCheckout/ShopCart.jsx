@@ -112,12 +112,9 @@ export default function ShopCart() {
                           ></div>
                         </div>
                         <div className="fw-500 text-dark-1 ml-30">
-                        <Link
-                          className="linkCustom"
-                          href={`/shop/${elm.id}`}
-                        >
-                          {elm.name}{" "}
-                        </Link>
+                          <Link className="linkCustom" href={`/shop/${elm.id}`}>
+                            {elm.name}{" "}
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -199,7 +196,11 @@ export default function ShopCart() {
                             type="text"
                             placeholder="Coupon Code"
                           />
-                          <button className="text-black fw-500" type="submit">
+                          <button
+                            className="fw-500"
+                            type="submit"
+                            style={{ color: "#6A7A8E" }}
+                          >
                             Apply coupon
                           </button>
                         </div>

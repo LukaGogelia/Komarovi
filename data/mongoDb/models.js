@@ -129,9 +129,9 @@ const GradeEntry =
   mongoose.models.GradeEntry || mongoose.model("GradeEntry", GradeEntrySchema);
 
 // Exam Entry model
-const ExamEntrySchema = new Schema({
+const QuizEntrySchema = new Schema({
   studentId: Schema.Types.ObjectId,
-  examId: Schema.Types.ObjectId,
+  quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
   openQuestionPoints: Number,
   closedQuestionPoints: Number,
   totalPoints: Number,
@@ -140,12 +140,16 @@ const ExamEntrySchema = new Schema({
   pass: Boolean,
 });
 
-const ExamEntry =
-  mongoose.models.ExamEntry || mongoose.model("ExamEntry", ExamEntrySchema);
+const QuizEntry =
+  mongoose.models.QuizEntry || mongoose.model("QuizEntry", QuizEntrySchema);
 
 // Exam model
-const ExamSchema = new Schema({
-  subject: String,
+const QuizSchema = new Schema({
+  subject: {
+    type: String,
+    enum: ["physics", "math"],
+    required: true,
+  },
   gradeLevel: Number,
   totalPoints: Number,
   passPoints: Number,
@@ -157,13 +161,31 @@ const ExamSchema = new Schema({
     count: Number,
     pointsEach: Number,
   },
-  date: Date,
   type: String,
   participants: Number,
   passCount: Number,
+  academicYear: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return (
+          /^\d{4}-\d{4}$/.test(v) &&
+          parseInt(v.substr(5, 4)) - parseInt(v.substr(0, 4)) === 1
+        );
+      },
+      message: (props) => `${props.value} is not a valid academic year format!`,
+    },
+  },
+  quizNumber: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 10,
+  },
 });
 
-const Exam = mongoose.models.Exam || mongoose.model("Exam", ExamSchema);
+const Quiz = mongoose.models.Quiz || mongoose.model("Quiz", QuizSchema);
 
 const PointsCommissionDecisionSchema = new Schema({
   studentId: {
@@ -207,8 +229,9 @@ module.exports = {
   Club,
   House,
   GradeEntry,
-  ExamEntry,
-  Exam,
+  QuizEntry,
+  Quiz,
+  News,
   PointsCommissionDecision,
   News,
   Category,

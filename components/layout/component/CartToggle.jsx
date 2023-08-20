@@ -4,9 +4,10 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { useContextElement } from "@/context/Context";
 import { useState, useEffect } from "react";
-import ShopCart from "./ShopCart";
-import CourseCart from "./CourseCart";
-import EventCart from "./EventCart";
+const ShopCart = dynamic(() => import("./ShopCart"));
+const CourseCart = dynamic(() => import("./CourseCart"));
+const EventCart = dynamic(() => import("./EventCart"));
+import dynamic from "next/dynamic";
 
 const CartToggle = ({ allClasses, parentClassess }) => {
   const { cartProducts, cartCourses, cartEvents } = useContextElement();
@@ -19,11 +20,11 @@ const CartToggle = ({ allClasses, parentClassess }) => {
   useEffect(() => {
     menuList.forEach((elm) => {
       elm?.links?.forEach((elm2) => {
-        if (elm2.href?.split('/')[1] == pathname?.split('/')[1]) {
+        if (elm2.href?.split("/")[1] == pathname?.split("/")[1]) {
           setMenuItem(elm.title);
         } else {
           elm2?.links?.map((elm3) => {
-            if (elm3.href?.split('/')[1] == pathname?.split('/')[1]) {
+            if (elm3.href?.split("/")[1] == pathname?.split("/")[1]) {
               setMenuItem(elm.title);
               setSubmenu(elm2.title);
             }
@@ -37,7 +38,7 @@ const CartToggle = ({ allClasses, parentClassess }) => {
     <>
       <div className={parentClassess ? parentClassess : ""}>
         <button
-          style={{ position: "relative" }}
+          style={{ position: "relative", color: "#6440FB" }}
           onClick={() => setActiveCart((pre) => !pre)}
           className={`${allClasses ? allClasses : ""}`}
           data-el-toggle=".js-cart-toggle"

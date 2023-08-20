@@ -1,12 +1,17 @@
-import Preloader from "@/components/common/Preloader";
-import DashboardOne from "@/components/dashboard/DashboardOne";
-import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+const Preloader = dynamic(() => import("@/components/common/Preloader"));
+const DashboardOne = dynamic(() =>
+  import("@/components/dashboard/DashboardOne")
+);
+const Sidebar = dynamic(() => import("@/components/dashboard/Sidebar"));
+const HeaderDashboard = dynamic(() =>
+  import("@/components/layout/headers/HeaderDashboard")
+);
+import dynamic from "next/dynamic";
 import React from "react";
 
 export const metadata = {
   title:
-    "Cashboard || Educrat - Professional LMS Online Education Course NextJS Template",
+    "Dashboard || Educrat - Professional LMS Online Education Course NextJS Template",
   description:
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
