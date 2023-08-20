@@ -1,4 +1,3 @@
-import { states } from "@/data/dashboard";
 import { teamMembers } from "@/data/instractors";
 import { notifications } from "@/data/notifications";
 import React from "react";
@@ -14,11 +13,30 @@ import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 import { GradeEntry } from "@/data/mongoDb/models";
+import { User } from "@/data/mongoDb/models";
+
 export async function fetchGradesData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  const userList = await User.find({
+    _id: "64e22cd5063cdf6c0a812386",
+  });
+
+  let personalPoints = 0; // Default value
+  let obtainedPointsForHouse = 0; // Default value
+
+  if (
+    userList &&
+    userList.length > 0 &&
+    userList[0].roles.includes("student")
+  ) {
+    const points = await userList[0].getStudentPoints();
+    personalPoints = points.personalPoints;
+    obtainedPointsForHouse = points.obtainedPointsForHouse;
+  }
 
   // Find the grade entries
   const gradeEntries = await GradeEntry.find({
@@ -42,6 +60,33 @@ export async function fetchGradesData() {
     "ten",
   ];
 
+  const states = [
+    {
+      id: 1,
+      title: "Obtained house points",
+      value: obtainedPointsForHouse,
+      iconClass: "icon-coupon",
+    },
+    {
+      id: 2,
+      title: "persinal points",
+      value: personalPoints,
+      iconClass: "icon-play-button",
+    },
+    {
+      id: 3,
+      title: "Total Students",
+      value: 129786,
+      iconClass: "icon-graduate-cap",
+    },
+    {
+      id: 4,
+      title: "Total Instructors",
+      value: 22786,
+      iconClass: "icon-online-learning",
+    },
+  ];
+
   // Count the occurrences of each grade in the entries
   gradeEntries.forEach((entry) => {
     const grade = entry.grade;
@@ -59,7 +104,12 @@ export async function fetchGradesData() {
   // Close the connection
   await mongoose.disconnect();
 
-  return { subjectList, gradeList, gradeEntries };
+  return {
+    subjectList,
+    gradeList,
+    gradeEntries,
+    states,
+  };
 }
 
 export async function useFetchQuizData() {
@@ -138,11 +188,13 @@ export async function useFetchQuizData() {
 
   return arr;
 }
+
 export default async function DashboardOne() {
   const { lastThreeDecisions } = await fetchData();
   const arr = await useFetchQuizData();
 
-  const { subjectList, gradeList, gradeEntries } = await fetchGradesData();
+  const { subjectList, gradeList, gradeEntries, states } =
+    await fetchGradesData();
 
   const academicYearsSet = new Set();
   arr.forEach((item) => {
@@ -176,7 +228,7 @@ export default async function DashboardOne() {
           }}
         >
           <div
-            className=" y-gap-30 col-lg-8 col-md-12 col-sm-12 x-gap-30"
+            className=" y-gap-30 col-lg-8 col-md-10 col-sm-12 col-xs-12 x-gap-30"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -188,15 +240,14 @@ export default async function DashboardOne() {
                 key={i}
                 className="responsive-card col-lg-6 col-md-8 col-sm-12 "
               >
-                <div className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4">
+                <div
+                  className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4 col-12"
+                  style={{ minHeight: "11rem" }}
+                >
                   <div>
                     <div className="lh-1 fw-500">{elm.title}</div>
                     <div className="text-24 lh-1 fw-700 text-dark-1 mt-20">
-                      ${elm.value}
-                    </div>
-                    <div className="lh-1 mt-25">
-                      <span className="text-purple-1">${elm.new}</span> New
-                      Sales
+                      {elm.value}
                     </div>
                   </div>
                   <i className={`text-40 ${elm.iconClass} text-purple-1`}></i>
@@ -300,16 +351,22 @@ export default async function DashboardOne() {
                       className={`d-flex ${i != 0 ? "border-top-light" : ""} `}
                     >
                       <div className="shrink-0">
-                        <Image
-                          width={90}
-                          height={80}
-                          src={decision.studentId.avatarSrc}
-                          alt="student-avatar"
-                        />
+                        {decision.studentId && decision.studentId.avatarSrc ? (
+                          <img
+                            width={90}
+                            height={80}
+                            src={decision.studentId.avatarSrc}
+                            alt="student-avatar"
+                          />
+                        ) : (
+                          <div>No Avatar</div>
+                        )}
                       </div>
                       <div className="ml-15">
                         <h4 className="text-15 lh-16 fw-500">
-                          {decision.studentId.name}
+                          {decision.studentId && decision.studentId.name
+                            ? decision.studentId.name
+                            : "No Name"}
                         </h4>
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
                           <div className="text-14 lh-1">

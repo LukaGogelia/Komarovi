@@ -58,14 +58,62 @@ const UserSchema = new Schema({
   firstName: String,
   lastName: String,
   email: String,
-  password: String, // Ensure to hash this before saving
+  password: String,
   phone: String,
-  nationalIdNumber: String, // New field for national ID number
+  nationalIdNumber: String,
   roles: [String],
   houseId: Schema.Types.ObjectId,
   clubIds: [Schema.Types.ObjectId],
   bookmarkedNews: [{ type: Schema.Types.ObjectId, ref: "News" }],
+  classesId: [
+    {
+      classId: Schema.Types.ObjectId, // Class ID, can be one of classTaught, classParticipant, or classTakeCareOf
+      academicYear: { type: String, ref: "Quizzes" }, // Academic year from the Quizzes schema
+    },
+  ],
+  classTaught: {
+    type: [Schema.Types.ObjectId], // Array of class IDs
+    validate: {
+      validator: function () {
+        return this.roles.includes("teacher"); // Only valid if role is 'teacher'
+      },
+      message: "Only teachers can have classes taught.",
+    },
+  },
+  classTakeCareOf: {
+    type: Schema.Types.ObjectId, // Single class ID
+    validate: {
+      validator: function () {
+        return this.roles.includes("teacher"); // Only valid if role is 'teacher'
+      },
+      message: "Only teachers can take care of a class.",
+    },
+  },
+  classParticipant: {
+    type: [Schema.Types.ObjectId], // Array of class IDs
+    validate: {
+      validator: function () {
+        return this.roles.includes("student"); // Only valid if role is 'student'
+      },
+      message: "Only students can be participants in a class.",
+    },
+  },
 });
+
+UserSchema.methods.getStudentPoints = async function () {
+  const PointsCommissionDecision = mongoose.model("PointsCommissionDecision");
+
+  const points = await PointsCommissionDecision.find({ studentId: this._id });
+
+  const totalPoints = points.reduce(
+    (sum, decision) => sum + decision.pointsAwarded,
+    0
+  );
+  const personalPoints = totalPoints * 0.15;
+  const obtainedPointsForHouse = totalPoints * 0.85;
+
+  return { personalPoints, obtainedPointsForHouse };
+};
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
@@ -233,7 +281,6 @@ module.exports = {
   Quiz,
   News,
   PointsCommissionDecision,
-  News,
   Category,
   RegistrationCode,
   Family,
