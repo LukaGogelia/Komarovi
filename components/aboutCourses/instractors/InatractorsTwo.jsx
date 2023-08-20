@@ -2,19 +2,11 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import {
-  categories,
-  rating,
-  sortingOptions,
-  teamMembers,
-} from "@/data/instractors";
+import { categories, sortingOptions } from "@/data/instractors";
 import PaginationTwo from "@/components/common/PaginationTwo";
-import Star from "@/components/common/Star";
 import Link from "next/link";
-export default function InatractorsTwo() {
+export default function InatractorsTwo({ teamMembers }) {
   const [categoryOpen, setCategoryOpen] = useState(true);
-  const [ratingOpen, setRatingOpen] = useState(true);
-  const [currentCategory, setCurrentCategory] = useState("All Categories");
 
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterRatingRange, setFilterRatingRange] = useState([]);
@@ -31,7 +23,7 @@ export default function InatractorsTwo() {
     let refItems = [];
     if (filterCategories.length > 0) {
       const filtered = teamMembers.filter((elm) =>
-        filterCategories.includes(elm.category),
+        filterCategories.includes(elm.category)
       );
       refItems = filtered;
     } else {
@@ -44,13 +36,13 @@ export default function InatractorsTwo() {
       const filtered = refItems.filter(
         (elm) =>
           elm.rating >= filterRatingRange[0] &&
-          elm.rating <= filterRatingRange[1],
+          elm.rating <= filterRatingRange[1]
       );
       filteredArrays = [...filteredArrays, filtered];
     }
 
     const commonItems = refItems.filter((item) =>
-      filteredArrays.every((array) => array.includes(item)),
+      filteredArrays.every((array) => array.includes(item))
     );
     setFilteredData(commonItems);
     setPageNumber(1);
@@ -61,11 +53,11 @@ export default function InatractorsTwo() {
       setSortedFilteredData(filteredData);
     } else if (currentSortingOption == "Rating (asc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => a.rating - b.rating),
+        [...filteredData].sort((a, b) => a.rating - b.rating)
       );
     } else if (currentSortingOption == "Rating (dsc)") {
       setSortedFilteredData(
-        [...filteredData].sort((a, b) => b.rating - a.rating),
+        [...filteredData].sort((a, b) => b.rating - a.rating)
       );
     }
   }, [currentSortingOption, filteredData]);
@@ -183,7 +175,7 @@ export default function InatractorsTwo() {
                                   (
                                   {
                                     teamMembers.filter(
-                                      (itm) => itm.category == elm.title,
+                                      (itm) => itm.category == elm.title
                                     ).length
                                   }
                                   )
@@ -199,108 +191,6 @@ export default function InatractorsTwo() {
                             >
                               Show more
                             </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="sidebar__item">
-                  <div className="accordion js-accordion">
-                    <div
-                      className={`accordion__item js-accordion-item-active ${
-                        ratingOpen ? "is-active" : ""
-                      } `}
-                    >
-                      <div
-                        className="accordion__button items-center"
-                        onClick={() => setRatingOpen((pre) => !pre)}
-                      >
-                        <h5 className="sidebar__title">Ratings</h5>
-
-                        <div className="accordion__icon">
-                          <div className="icon icon-chevron-down"></div>
-                          <div className="icon icon-chevron-up"></div>
-                        </div>
-                      </div>
-
-                      <div
-                        className="accordion__content"
-                        style={ratingOpen ? { maxHeight: "350px" } : {}}
-                      >
-                        <div className="accordion__content__inner">
-                          <div className="sidebar-checkbox">
-                            <div
-                              onClick={() => setFilterRatingRange([])}
-                              className="sidebar-checkbox__item"
-                            >
-                              <div className="form-radio mr-10">
-                                <div className="radio">
-                                  <input
-                                    type="radio"
-                                    checked={
-                                      filterRatingRange.length < 1
-                                        ? "checked"
-                                        : ""
-                                    }
-                                  />
-                                  <div className="radio__mark">
-                                    <div className="radio__icon"></div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="sidebar-checkbox__title d-flex items-center">
-                                <div className="d-flex x-gap-5 pr-10">
-                                  <Star star={5} textSize={"text-11"} />
-                                </div>
-                                All
-                              </div>
-                              <div className="sidebar-checkbox__count"></div>
-                            </div>
-                            {rating.map((elm, i) => (
-                              <div
-                                key={i}
-                                onClick={() =>
-                                  handleFilterRatingRange(elm.range)
-                                }
-                                className="sidebar-checkbox__item cursor"
-                              >
-                                <div className="form-radio mr-10">
-                                  <div className="radio">
-                                    <input
-                                      type="radio"
-                                      checked={
-                                        filterRatingRange.join(" ").trim() ==
-                                        elm.range.join(" ").trim()
-                                          ? "checked"
-                                          : ""
-                                      }
-                                    />
-                                    <div className="radio__mark">
-                                      <div className="radio__icon"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="sidebar-checkbox__title d-flex items-center">
-                                  <div className="d-flex x-gap-5 pr-10">
-                                    <Star star={5} textSize={"text-11"} />
-                                  </div>
-                                  {elm.text}
-                                </div>
-                                <div className="sidebar-checkbox__count">
-                                  (
-                                  {
-                                    teamMembers.filter(
-                                      (itm) =>
-                                        itm.rating >= elm.range[0] &&
-                                        itm.rating <= elm.range[1],
-                                    ).length
-                                  }
-                                  )
-                                </div>
-                              </div>
-                            ))}
                           </div>
                         </div>
                       </div>
@@ -361,7 +251,7 @@ export default function InatractorsTwo() {
                               key={i}
                               onClick={() => {
                                 setCurrentSortingOption((pre) =>
-                                  pre == elm ? "Default" : elm,
+                                  pre == elm ? "Default" : elm
                                 );
                                 document
                                   .getElementById("dd33button")

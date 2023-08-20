@@ -28,6 +28,14 @@ const RegistrationCodeSchema = new Schema({
     },
   ],
 });
+const SubjectSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+});
+
+const Subject = mongoose.model("Subject", SubjectSchema);
 
 const RegistrationCode =
   mongoose.models.RegistrationCode ||
@@ -97,6 +105,19 @@ const UserSchema = new Schema({
       },
       message: "Only students can be participants in a class.",
     },
+    socialProfile: [
+      {
+        icon: {
+          type: String,
+          enum: ["icon-facebook", "icon-instagram"],
+          required: false, // Optional field
+        },
+        url: {
+          type: String,
+          required: false, // Optional field
+        },
+      },
+    ],
   },
 });
 
@@ -283,5 +304,6 @@ module.exports = {
   PointsCommissionDecision,
   Category,
   RegistrationCode,
+  Subject,
   Family,
 };
