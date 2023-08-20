@@ -2,12 +2,65 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
+// RegistrationCode model
+const RegistrationCodeSchema = new Schema({
+  code: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  family: {
+    type: Schema.Types.ObjectId,
+    ref: "Family",
+    required: true,
+  },
+  expirationDate: {
+    type: Date,
+    default: function () {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() + 9);
+      return currentDate;
+    },
+  },
+  roles: [
+    {
+      type: String,
+    },
+  ],
+});
+
+const RegistrationCode =
+  mongoose.models.RegistrationCode ||
+  mongoose.model("RegistrationCode", RegistrationCodeSchema);
+
+const FamilySchema = new Schema({
+  mother: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+  father: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+  children: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+});
+
+const Family = mongoose.models.Family || mongoose.model("Family", FamilySchema);
+
 const UserSchema = new Schema({
   firstName: String,
   lastName: String,
   email: String,
-  password: String, // Ensure to hash
+  password: String, // Ensure to hash this before saving
   phone: String,
+  nationalIdNumber: String, // New field for national ID number
   roles: [String],
   houseId: Schema.Types.ObjectId,
   clubIds: [Schema.Types.ObjectId],
@@ -159,4 +212,6 @@ module.exports = {
   PointsCommissionDecision,
   News,
   Category,
+  RegistrationCode,
+  Family,
 };
