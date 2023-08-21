@@ -10,6 +10,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 export default function Assignment() {
   const [users, setUsers] = useState([]);
   const [ddOpen, setDdOpen] = useState(false);
+  const [familyAdded, setFamilyAdded] = useState(false);
 
   const roles = {
     "Add Teacher": "Teacher",
@@ -20,12 +21,62 @@ export default function Assignment() {
   };
 
   const options = [
-    { label: "Banking" },
-    { label: "Digital & Creative" },
-    { label: "Retail" },
-    { label: "Designer" },
-    { label: "Developer" },
+    { label: "Parent" },
+    { label: "Student" },
+    { label: "Teacher" },
+    { label: "Admin" },
+    { label: "Club President" },
+    { label: "Care Manager" },
+    { label: "House Mentor" },
   ];
+
+  const addFamily = () => {
+    if (familyAdded) {
+      alert("A family has already been added to this form.");
+      return;
+    }
+
+    setUsers([
+      ...users,
+      {
+        role: "parent",
+        text: "Father",
+        visible: true,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
+      {
+        role: "parent",
+        text: "Mother",
+        visible: true,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
+      {
+        role: "student",
+        text: "Child",
+        visible: true,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
+    ]);
+    setFamilyAdded(true);
+  };
 
   const updateUserDetails = (index, updatedFields) => {
     setUsers((prevUsers) =>
@@ -110,14 +161,19 @@ export default function Assignment() {
         </div>
 
         <div className="row y-gap-30">
-          <div className="col-xl-12">
+          <div className="col-12 ">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex items-center py-20 px-30 border-bottom-light">
                 <h2 className="text-17 lh-1 fw-500">Page Head</h2>
               </div>
 
               <div className="py-30 px-30">
-                <Buttons roles={roles} handleButtonClick={handleButtonClick} />
+                <Buttons
+                  roles={roles}
+                  handleButtonClick={handleButtonClick}
+                  addFamily={addFamily}
+                  className="my-7"
+                />
 
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="droppable">

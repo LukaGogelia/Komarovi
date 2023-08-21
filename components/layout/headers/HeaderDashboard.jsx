@@ -202,16 +202,6 @@ export default function HeaderDashboard() {
 
                 <div className="d-flex items-center sm:d-none">
                   <div className="relative">
-                    <div className="form-switch d-flex items-center">
-                      <div className="switch">
-                        <input type="checkbox" />
-                        <span className="switch__slider"></span>
-                      </div>
-                      <div className="text-13 lh-1 text-dark-1 ml-10">ქარ</div>
-                    </div>
-                  </div>
-
-                  <div className="relative">
                     <button
                       onClick={handleDarkmode}
                       className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"

@@ -2734,7 +2734,8 @@ select,
 input[type="text"],
 input[type="search"],
 textarea,
-input[type="email"] {
+input[type="email"],
+input[type="date"] {
   border: 0;
 }
 
@@ -2753,7 +2754,9 @@ form.contact-form input[type="text"],
 form.contact-form input[type="password"],
 form.contact-form input[type="search"],
 form.contact-form textarea,
-form.contact-form input[type="email"] {
+form.contact-form input[type="email"],
+form.contact-form input[type="date"] {
+  /* Corrected by adding a comma here */
   border: 0;
   outline: none;
   width: 100%;
@@ -2766,12 +2769,18 @@ form.contact-form input[type="email"] {
   transition: all 0.15s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+form.contact-form input[type="date"] {
+  /* Specific styling for date input */
+  margin-left: 0px; /* Adjust this value to fix the left margin */
+}
+
 form.contact-form select:focus,
 form.contact-form input[type="text"]:focus,
 form.contact-form input[type="password"]:focus,
 form.contact-form input[type="search"]:focus,
 form.contact-form textarea:focus,
-form.contact-form input[type="email"]:focus {
+form.contact-form input[type="email"]:focus,
+form.contact-form input[type="date"]:focus {
   outline: none;
 }
 
@@ -2780,6 +2789,7 @@ form.contact-form input[type="text"].-border-dark,
 form.contact-form input[type="password"].-border-dark,
 form.contact-form input[type="search"].-border-dark,
 form.contact-form textarea.-border-dark,
+form.contact-form input[type="date"].-border-dark,
 form.contact-form input[type="email"].-border-dark {
   border: 1px solid rgba(0, 0, 0, 0.15) !important;
 }
@@ -2805,6 +2815,7 @@ form.contact-form.-light select,
 form.contact-form.-light input[type="text"],
 form.contact-form.-light input[type="search"],
 form.contact-form.-light textarea,
+form.contact-form.-light input[type="date"],
 form.contact-form.-light input[type="email"] {
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.6);
@@ -15761,7 +15772,6 @@ table.table td {
   background: white;
 }
 
-
 /* Your existing CSS file */
 .-dark-mode .tox-tinymce {
   background-color: #333; /* Or any dark color */
@@ -15937,4 +15947,27 @@ table.table td {
 
 .react-datepicker__navigation--next:before {
   border-left-color: rgb(117, 84, 253);
+}
+
+.card-input::placeholder {
+  color: var(--color-purple-1) !important;
+}
+
+.card-input {
+  color: #6440fb !important;
+  /* border-color: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid; */
+}
+
+html.-dark-mode .card-input {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+html.-dark-mode::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.hamburger-line {
+  width: 20px;
+  border-bottom: 2px solid #6440fb;
 }
