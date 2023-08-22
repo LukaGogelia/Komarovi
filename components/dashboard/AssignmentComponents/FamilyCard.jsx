@@ -34,7 +34,7 @@ const FamilyCard = ({
             ...provided.draggableProps.style,
           }}
         >
-          <h3>Family {familyIndex + 1}</h3>
+          <h3>Family</h3>
           {familyUsers.map((user, userIndex) => {
             console.log("user:" + user, userIndex);
             return (
