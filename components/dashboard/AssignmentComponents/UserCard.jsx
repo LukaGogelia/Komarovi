@@ -14,15 +14,14 @@ const UserCard = ({
   user,
   index,
   ddElements,
-
   options,
-
   toggleExpandUser,
   handleselectedElm,
   handleRemoveIndividual,
   updateUser,
   handleRemoveUser,
   familyIndex,
+  toggleExpandFamilyUser,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
 
@@ -78,8 +77,11 @@ const UserCard = ({
                     </span>
                   </div>
                   <HamburgerIcon
-                    style
-                    onClick={() => toggleExpandUser(index)}
+                    onClick={() => {
+                      console.log("mamluk " + index);
+                      if (toggleExpandFamilyUser) toggleExpandFamilyUser(index);
+                      else toggleExpandUser(index);
+                    }}
                   />
                 </div>
 
@@ -260,7 +262,15 @@ const UserCard = ({
                     : ""}
                   {user.nationalId ? ", " + user.nationalId : ""}
                 </div>
-                <HamburgerIcon onClick={() => toggleExpandUser(index)} />
+                <div>
+                  <HamburgerIcon
+                    onClick={() => {
+                      console.log("mamluk " + index);
+                      if (toggleExpandFamilyUser) toggleExpandFamilyUser(index);
+                      else toggleExpandUser(index);
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>
