@@ -14,17 +14,21 @@ const UserCard = ({
   user,
   index,
   ddElements,
+
   options,
-  handleRemoveUser,
+
   toggleExpandUser,
   handleselectedElm,
+  handleRemoveIndividual,
   updateUser,
+  handleRemoveUser,
+  familyIndex,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
 
   return (
     <>
-      <div>
+      <div className="text-dark-1" style={{ fontSize: "1.3rem" }}>
         <strong>{user.text}</strong>
       </div>
       <Draggable key={index} draggableId={`draggable-${index}`} index={index}>
@@ -33,7 +37,7 @@ const UserCard = ({
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className="user-card bg-purple-3 card-input mt-30"
+            className="user-card bg-purple-3 card-input"
             style={{
               border: "1px solid #ccc",
               borderRadius: "15px",
@@ -62,7 +66,13 @@ const UserCard = ({
                         stroke: "1px black",
                         marginBottom: "15px",
                       }}
-                      onClick={() => handleRemoveUser(index)}
+                      onClick={() => {
+                        if (handleRemoveIndividual) {
+                          handleRemoveIndividual(familyIndex, index);
+                        } else {
+                          handleRemoveUser(index);
+                        }
+                      }}
                     >
                       ❌ Remove User
                     </span>
@@ -149,10 +159,14 @@ const UserCard = ({
                     />
                   </div>
                   <div
-                    className="input-row"
-                    style={{ marginTop: "10px", color: "#6440fb" }}
+                    className="date-input-wrapper"
+                    style={{ position: "relative" }}
                   >
+                    <label htmlFor="birthDate" className="mt-3 ms-3 mb-1">
+                      Birth Date:
+                    </label>
                     <input
+                      id="birthDate"
                       className="card-input"
                       value={user.birthDate}
                       onChange={(e) =>
@@ -161,6 +175,7 @@ const UserCard = ({
                       style={{
                         width: "100%",
                         borderColor: "rgba(255, 255, 255, 0.6) !important",
+                        padding: "20px 10px",
                       }}
                       required
                       type="date"

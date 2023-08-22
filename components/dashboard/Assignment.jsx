@@ -1,5 +1,5 @@
-"use client";
 // არ არის შევსებული ქართულად არის გასაკეთებელი
+"use client";
 import React, { useState } from "react";
 import FooterNine from "../layout/footers/FooterNine";
 import PageLinksTwo from "../common/PageLinksTwo";
@@ -36,12 +36,11 @@ export default function Assignment() {
       return;
     }
 
-    setUsers([
-      ...users,
+    const familyMembers = [
       {
         role: "parent",
         text: "Father",
-        visible: true,
+        visible: false,
         ddElements: [],
         firstName: "",
         lastName: "",
@@ -53,7 +52,7 @@ export default function Assignment() {
       {
         role: "parent",
         text: "Mother",
-        visible: true,
+        visible: false,
         ddElements: [],
         firstName: "",
         lastName: "",
@@ -65,7 +64,7 @@ export default function Assignment() {
       {
         role: "student",
         text: "Child",
-        visible: true,
+        visible: false,
         ddElements: [],
         firstName: "",
         lastName: "",
@@ -73,6 +72,14 @@ export default function Assignment() {
         birthDate: "",
         phone: "",
         email: "",
+      },
+    ];
+
+    setUsers([
+      ...users,
+      {
+        isFamily: true,
+        members: familyMembers,
       },
     ]);
     setFamilyAdded(true);
@@ -91,10 +98,32 @@ export default function Assignment() {
     );
   };
 
+  const handleRemoveIndividual = (userIndex, memberIndex) => {
+    setUsers((prevUsers) => {
+      return prevUsers
+        .map((user, index) => {
+          if (index !== userIndex || !user.isFamily) return user;
+
+          const updatedMembers = [...user.members];
+          updatedMembers.splice(memberIndex, 1);
+
+          if (updatedMembers.length === 0) {
+            setFamilyAdded(false);
+            return null; // return null to remove this family from the users array
+          }
+
+          return {
+            ...user,
+            members: updatedMembers,
+          };
+        })
+        .filter(Boolean); // This will remove any null values from the users array
+    });
+  };
+
   const handleRemoveUser = (indexToRemove) => {
-    setUsers((prevUsers) =>
-      prevUsers.filter((_, index) => index !== indexToRemove)
-    );
+    const updatedUsers = users.filter((user, index) => index !== indexToRemove);
+    setUsers(updatedUsers);
   };
 
   const handleselectedElm = (index, label) => {
@@ -134,10 +163,16 @@ export default function Assignment() {
     ]);
   };
 
-  const toggleExpandUser = (index) => {
-    setUsers(
-      users.map((em, i) => (i === index ? { ...em, visible: !em.visible } : em))
-    );
+  const toggleExpandUser = (userIndex, memberIndex = null) => {
+    const updatedUsers = [...users];
+    if (memberIndex !== null) {
+      // if it's a family member
+      updatedUsers[userIndex].members[memberIndex].visible =
+        !updatedUsers[userIndex].members[memberIndex].visible;
+    } else {
+      updatedUsers[userIndex].visible = !updatedUsers[userIndex].visible;
+    }
+    setUsers(updatedUsers);
   };
 
   const onDragEnd = (result) => {
@@ -179,25 +214,74 @@ export default function Assignment() {
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {users.map((user, index) => (
-                          <UserCard
-                            key={index}
-                            user={user}
-                            index={index}
-                            options={options}
-                            handleRemoveUser={handleRemoveUser}
-                            toggleExpandUser={toggleExpandUser}
-                            setDdOpen={setDdOpen}
-                            ddOpen={ddOpen}
-                            updateUser={(fields) =>
-                              updateUserDetails(index, fields)
-                            }
-                            ddElements={user.ddElements}
-                            handleselectedElm={(label) =>
-                              handleselectedElm(index, label)
-                            }
-                          />
-                        ))}
+                        {users.map((user, index) => {
+                          // Render family members
+                          if (user.isFamily) {
+                            return (
+                              <div
+                                key={index}
+                                className="bg-green-1 rounded-4 p-3"
+                              >
+                                {user.members.map((member, memberIndex) => (
+                                  <UserCard
+                                    key={memberIndex}
+                                    familyIndex={index}
+                                    user={member}
+                                    index={index}
+                                    memberIndex={memberIndex}
+                                    toggleExpandUser={() =>
+                                      toggleExpandUser(index, memberIndex)
+                                    }
+                                    handleRemoveIndividual={
+                                      handleRemoveIndividual
+                                    }
+                                    options={options}
+                                    setDdOpen={setDdOpen}
+                                    ddOpen={ddOpen}
+                                    updateUser={(fields) =>
+                                      updateUserDetails(
+                                        index,
+                                        fields,
+                                        memberIndex
+                                      )
+                                    }
+                                    ddElements={member.ddElements}
+                                    handleselectedElm={(label) =>
+                                      handleselectedElm(
+                                        index,
+                                        label,
+                                        memberIndex
+                                      )
+                                    }
+                                  />
+                                ))}
+                              </div>
+                            );
+                          }
+                          // Render non-family members
+                          return (
+                            <UserCard
+                              key={index}
+                              user={user}
+                              index={index}
+                              options={options}
+                              handleRemoveUser={handleRemoveUser}
+                              toggleExpandUser={toggleExpandUser}
+                              setDdOpen={setDdOpen}
+                              ddOpen={ddOpen}
+                              handleRemoveIndividual={() =>
+                                handleRemoveIndividual()
+                              }
+                              updateUser={(fields) =>
+                                updateUserDetails(index, fields)
+                              }
+                              ddElements={user.ddElements}
+                              handleselectedElm={(label) =>
+                                handleselectedElm(index, label)
+                              }
+                            />
+                          );
+                        })}
                         {provided.placeholder}
                       </div>
                     )}
