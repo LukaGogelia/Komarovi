@@ -30,7 +30,11 @@ const UserCard = ({
       <div className="text-dark-1" style={{ fontSize: "1.3rem" }}>
         <strong>{user.text}</strong>
       </div>
-      <Draggable key={index} draggableId={`draggable-${index}`} index={index}>
+      <Draggable
+        key={index}
+        draggableId={toggleExpandFamilyUser ? "" : `draggable-${index}`}
+        index={index}
+      >
         {(provided) => (
           <div
             ref={provided.innerRef}
