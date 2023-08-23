@@ -16,11 +16,7 @@ const FamilyCard = ({
   console.log(family);
 
   return (
-    <Draggable
-      key={familyIndex}
-      draggableId={`family-draggable-${familyIndex}`}
-      index={familyIndex}
-    >
+    <Draggable key={familyIndex}>
       {(provided) => (
         <div
           ref={provided.innerRef}

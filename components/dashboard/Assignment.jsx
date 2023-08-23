@@ -75,13 +75,45 @@ export default function Assignment() {
       return;
     }
 
-    setUsers([
-      ...users,
+    setFamilyUsers([
       {
-        isFamily: true,
-        members: familyUsers,
+        role: "parent",
+        text: "Father",
+        visible: false,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
+      {
+        role: "parent",
+        text: "Mother",
+        visible: false,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
+      {
+        role: "student",
+        text: "Child",
+        visible: false,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
       },
     ]);
+
     setFamilyAdded(true);
   };
 
@@ -223,43 +255,35 @@ export default function Assignment() {
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {users.map((userOrFamily, index) => {
-                          if (userOrFamily.isFamily) {
-                            return (
-                              <FamilyCard
-                                key={index}
-                                family={userOrFamily.members}
-                                toggleExpandUser={toggleExpandUser}
-                                familyIndex={index}
-                                options={options}
-                                familyUsers={familyUsers}
-                                toggleExpandFamilyUser={toggleExpandFamilyUser}
-                                setFamilyUsers={setFamilyUsers}
-                              />
-                            );
-                          }
-
-                          return (
-                            <UserCard
-                              key={index}
-                              user={userOrFamily}
-                              index={index}
-                              options={options}
-                              handleRemoveUser={handleRemoveUser}
-                              toggleExpandUser={toggleExpandUser}
-                              handleRemoveIndividual={() =>
-                                handleRemoveIndividual()
-                              }
-                              updateUser={(fields) =>
-                                updateUserDetails(index, fields)
-                              }
-                              ddElements={userOrFamily.ddElements}
-                              handleselectedElm={(label) =>
-                                handleselectedElm(index, label)
-                              }
-                            />
-                          );
-                        })}
+                        {familyAdded && (
+                          <FamilyCard
+                            toggleExpandUser={toggleExpandUser}
+                            options={options}
+                            familyUsers={familyUsers}
+                            toggleExpandFamilyUser={toggleExpandFamilyUser}
+                            setFamilyUsers={setFamilyUsers}
+                          />
+                        )}
+                        {users.map((userOrFamily, index) => (
+                          <UserCard
+                            key={index}
+                            user={userOrFamily}
+                            index={index}
+                            options={options}
+                            handleRemoveUser={handleRemoveUser}
+                            toggleExpandUser={toggleExpandUser}
+                            handleRemoveIndividual={() =>
+                              handleRemoveIndividual()
+                            }
+                            updateUser={(fields) =>
+                              updateUserDetails(index, fields)
+                            }
+                            ddElements={userOrFamily.ddElements}
+                            handleselectedElm={(label) =>
+                              handleselectedElm(index, label)
+                            }
+                          />
+                        ))}
                         {provided.placeholder}
                       </div>
                     )}
