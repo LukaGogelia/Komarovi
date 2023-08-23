@@ -15971,3 +15971,7 @@ html.-dark-mode::-webkit-calendar-picker-indicator {
   width: 20px;
   border-bottom: 2px solid #6440fb;
 }
+
+.non-draggable-item:hover {
+  cursor: default !important;
+}

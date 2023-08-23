@@ -11,8 +11,8 @@ const FamilyCard = ({
   familyUsers,
   setFamilyUsers,
   handleRemove,
-  toggleExpandFamilyUser,
-  handleRemoveFamilyUser,
+  toggleExpand,
+  updateDetails,
   handleAddChildButtonClick,
   ...otherProps
 }) => {
@@ -25,11 +25,13 @@ const FamilyCard = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          className="non-draggable-item"
           style={{
             border: "2px solid #ddd",
             borderRadius: "15px",
             padding: "20px",
             marginBottom: "20px",
+
             ...provided.draggableProps.style,
           }}
         >
@@ -42,10 +44,12 @@ const FamilyCard = ({
                 user={user}
                 ddElements={user.ddElements}
                 index={userIndex}
+                updateUser={(fields) => updateDetails(userIndex, fields, true)}
                 options={options}
                 familyIndex={familyIndex}
-                handleRemoveFamilyUser={handleRemoveFamilyUser}
-                toggleExpandFamilyUser={toggleExpandFamilyUser}
+                handleRemove={handleRemove}
+                toggleExpand={toggleExpand}
+                isFamily={true}
                 {...otherProps}
               />
             );

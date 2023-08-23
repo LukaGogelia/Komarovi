@@ -15,12 +15,11 @@ const UserCard = ({
   index,
   ddElements,
   options,
-  toggleExpandUser,
+  isFamily,
   handleselectedElm,
-  handleRemoveFamilyUser,
   updateUser,
-  handleRemoveUser,
-  toggleExpandFamilyUser,
+  handleRemove,
+  toggleExpand,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
 
@@ -31,7 +30,7 @@ const UserCard = ({
       </div>
       <Draggable
         key={index}
-        draggableId={toggleExpandFamilyUser ? "" : `draggable-${index}`}
+        draggableId={isFamily ? "" : `draggable-${index}`}
         index={index}
       >
         {(provided) => (
@@ -69,11 +68,7 @@ const UserCard = ({
                         marginBottom: "15px",
                       }}
                       onClick={() => {
-                        if (handleRemoveFamilyUser) {
-                          handleRemoveFamilyUser(index);
-                        } else {
-                          handleRemoveUser(index);
-                        }
+                        handleRemove(index, isFamily);
                       }}
                     >
                       ❌ Remove User
@@ -81,9 +76,7 @@ const UserCard = ({
                   </div>
                   <HamburgerIcon
                     onClick={() => {
-                      console.log("mamluk " + index);
-                      if (toggleExpandFamilyUser) toggleExpandFamilyUser(index);
-                      else toggleExpandUser(index);
+                      toggleExpand(index, isFamily);
                     }}
                   />
                 </div>
@@ -268,9 +261,7 @@ const UserCard = ({
                 <div>
                   <HamburgerIcon
                     onClick={() => {
-                      console.log("mamluk " + index);
-                      if (toggleExpandFamilyUser) toggleExpandFamilyUser(index);
-                      else toggleExpandUser(index);
+                      toggleExpand(index, isFamily);
                     }}
                   />
                 </div>

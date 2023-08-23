@@ -43,50 +43,50 @@ export default function Assignment() {
     birthDate: "",
     phone: "",
     email: "",
+    isFamilyMember: true,
   };
 
-  const genereateStarterFamily = (childCount) => {
-    const result = [
-      {
-        role: "parent",
-        text: "Father",
-        visible: false,
-        ddElements: [],
-        firstName: "",
-        lastName: "",
-        nationalId: "",
-        birthDate: "",
-        phone: "",
-        email: "",
-      },
-      {
-        role: "parent",
-        text: "Mother",
-        visible: false,
-        ddElements: [],
-        firstName: "",
-        lastName: "",
-        nationalId: "",
-        birthDate: "",
-        phone: "",
-        email: "",
-      },
-      {
-        role: "student",
-        text: "Child",
-        visible: false,
-        ddElements: [],
-        firstName: "",
-        lastName: "",
-        nationalId: "",
-        birthDate: "",
-        phone: "",
-        email: "",
-      },
-    ];
-
-    return result;
-  };
+  const starterFamily = [
+    {
+      role: "parent",
+      text: "Father",
+      visible: false,
+      ddElements: [],
+      firstName: "",
+      lastName: "",
+      nationalId: "",
+      birthDate: "",
+      phone: "",
+      email: "",
+      isFamilyMember: true,
+    },
+    {
+      role: "parent",
+      text: "Mother",
+      visible: false,
+      ddElements: [],
+      firstName: "",
+      lastName: "",
+      nationalId: "",
+      birthDate: "",
+      phone: "",
+      email: "",
+      isFamilyMember: true,
+    },
+    {
+      role: "student",
+      text: "Child",
+      visible: false,
+      ddElements: [],
+      firstName: "",
+      lastName: "",
+      nationalId: "",
+      birthDate: "",
+      phone: "",
+      email: "",
+      isFamilyMember: true,
+    },
+  ];
 
   useEffect(() => {
     if (familyUsers.length === 0) {
@@ -100,13 +100,14 @@ export default function Assignment() {
       return;
     }
 
-    setFamilyUsers(genereateStarterFamily(2));
+    setFamilyUsers(starterFamily);
 
     setFamilyAdded(true);
   };
 
-  const updateUserDetails = (index, updatedFields) => {
-    setUsers((prevUsers) =>
+  const updateDetails = (index, updatedFields, isFamily) => {
+    const setArr = isFamily ? setFamilyUsers : setUsers;
+    setArr((prevUsers) =>
       prevUsers.map((user, i) => {
         if (i !== index) return user;
 
@@ -116,18 +117,6 @@ export default function Assignment() {
         };
       })
     );
-  };
-
-  const handleRemoveFamilyUser = (indexToRemove) => {
-    const updatedFamilyUsers = familyUsers.filter(
-      (user, index) => index !== indexToRemove
-    );
-    setFamilyUsers(updatedFamilyUsers);
-  };
-
-  const handleRemoveUser = (indexToRemove) => {
-    const updatedUsers = users.filter((user, index) => index !== indexToRemove);
-    setUsers(updatedUsers);
   };
 
   const handleselectedElm = (index, label) => {
@@ -168,29 +157,28 @@ export default function Assignment() {
         birthDate: "",
         phone: "",
         email: "",
+        isFamilyMember: false,
       },
     ]);
   };
 
-  const toggleExpandFamilyUser = (userIndex) => {
-    console.log(userIndex);
-    const updatedUsers = [...familyUsers];
+  const toggleExpand = (userIndex, isFamily) => {
+    const arr = isFamily ? familyUsers : users;
+    const setArr = isFamily ? setFamilyUsers : setUsers;
+
+    const updatedUsers = [...arr];
 
     updatedUsers[userIndex].visible = !updatedUsers[userIndex].visible;
 
-    setFamilyUsers(updatedUsers);
+    setArr(updatedUsers);
   };
 
-  const toggleExpandUser = (userIndex, memberIndex = null) => {
-    const updatedUsers = [...users];
-    if (memberIndex !== null) {
-      // if it's a family member
-      updatedUsers[userIndex].members[memberIndex].visible =
-        !updatedUsers[userIndex].members[memberIndex].visible;
-    } else {
-      updatedUsers[userIndex].visible = !updatedUsers[userIndex].visible;
-    }
-    setUsers(updatedUsers);
+  const handleRemove = (indexToRemove, isFamily) => {
+    const arr = isFamily ? familyUsers : users;
+    const setArr = isFamily ? setFamilyUsers : setUsers;
+
+    const updatedUsers = arr.filter((_, index) => index !== indexToRemove);
+    setArr(updatedUsers);
   };
 
   const onDragEnd = (result) => {
@@ -234,12 +222,12 @@ export default function Assignment() {
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {familyAdded && (
                           <FamilyCard
-                            toggleExpandUser={toggleExpandUser}
                             options={options}
                             familyUsers={familyUsers}
-                            toggleExpandFamilyUser={toggleExpandFamilyUser}
+                            toggleExpand={toggleExpand}
+                            updateDetails={updateDetails}
                             setFamilyUsers={setFamilyUsers}
-                            handleRemoveFamilyUser={handleRemoveFamilyUser}
+                            handleRemove={handleRemove}
                             handleAddChildButtonClick={() =>
                               handleAddChildButtonClick()
                             }
@@ -251,15 +239,16 @@ export default function Assignment() {
                             user={userOrFamily}
                             index={index}
                             options={options}
-                            handleRemoveUser={handleRemoveUser}
-                            toggleExpandUser={toggleExpandUser}
+                            handleRemove={handleRemove}
+                            toggleExpand={toggleExpand}
                             updateUser={(fields) =>
-                              updateUserDetails(index, fields)
+                              updateDetails(index, fields, false)
                             }
                             ddElements={userOrFamily.ddElements}
                             handleselectedElm={(label) =>
                               handleselectedElm(index, label)
                             }
+                            isFamily={false}
                           />
                         ))}
                         {provided.placeholder}
