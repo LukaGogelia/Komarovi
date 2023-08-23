@@ -11,6 +11,7 @@ const FamilyCard = ({
   setFamilyUsers,
   handleRemove,
   toggleExpandFamilyUser,
+  handleRemoveFamilyUser,
   ...otherProps
 }) => {
   console.log(family);
@@ -41,7 +42,7 @@ const FamilyCard = ({
                 index={userIndex}
                 options={options}
                 familyIndex={familyIndex}
-                // toggleExpandUser={toggleExpandUser}
+                handleRemoveFamilyUser={handleRemoveFamilyUser}
                 toggleExpandFamilyUser={toggleExpandFamilyUser}
                 {...otherProps}
               />

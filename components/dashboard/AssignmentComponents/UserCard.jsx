@@ -17,7 +17,7 @@ const UserCard = ({
   options,
   toggleExpandUser,
   handleselectedElm,
-  handleRemoveIndividual,
+  handleRemoveFamilyUser,
   updateUser,
   handleRemoveUser,
   familyIndex,
@@ -70,8 +70,8 @@ const UserCard = ({
                         marginBottom: "15px",
                       }}
                       onClick={() => {
-                        if (handleRemoveIndividual) {
-                          handleRemoveIndividual(familyIndex, index);
+                        if (handleRemoveFamilyUser) {
+                          handleRemoveFamilyUser(index);
                         } else {
                           handleRemoveUser(index);
                         }

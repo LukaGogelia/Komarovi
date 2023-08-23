@@ -130,27 +130,11 @@ export default function Assignment() {
     );
   };
 
-  const handleRemoveIndividual = (userIndex, memberIndex) => {
-    setFamilyUsers((prevUsers) => {
-      return prevUsers
-        .map((user, index) => {
-          if (index !== userIndex || !user.isFamily) return user;
-
-          const updatedMembers = [...user.members];
-          updatedMembers.splice(memberIndex, 1);
-
-          if (updatedMembers.length === 0) {
-            setFamilyAdded(false);
-            return null; // return null to remove this family from the users array
-          }
-
-          return {
-            ...user,
-            members: updatedMembers,
-          };
-        })
-        .filter(Boolean); // This will remove any null values from the users array
-    });
+  const handleRemoveFamilyUser = (indexToRemove) => {
+    const updatedFamilyUsers = familyUsers.filter(
+      (user, index) => index !== indexToRemove
+    );
+    setFamilyUsers(updatedFamilyUsers);
   };
 
   const handleRemoveUser = (indexToRemove) => {
@@ -262,6 +246,7 @@ export default function Assignment() {
                             familyUsers={familyUsers}
                             toggleExpandFamilyUser={toggleExpandFamilyUser}
                             setFamilyUsers={setFamilyUsers}
+                            handleRemoveFamilyUser={handleRemoveFamilyUser}
                           />
                         )}
                         {users.map((userOrFamily, index) => (
@@ -272,9 +257,6 @@ export default function Assignment() {
                             options={options}
                             handleRemoveUser={handleRemoveUser}
                             toggleExpandUser={toggleExpandUser}
-                            handleRemoveIndividual={() =>
-                              handleRemoveIndividual()
-                            }
                             updateUser={(fields) =>
                               updateUserDetails(index, fields)
                             }
