@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import FooterNine from "../layout/footers/FooterNine";
 import PageLinksTwo from "../common/PageLinksTwo";
+
 import Buttons from "./AssignmentComponents/Buttons";
 import FamilyCard from "./AssignmentComponents/FamilyCard";
 import UserCard from "./AssignmentComponents/UserCard";
@@ -31,6 +32,19 @@ export default function Assignment() {
     { label: "House Mentor" },
   ];
 
+  const starterChild = {
+    role: "student",
+    text: "Child",
+    visible: true,
+    ddElements: [],
+    firstName: "",
+    lastName: "",
+    nationalId: "",
+    birthDate: "",
+    phone: "",
+    email: "",
+  };
+
   const genereateStarterFamily = (childCount) => {
     const result = [
       {
@@ -57,24 +71,19 @@ export default function Assignment() {
         phone: "",
         email: "",
       },
+      {
+        role: "student",
+        text: "Child",
+        visible: false,
+        ddElements: [],
+        firstName: "",
+        lastName: "",
+        nationalId: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+      },
     ];
-
-    const starterChild = {
-      role: "student",
-      text: "Child",
-      visible: false,
-      ddElements: [],
-      firstName: "",
-      lastName: "",
-      nationalId: "",
-      birthDate: "",
-      phone: "",
-      email: "",
-    };
-
-    for (let i = 0; i < childCount; i++) {
-      result.push({ ...starterChild });
-    }
 
     return result;
   };
@@ -139,6 +148,11 @@ export default function Assignment() {
         }
       })
     );
+  };
+
+  const handleAddChildButtonClick = () => {
+    const updatedFamilyUsers = [...familyUsers, { ...starterChild }];
+    setFamilyUsers(updatedFamilyUsers);
   };
 
   const handleButtonClick = (role) => {
@@ -226,6 +240,9 @@ export default function Assignment() {
                             toggleExpandFamilyUser={toggleExpandFamilyUser}
                             setFamilyUsers={setFamilyUsers}
                             handleRemoveFamilyUser={handleRemoveFamilyUser}
+                            handleAddChildButtonClick={() =>
+                              handleAddChildButtonClick()
+                            }
                           />
                         )}
                         {users.map((userOrFamily, index) => (

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { AddChildButton } from "./Buttons";
 import UserCard from "./UserCard";
 
 const FamilyCard = ({
@@ -12,13 +13,14 @@ const FamilyCard = ({
   handleRemove,
   toggleExpandFamilyUser,
   handleRemoveFamilyUser,
+  handleAddChildButtonClick,
   ...otherProps
 }) => {
   console.log(family);
 
   return (
-    <Draggable key={familyIndex}>
-      {(provided) => (
+    <Draggable>
+      {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -48,6 +50,18 @@ const FamilyCard = ({
               />
             );
           })}
+          {/* Adding the AddChildButton at the bottom of the card */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "33px",
+            }}
+          >
+            <AddChildButton
+              handleAddChildButtonClick={handleAddChildButtonClick}
+            />
+          </div>
         </div>
       )}
     </Draggable>
