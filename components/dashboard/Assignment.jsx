@@ -1,6 +1,6 @@
 // არ არის შევსებული ქართულად არის გასაკეთებელი
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FooterNine from "../layout/footers/FooterNine";
 import PageLinksTwo from "../common/PageLinksTwo";
 import Buttons from "./AssignmentComponents/Buttons";
@@ -10,46 +10,8 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 export default function Assignment() {
   const [users, setUsers] = useState([]);
-  const [families, setFamilies] = useState([]);
   const [familyAdded, setFamilyAdded] = useState(false);
-  const [familyUsers, setFamilyUsers] = useState([
-    {
-      role: "parent",
-      text: "Father",
-      visible: false,
-      ddElements: [],
-      firstName: "",
-      lastName: "",
-      nationalId: "",
-      birthDate: "",
-      phone: "",
-      email: "",
-    },
-    {
-      role: "parent",
-      text: "Mother",
-      visible: false,
-      ddElements: [],
-      firstName: "",
-      lastName: "",
-      nationalId: "",
-      birthDate: "",
-      phone: "",
-      email: "",
-    },
-    {
-      role: "student",
-      text: "Child",
-      visible: false,
-      ddElements: [],
-      firstName: "",
-      lastName: "",
-      nationalId: "",
-      birthDate: "",
-      phone: "",
-      email: "",
-    },
-  ]);
+  const [familyUsers, setFamilyUsers] = useState(1);
 
   const roles = {
     "Add Teacher": "Teacher",
@@ -69,13 +31,8 @@ export default function Assignment() {
     { label: "House Mentor" },
   ];
 
-  const addFamily = () => {
-    if (familyAdded) {
-      alert("A family has already been added to this form.");
-      return;
-    }
-
-    setFamilyUsers([
+  const genereateStarterFamily = (childCount) => {
+    const result = [
       {
         role: "parent",
         text: "Father",
@@ -100,19 +57,41 @@ export default function Assignment() {
         phone: "",
         email: "",
       },
-      {
-        role: "student",
-        text: "Child",
-        visible: false,
-        ddElements: [],
-        firstName: "",
-        lastName: "",
-        nationalId: "",
-        birthDate: "",
-        phone: "",
-        email: "",
-      },
-    ]);
+    ];
+
+    const starterChild = {
+      role: "student",
+      text: "Child",
+      visible: false,
+      ddElements: [],
+      firstName: "",
+      lastName: "",
+      nationalId: "",
+      birthDate: "",
+      phone: "",
+      email: "",
+    };
+
+    for (let i = 0; i < childCount; i++) {
+      result.push({ ...starterChild });
+    }
+
+    return result;
+  };
+
+  useEffect(() => {
+    if (familyUsers.length === 0) {
+      setFamilyAdded(false);
+    }
+  }, [familyUsers]);
+
+  const addFamily = () => {
+    if (familyAdded) {
+      alert("A family has already been added to this form.");
+      return;
+    }
+
+    setFamilyUsers(genereateStarterFamily(2));
 
     setFamilyAdded(true);
   };

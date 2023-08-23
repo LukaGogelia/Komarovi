@@ -20,7 +20,6 @@ const UserCard = ({
   handleRemoveFamilyUser,
   updateUser,
   handleRemoveUser,
-  familyIndex,
   toggleExpandFamilyUser,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
@@ -28,7 +27,7 @@ const UserCard = ({
   return (
     <>
       <div className="text-dark-1" style={{ fontSize: "1.3rem" }}>
-        <strong>{user.text}</strong>
+        <p>{user.text}</p>
       </div>
       <Draggable
         key={index}
