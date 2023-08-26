@@ -70,8 +70,9 @@ export async function fetchTeachers() {
       subjectId: finalSubjectIds,
     };
   });
+  const lastFiveTeamMembers = teamMembers.slice(-5);
 
-  return { teamMembers, subjects };
+  return { teamMembers, subjects, lastFiveTeamMembers };
 }
 
 export const metadata = {
@@ -82,7 +83,7 @@ export const metadata = {
 };
 
 export default async function page() {
-  const { teamMembers, subjects, teachers } = await fetchTeachers();
+  const { teamMembers, subjects } = await fetchTeachers();
 
   return (
     <div className="main-content  ">

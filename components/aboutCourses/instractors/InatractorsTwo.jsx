@@ -9,63 +9,66 @@ import Link from "next/link";
 export default function InatractorsTwo({ teamMembers, subjects }) {
   const [categoryOpen, setCategoryOpen] = useState(true);
   const validTeamMembers = Array.isArray(teamMembers) ? teamMembers : [];
+
   const allSubjectNames = subjects.map((subj) => subj.subject);
 
+  // Now filterCategories will be an array of subject IDs
   const [filterCategories, setFilterCategories] = useState([]);
   const [filteredData, setFilteredData] = useState(validTeamMembers);
   const [currentSortingOption, setCurrentSortingOption] = useState("Default");
   const [sortedFilteredData, setSortedFilteredData] =
     useState(validTeamMembers);
+  const allSubjects = subjects.map((subj) => ({
+    name: subj.subject,
+    id: subj._id,
+  }));
+
+  const shouldInclude = (elm) => {
+    if (!elm.subjectId || !Array.isArray(elm.subjectId)) return false;
+
+    // If there are no filterCategories, it means we want all the data
+    if (filterCategories.length === 0) return true;
+
+    // Check if any of the subject IDs in elm.subjectId are in filterCategories
+    return elm.subjectId.some((subjectId) =>
+      filterCategories.includes(subjectId.toString())
+    );
+  };
+
   useEffect(() => {
-    // Helper function to check inclusion
-    const shouldInclude = (elm) => {
-      // If there's no subjectId in the elm, exclude it
-      if (!elm.subjectId || !Array.isArray(elm.subjectId)) return false;
-
-      // Check if any of the subject IDs in elm.subjectId matches an ID in subjects
-      const matches = elm.subjectId.some((subjectId) =>
-        subjects.some((subject) => subject.id === subjectId)
-      );
-
-      return matches;
-    };
-
-    // If filterCategories is empty, simply use validTeamMembers
-    const refItems =
-      filterCategories.length > 0
-        ? validTeamMembers.filter(shouldInclude)
-        : validTeamMembers;
-
+    const refItems = validTeamMembers.filter(shouldInclude);
     setFilteredData(refItems);
-  }, [filterCategories, validTeamMembers, subjects]);
+  }, [filterCategories, validTeamMembers]);
 
   useEffect(() => {
+    let sortedData = [...filteredData];
+
     switch (currentSortingOption) {
       case "Rating (asc)":
-        setSortedFilteredData(
-          [...filteredData].sort((a, b) => a.rating - b.rating)
-        );
+        sortedData.sort((a, b) => a.rating - b.rating);
         break;
       case "Rating (dsc)":
-        setSortedFilteredData(
-          [...filteredData].sort((a, b) => b.rating - a.rating)
-        );
+        sortedData.sort((a, b) => b.rating - a.rating);
         break;
       default:
-        setSortedFilteredData(filteredData);
         break;
     }
+
+    setSortedFilteredData(sortedData);
   }, [currentSortingOption, filteredData]);
 
-  const handleFilterCategories = (item) => {
-    if (filterCategories.includes(item)) {
-      setFilterCategories((prev) =>
-        prev.filter((category) => category !== item)
-      );
+  // Update this function to work with subject IDs
+  const handleFilterCategories = (subjectId) => {
+    if (filterCategories.includes(subjectId)) {
+      setFilterCategories((prev) => prev.filter((id) => id !== subjectId));
     } else {
-      setFilterCategories((prev) => [...prev, item]);
+      setFilterCategories((prev) => [...prev, subjectId]);
     }
   };
+
+  // console.log("subjects", subjects);
+  // console.log("teamMembers", teamMembers);
+  // return <></>;
 
   return (
     <>
@@ -139,11 +142,11 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
                               <div className="sidebar-checkbox__title">All</div>
                               <div className="sidebar-checkbox__count"></div>
                             </div>
-                            {allSubjectNames.map((subjectName, i) => (
+                            {allSubjects.map((subject, i) => (
                               <div
                                 key={i}
                                 onClick={() =>
-                                  handleFilterCategories(subjectName)
+                                  handleFilterCategories(subject.id)
                                 }
                                 className="sidebar-checkbox__item cursor"
                               >
@@ -151,7 +154,7 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
                                   <input
                                     type="checkbox"
                                     checked={filterCategories.includes(
-                                      subjectName
+                                      subject.id
                                     )}
                                   />
                                   <div className="form-checkbox__mark">
@@ -159,15 +162,15 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
                                   </div>
                                 </div>
                                 <div className="sidebar-checkbox__title">
-                                  {subjectName}
+                                  {subject.name}
                                 </div>
                                 <div className="sidebar-checkbox__count">
                                   (
                                   {
                                     teamMembers.filter(
                                       (itm) =>
-                                        itm.subject &&
-                                        itm.subject.subject === subjectName // Updated itm.subject.name to itm.subject.subject
+                                        itm.subjectId &&
+                                        itm.subjectId.includes(subject.id)
                                     ).length
                                   }
                                   )
@@ -192,72 +195,6 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
                       {sortedFilteredData.length}
                     </span>{" "}
                     total results
-                  </div>
-                </div>
-
-                <div className="col-auto">
-                  <div className="d-flex items-center">
-                    <div className="text-14 lh-12 fw-500 text-dark-1 mr-20">
-                      Sort by:
-                    </div>
-
-                    <div
-                      id="dd33button"
-                      className="dropdown js-dropdown js-category-active"
-                    >
-                      <div
-                        onClick={() => {
-                          document
-                            .getElementById("dd33button")
-                            .classList.toggle("-is-dd-active");
-                          document
-                            .getElementById("dd33content")
-                            .classList.toggle("-is-el-visible");
-                        }}
-                        className="dropdown__button d-flex items-center text-14 rounded-8 px-20 py-10 text-14 lh-12"
-                        data-el-toggle=".js-category-toggle"
-                        data-el-toggle-active=".js-category-active"
-                      >
-                        <span className="js-dropdown-title">
-                          {currentSortingOption}
-                        </span>
-                        <i className="icon text-9 ml-40 icon-chevron-down"></i>
-                      </div>
-
-                      <div
-                        id="dd33content"
-                        className="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle"
-                      >
-                        <div className="text-14 y-gap-15 js-dropdown-list">
-                          {sortingOptions.map((elm, i) => (
-                            <div
-                              key={i}
-                              onClick={() => {
-                                setCurrentSortingOption((pre) =>
-                                  pre == elm ? "Default" : elm
-                                );
-                                document
-                                  .getElementById("dd33button")
-                                  .classList.toggle("-is-dd-active");
-                                document
-                                  .getElementById("dd33content")
-                                  .classList.toggle("-is-el-visible");
-                              }}
-                            >
-                              <span
-                                className={`d-block js-dropdown-link cursor ${
-                                  currentSortingOption == elm
-                                    ? "activeMenu"
-                                    : ""
-                                } `}
-                              >
-                                {elm}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

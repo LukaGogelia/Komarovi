@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
-import { fetchData } from "./Reviews";
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
 import { Quiz, Student } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
@@ -16,6 +15,8 @@ import { GradeEntry } from "@/data/mongoDb/models";
 import { User } from "@/data/mongoDb/models";
 import { PointsCommissionDecision } from "@/data/mongoDb/models";
 import { connectDb } from "./ConnectToDb";
+import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
+import { fetchData } from "./Reviews";
 
 export async function fetchGradesData() {
   try {
@@ -123,6 +124,8 @@ export async function useFetchQuizData() {
   // const physicsArray = extractIds(physicsId);
   const studentId = "64e52ffb1436edfda9379761";
 
+  const darkmode = true;
+
   const mathList = await Student.findOne({ _id: studentId })
     .populate({
       path: "quizEntries",
@@ -193,8 +196,9 @@ export async function useFetchQuizData() {
 }
 
 export default async function DashboardOne() {
-  // const { lastThreeDecisions } = await fetchData();
+  const { lastFiveDecisionsList } = await fetchData();
   const arr = await useFetchQuizData();
+  const { lastFiveTeamMembers } = await fetchTeachers();
 
   const { subjectList, gradeList, gradeEntries, states } =
     await fetchGradesData();
@@ -247,7 +251,7 @@ export default async function DashboardOne() {
             {states.map((elm, i) => (
               <div
                 key={i}
-                className="responsive-card"
+                className="responsive-card -dark-bg-dark-1 -dark-text-white"
                 style={{
                   flex: "1 0 calc(50% - 30px)",
                   maxWidth: "calc(50% - 10px)",
@@ -274,6 +278,7 @@ export default async function DashboardOne() {
                       marginTop: "20px",
                       color: "#333",
                     }}
+                    className="-dark-text-white"
                   >
                     {elm.value}
                   </div>
@@ -317,7 +322,7 @@ export default async function DashboardOne() {
               </div>
               <div className="py-30 px-30">
                 <div className="y-gap-40">
-                  {teamMembers.slice(0, 5).map((elm, i) => (
+                  {lastFiveTeamMembers.map((elm, i) => (
                     <div
                       key={i}
                       className={`d-flex ${i != 0 ? "border-top-light" : ""} `}
@@ -340,21 +345,15 @@ export default async function DashboardOne() {
                         </h4>
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
                           <div className="d-flex items-center">
-                            <i className="icon-message text-15 mr-10"></i>
-                            <div className="text-13 lh-1">
-                              {elm.reviews} Reviews
-                            </div>
-                          </div>
-                          <div className="d-flex items-center">
                             <i className="icon-online-learning text-15 mr-10"></i>
                             <div className="text-13 lh-1">
-                              {elm.students} Students
+                              {elm.students} Classes
                             </div>
                           </div>
                           <div className="d-flex items-center">
                             <i className="icon-play text-15 mr-10"></i>
                             <div className="text-13 lh-1">
-                              {elm.courses} Course
+                              {elm.courses} Subject
                             </div>
                           </div>
                         </div>
@@ -366,7 +365,7 @@ export default async function DashboardOne() {
             </div>
           </div>
 
-          {/* <div className="col-xl-4 col-md-6">
+          <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
                 <h2 className="text-17 lh-1 fw-500">Recent house points</h2>
@@ -379,12 +378,12 @@ export default async function DashboardOne() {
               </div>
               <div className="py-30 px-30">
                 <div className="y-gap-40">
-                  {lastThreeDecisions.map((decision, i) => (
+                  {lastFiveDecisionsList.map((decision, i) => (
                     <div
                       key={i}
                       className={`d-flex ${i != 0 ? "border-top-light" : ""} `}
                     >
-                      <div className="shrink-0">
+                      {/* <div className="shrink-0">
                         {decision.studentId && decision.studentId.avatarSrc ? (
                           <img
                             width={90}
@@ -395,17 +394,16 @@ export default async function DashboardOne() {
                         ) : (
                           <div>No Avatar</div>
                         )}
-                      </div>
+                      </div> */}
                       <div className="ml-15">
-                        <h4 className="text-15 lh-16 fw-500">
+                        {/* <h4 className="text-15 lh-16 fw-500">
                           {decision.studentId && decision.studentId.name
                             ? decision.studentId.name
                             : "No Name"}
-                        </h4>
+                        </h4> */}
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
                           <div className="text-14 lh-1">
                             {new Date(decision.date).toLocaleDateString()}{" "}
-                           
                           </div>
                           <div className="text-14 lh-1">
                             Points: {decision.pointsAwarded}
@@ -420,10 +418,10 @@ export default async function DashboardOne() {
                 </div>
               </div>
             </div>
-          </div> */}
+          </div>
 
           <div className="col-xl-4 col-md-6">
-            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
+            <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100 ">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
                 <h2 className="text-17 lh-1 fw-500">Notifications</h2>
               </div>
