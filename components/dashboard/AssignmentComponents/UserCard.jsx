@@ -25,9 +25,6 @@ const UserCard = ({
 
   return (
     <>
-      <div className="text-dark-1" style={{ fontSize: "1.3rem" }}>
-        <p>{user.text}</p>
-      </div>
       <Draggable
         key={index}
         draggableId={isFamily ? "" : `draggable-${index}`}
@@ -43,10 +40,45 @@ const UserCard = ({
               border: "1px solid #ccc",
               borderRadius: "15px",
               padding: "20px",
-              margin: "10px 0",
+              margin: "23px 0",
+              position: "relative",
+              cursor: `${isFamily ? "default" : ""}`,
               ...provided.draggableProps.style,
             }}
           >
+            {isFamily && (
+              <div
+                style={{
+                  position: "absolute",
+                  width: "9em",
+                  textAlign: "center",
+                  top: "-17px",
+                  left: user.invitationCode ? "calc(50% - 9px)" : "50%",
+                  transform: user.invitationCode
+                    ? "translateX(-100%)"
+                    : "translateX(-50%)",
+                  padding: "5px 10px",
+                }}
+                className="bg-green-1 rounded-2 text-white"
+              >
+                {user.text}
+              </div>
+            )}
+            {user.invitationCode && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-17px",
+                  left: isFamily ? "calc(50% + 9px)" : "50%",
+                  transform: isFamily ? "translateX(0%)" : "translateX(-50%)",
+                  padding: "5px 10px",
+                  cursor: "default",
+                }}
+                className="bg-purple-1 rounded-2 text-white"
+              >
+                Code: {user.invitationCode}
+              </div>
+            )}
             {user.visible ? (
               // The expanded state with the form and all details
               <>
@@ -73,6 +105,8 @@ const UserCard = ({
                     >
                       ❌ Remove User
                     </span>
+
+                    {/* Display the generated code here */}
                   </div>
                   <HamburgerIcon
                     onClick={() => {
@@ -160,9 +194,10 @@ const UserCard = ({
                     className="date-input-wrapper"
                     style={{ position: "relative" }}
                   >
-                    <label htmlFor="birthDate" className="mt-3 ms-3 mb-1">
+                    <label htmlFor="birthDate" className="my-1 ms-3">
                       Birth Date:
                     </label>
+
                     <input
                       id="birthDate"
                       className="card-input"
@@ -173,7 +208,6 @@ const UserCard = ({
                       style={{
                         width: "100%",
                         borderColor: "rgba(255, 255, 255, 0.6) !important",
-                        padding: "20px 10px",
                       }}
                       required
                       type="date"
@@ -193,11 +227,11 @@ const UserCard = ({
                       <span className="js-button-title">
                         {ddElements.length > 0
                           ? ddElements.join(", ")
-                          : user.role}
+                          : "User roles"}
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className={ddOpen ? "carrot-flip" : ""}
+                        className={`me-1 ${ddOpen ? "carrot-flip" : ""}`}
                       />
                     </button>
                     <div

@@ -12,14 +12,15 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 export default function Assignment() {
   const [users, setUsers] = useState([]);
   const [familyAdded, setFamilyAdded] = useState(false);
-  const [familyUsers, setFamilyUsers] = useState(1);
+  const [familyUsers, setFamilyUsers] = useState([]);
+  const [codesGenerated, setCodesGenerated] = useState(false);
 
   const roles = {
     "Add Teacher": "Teacher",
     "Add Care Manager": "Care Manager",
     "Add House Mentor": "House Mentor",
     "Add Admin": "Admin",
-    "Add User": "User",
+    "Add User": null,
   };
 
   const options = [
@@ -44,14 +45,15 @@ export default function Assignment() {
     phone: "",
     email: "",
     isFamilyMember: true,
+    invitationCode: "",
   };
 
   const starterFamily = [
     {
-      role: "parent",
+      role: "Parent",
       text: "Father",
       visible: false,
-      ddElements: [],
+      ddElements: ["Parent"],
       firstName: "",
       lastName: "",
       nationalId: "",
@@ -59,12 +61,13 @@ export default function Assignment() {
       phone: "",
       email: "",
       isFamilyMember: true,
+      invitationCode: "",
     },
     {
-      role: "parent",
+      role: "Parent",
       text: "Mother",
       visible: false,
-      ddElements: [],
+      ddElements: ["Parent"],
       firstName: "",
       lastName: "",
       nationalId: "",
@@ -72,12 +75,13 @@ export default function Assignment() {
       phone: "",
       email: "",
       isFamilyMember: true,
+      invitationCode: "",
     },
     {
-      role: "student",
+      role: "Student",
       text: "Child",
       visible: false,
-      ddElements: [],
+      ddElements: ["Student"],
       firstName: "",
       lastName: "",
       nationalId: "",
@@ -85,6 +89,7 @@ export default function Assignment() {
       phone: "",
       email: "",
       isFamilyMember: true,
+      invitationCode: "",
     },
   ];
 
@@ -94,6 +99,15 @@ export default function Assignment() {
     }
   }, [familyUsers]);
 
+  useEffect(() => {
+    let allCodesGenerated = codesGenerated;
+    allCodesGenerated =
+      users.every((user) => user.invitationCode !== "") &&
+      familyUsers.every((user) => user.invitationCode !== "") &&
+      (users.length !== 0 || familyUsers.length !== 0);
+    setCodesGenerated(allCodesGenerated);
+  }, [users, familyUsers]);
+
   const addFamily = () => {
     if (familyAdded) {
       alert("A family has already been added to this form.");
@@ -101,8 +115,42 @@ export default function Assignment() {
     }
 
     setFamilyUsers(starterFamily);
-
     setFamilyAdded(true);
+  };
+
+  const generateCodes = () => {
+    const generateSevenDigitNumber = () =>
+      Math.floor(1000000 + Math.random() * 9000000).toString();
+
+    if (users.length) {
+      const updatedUsers = users.map((user) =>
+        user.invitationCode
+          ? user
+          : {
+              ...user,
+              invitationCode: generateSevenDigitNumber(),
+            }
+      );
+      setUsers(updatedUsers);
+    }
+
+    if (familyUsers.length) {
+      const updatedFamilyUsers = familyUsers.map((user) =>
+        user.invitationCode
+          ? user
+          : {
+              ...user,
+              invitationCode: generateSevenDigitNumber(),
+            }
+      );
+      setFamilyUsers(updatedFamilyUsers);
+    }
+  };
+
+  const saveCodes = () => {
+    // Logic to save codes to the backend
+    console.log("Codes saved:", generatedCodes);
+    // Call your backend API to save the codes here
   };
 
   const updateDetails = (index, updatedFields, isFamily) => {
@@ -119,8 +167,9 @@ export default function Assignment() {
     );
   };
 
-  const handleselectedElm = (index, label) => {
-    setUsers((prevUsers) =>
+  const handleselectedElm = (index, label, isFamily) => {
+    const setArr = isFamily ? setFamilyUsers : setUsers;
+    setArr((prevUsers) =>
       prevUsers.map((user, i) => {
         if (i !== index) return user;
 
@@ -142,6 +191,7 @@ export default function Assignment() {
   const handleAddChildButtonClick = () => {
     const updatedFamilyUsers = [...familyUsers, { ...starterChild }];
     setFamilyUsers(updatedFamilyUsers);
+    setCodesGenerated(false);
   };
 
   const handleButtonClick = (role) => {
@@ -150,7 +200,7 @@ export default function Assignment() {
       {
         role,
         visible: true,
-        ddElements: [],
+        ddElements: role === null ? [] : [role],
         firstName: "",
         lastName: "",
         nationalId: "",
@@ -158,8 +208,10 @@ export default function Assignment() {
         phone: "",
         email: "",
         isFamilyMember: false,
+        invitationCode: "",
       },
     ]);
+    setCodesGenerated(false);
   };
 
   const toggleExpand = (userIndex, isFamily) => {
@@ -208,7 +260,7 @@ export default function Assignment() {
                 <h2 className="text-17 lh-1 fw-500">Page Head</h2>
               </div>
 
-              <div className="py-30 px-30">
+              <div className="py-30 px-30 mx-7">
                 <Buttons
                   roles={roles}
                   handleButtonClick={handleButtonClick}
@@ -231,6 +283,7 @@ export default function Assignment() {
                             handleAddChildButtonClick={() =>
                               handleAddChildButtonClick()
                             }
+                            handleselectedElm={handleselectedElm}
                           />
                         )}
                         {users.map((userOrFamily, index) => (
@@ -246,7 +299,7 @@ export default function Assignment() {
                             }
                             ddElements={userOrFamily.ddElements}
                             handleselectedElm={(label) =>
-                              handleselectedElm(index, label)
+                              handleselectedElm(index, label, false)
                             }
                             isFamily={false}
                           />
@@ -256,6 +309,32 @@ export default function Assignment() {
                     )}
                   </Droppable>
                 </DragDropContext>
+                <div className="col-auto mb-30">
+                  <div className="row x-gap-10 y-gap-10 justify-content-center">
+                    <div className="col-auto">
+                      {users.length || familyUsers.length ? (
+                        <button
+                          type="button"
+                          className="button -md -purple-1 text-white"
+                          onClick={() => generateCodes()}
+                        >
+                          Generate codes
+                        </button>
+                      ) : null}
+                    </div>
+                    <div className="col-auto">
+                      {codesGenerated && (
+                        <button
+                          type="button"
+                          className="button -md -dark-1 text-white"
+                          onClick={() => saveCodes()}
+                        >
+                          Save the codes
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

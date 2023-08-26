@@ -3,7 +3,7 @@ import React from "react";
 
 const HamburgerIcon = ({ onClick }) => {
   return (
-    <div onClick={onClick}>
+    <div onClick={onClick} className="pointer">
       <div
         style={{
           marginTop: "4px",

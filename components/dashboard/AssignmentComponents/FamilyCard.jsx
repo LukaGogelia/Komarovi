@@ -14,6 +14,7 @@ const FamilyCard = ({
   toggleExpand,
   updateDetails,
   handleAddChildButtonClick,
+  handleselectedElm,
   ...otherProps
 }) => {
   console.log(family);
@@ -45,6 +46,9 @@ const FamilyCard = ({
                 ddElements={user.ddElements}
                 index={userIndex}
                 updateUser={(fields) => updateDetails(userIndex, fields, true)}
+                handleselectedElm={(label) =>
+                  handleselectedElm(userIndex, label, true)
+                }
                 options={options}
                 familyIndex={familyIndex}
                 handleRemove={handleRemove}
