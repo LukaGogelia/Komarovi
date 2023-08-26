@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import PieChartComponent from "./dashboard/PieCharts";
 import SubjectDropdown from "./SubjectDropdown";
+import PieChartsComponent from "./dashboard/PieChartsComponent";
+// import PieChartsComponent from "./dashboard/PieChartsComponent";
 
 const numberToWord = (number) => {
   const words = [
@@ -21,57 +22,48 @@ const numberToWord = (number) => {
 };
 
 export default function GradeIndicator({
-  subjectList,
-  gradeList,
-  gradeEntries,
+  subjectList: S,
+  gradeList: G,
+  gradeEntries: GR,
 }) {
+  const subjectList = JSON.parse(S);
+  const gradeList = JSON.parse(G);
+  const gradeEntries = JSON.parse(GR);
+
   const [selectedSubject, setSelectedSubject] = useState(null);
 
-  const handleSubjectChange = (subject) => {
-    setSelectedSubject(subject);
-  };
-
-  const filteredGrades = useMemo(() => {
-    if (selectedSubject) {
-      const filteredGradeEntries = gradeEntries.filter(
-        (entry) => entry.subject === selectedSubject
-      );
-      const gradeCounts = new Array(10).fill(0);
-      filteredGradeEntries.forEach((entry) => {
-        const grade = entry.grade;
-        if (grade >= 1 && grade <= 10) {
-          gradeCounts[10 - grade]++;
-        }
-      });
-
-      return gradeCounts
-        .map((count, index) => ({
-          name: numberToWord(10 - index),
-          value: count,
-        }))
-        .filter((grade) => grade.value > 0);
-    }
-
-    return gradeList;
-  }, [selectedSubject, gradeEntries]);
-
-  const averageGrade = useMemo(() => {
-    const filteredGradeEntries = selectedSubject
+  const filteredGradeEntries = useMemo(() => {
+    return selectedSubject
       ? gradeEntries.filter((entry) => entry.subject === selectedSubject)
       : gradeEntries;
+  }, [selectedSubject, gradeEntries]);
 
+  const computedGradeList = useMemo(() => {
+    const gradeCounts = new Array(10).fill(0);
+    filteredGradeEntries.forEach((entry) => {
+      const grade = entry.grade;
+      if (grade >= 1 && grade <= 10) {
+        gradeCounts[10 - grade]++;
+      }
+    });
+
+    return gradeCounts
+      .map((count, index) => ({
+        name: numberToWord(10 - index),
+        value: count,
+      }))
+      .filter((grade) => grade.value > 0);
+  }, [filteredGradeEntries]);
+
+  const averageGrade = useMemo(() => {
     const totalGrades = filteredGradeEntries.reduce(
       (sum, entry) => sum + entry.grade,
       0
     );
     const numberOfGrades = filteredGradeEntries.length;
 
-    if (numberOfGrades > 0) {
-      return totalGrades / numberOfGrades;
-    }
-
-    return null;
-  }, [selectedSubject, gradeEntries]);
+    return numberOfGrades > 0 ? totalGrades / numberOfGrades : null;
+  }, [filteredGradeEntries]);
 
   return (
     <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
@@ -84,15 +76,16 @@ export default function GradeIndicator({
             Grades
           </h3>
         </div>
+
         <SubjectDropdown
           options={subjectList}
-          onSubjectChange={handleSubjectChange}
+          onSubjectChange={setSelectedSubject}
         />
       </div>
       <div className="py-40 px-30">
-        <PieChartComponent
-          key={selectedSubject}
-          data={filteredGrades}
+        <PieChartsComponent
+          key={selectedSubject || "default"}
+          data={computedGradeList}
           averageGrade={averageGrade}
         />
       </div>

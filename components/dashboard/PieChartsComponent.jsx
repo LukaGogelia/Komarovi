@@ -76,13 +76,13 @@ const PieChartComponent = ({ data, averageGrade }) => {
           outerRadius={75}
           fill="#FF5733"
         >
-          {data.map((entry, index) => (
+          {data?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <text
           x="50%"
-          y={data.length === 10 ? "28.5%" : "37%"} // Adjusted positioning for the first line
+          y={data?.length === 10 ? "28.5%" : "37%"} // Adjusted positioning for the first line
           textAnchor="middle"
           dominantBaseline="central"
           style={{
@@ -95,15 +95,15 @@ const PieChartComponent = ({ data, averageGrade }) => {
         </text>
         <line
           x1="64%"
-          y1={data.length === 10 ? "33%" : "41.5%"} // Adjusted positioning for the line
+          y1={data?.length === 10 ? "33%" : "41.5%"} // Adjusted positioning for the line
           x2="35%"
-          y2={data.length === 10 ? "33%" : "41.5%"}
+          y2={data?.length === 10 ? "33%" : "41.5%"}
           stroke="#6440FB"
           style={{ strokeWidth: 1 }}
         />
         <text
           x="50%"
-          y={data.length === 10 ? "40.5%" : "49%"} // Adjusted positioning for the second line
+          y={data?.length === 10 ? "40.5%" : "49%"} // Adjusted positioning for the second line
           textAnchor="middle"
           dominantBaseline="central"
           style={{

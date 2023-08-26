@@ -12,7 +12,7 @@ const ApplyGauge = () => {
   };
 
   return (
-    <div className="col-xl-4 col-md-6">
+    <div className="col-xl-4 col-md-12">
       <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100 ">
         <div
           style={{ display: "flex", flexDirection: "column" }}

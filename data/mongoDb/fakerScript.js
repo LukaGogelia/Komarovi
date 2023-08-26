@@ -1,25 +1,53 @@
 const mongoose = require("mongoose");
 const faker = require("faker");
-const { Subject } = require("./models"); // Adjust the path to match your project structure
+const Schema = mongoose.Schema;
 
-// Connect to your MongoDB
+// Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// Define subjects you want to create
-const subjects = Array.from({ length: 10 }, () => ({
-  name: faker.random.words(2), // This will generate a random subject name
-}));
+// Define the Subject Schema
+const SubjectSchema = new Schema({
+  subject: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
+});
 
-// Create subjects in the database
-Subject.insertMany(subjects)
-  .then(() => {
-    console.log("Successfully inserted subjects");
-    mongoose.disconnect(); // Disconnect when done
-  })
-  .catch((error) => {
-    console.error("An error occurred:", error);
-    mongoose.disconnect(); // Disconnect in case of an error
-  });
+const Subject =
+  mongoose.models.Subject || mongoose.model("Subject", SubjectSchema);
+
+// Function to generate fake subjects
+async function generateFakeSubjects() {
+  const numberOfSubjects = 10; // Adjust this as needed
+
+  for (let i = 0; i < numberOfSubjects; i++) {
+    // Generate a random subject name
+    const subjectName = faker.lorem.words(2);
+
+    const subject = new Subject({
+      subject: subjectName,
+    });
+
+    try {
+      await subject.save();
+    } catch (error) {
+      // Handle unique constraint error by skipping this iteration
+      if (error.code === 11000) {
+        console.warn(`Subject "${subjectName}" already exists. Skipping.`);
+        continue;
+      }
+      console.error("Error generating subject:", error);
+    }
+  }
+
+  console.log(`${numberOfSubjects} fake subjects generated!`);
+}
+
+generateFakeSubjects()
+  .then(() => mongoose.connection.close())
+  .catch((error) => console.error(error));

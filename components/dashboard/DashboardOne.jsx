@@ -8,150 +8,142 @@ const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 import { fetchData } from "./Reviews";
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
-import { Quiz } from "@/data/mongoDb/models";
+import { Quiz, Student } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 import { GradeEntry } from "@/data/mongoDb/models";
 import { User } from "@/data/mongoDb/models";
+import { PointsCommissionDecision } from "@/data/mongoDb/models";
+import { connectDb } from "./ConnectToDb";
 
 export async function fetchGradesData() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  try {
+    await connectDb();
 
-  const userList = await User.find({
-    _id: "64e22cd5063cdf6c0a812386",
-  });
+    const studentId = "64e52ffb1436edfda9379761";
 
-  let personalPoints = 0; // Default value
-  let obtainedPointsForHouse = 0; // Default value
+    const student = await Student.findOne({ _id: studentId })
+      .populate("gradeEntries")
+      .exec();
 
-  if (
-    userList &&
-    userList.length > 0 &&
-    userList[0].roles.includes("student")
-  ) {
-    const points = await userList[0].getStudentPoints();
-    personalPoints = points.personalPoints;
-    obtainedPointsForHouse = points.obtainedPointsForHouse;
-  }
+    const pointsDecisions = await PointsCommissionDecision.find({
+      _id: { $in: student.pointsCommissionDecision },
+    });
 
-  // Find the grade entries
-  const gradeEntries = await GradeEntry.find({
-    studentId: "64db5e53c84450e9247d9966",
-  });
+    let personalPoints = 0;
+    let obtainedPointsForHouse = 0;
 
-  // Extract the subjects into objects with the "label" key
-  const subjectList = gradeEntries.map((entry) => ({ label: entry.subject }));
+    pointsDecisions.forEach((decision) => {
+      personalPoints += Math.round(decision.pointsAwarded * 0.15);
+      obtainedPointsForHouse += Math.round(decision.pointsAwarded * 0.85);
+    });
 
-  const gradeCounts = new Array(10).fill(0);
-  const gradeNames = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-  ];
+    const gradeCounts = new Array(10).fill(0);
+    const gradeNames = [
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+    ];
 
-  const states = [
-    {
-      id: 1,
-      title: "Obtained house points",
-      value: obtainedPointsForHouse,
-      iconClass: "icon-coupon",
-    },
-    {
-      id: 2,
-      title: "persinal points",
-      value: personalPoints,
-      iconClass: "icon-play-button",
-    },
-    {
-      id: 3,
-      title: "Total Students",
-      value: 129786,
-      iconClass: "icon-graduate-cap",
-    },
-    {
-      id: 4,
-      title: "Total Instructors",
-      value: 22786,
-      iconClass: "icon-online-learning",
-    },
-  ];
+    const gradeEntries = student.gradeEntries;
 
-  // Count the occurrences of each grade in the entries
-  gradeEntries.forEach((entry) => {
-    const grade = entry.grade;
-    if (grade >= 1 && grade <= 10) {
-      gradeCounts[10 - grade]++;
+    if (gradeEntries && Array.isArray(gradeEntries)) {
+      gradeEntries.forEach((entry) => {
+        const grade = entry.grade;
+
+        if (grade >= 1 && grade <= 10) {
+          gradeCounts[10 - grade]++;
+        }
+      });
+
+      const gradeList = gradeCounts.map((count, index) => ({
+        name: gradeNames[9 - index],
+        value: count,
+      }));
+
+      // Deduplicate subjects
+      const uniqueSubjects = [
+        ...new Set(gradeEntries.map((entry) => entry.subject)),
+      ];
+      const subjectList = uniqueSubjects.map((subject) => ({ label: subject }));
+
+      return {
+        subjectList,
+        gradeList,
+        gradeEntries,
+        states: [
+          {
+            id: 1,
+            title: "Obtained house points",
+            value: obtainedPointsForHouse,
+            iconClass: "icon-coupon",
+          },
+          {
+            id: 2,
+            title: "personal points",
+            value: personalPoints,
+            iconClass: "icon-play-button",
+          },
+          {
+            id: 3,
+            title: "Total Students",
+            value: 129786,
+            iconClass: "icon-graduate-cap",
+          },
+          {
+            id: 4,
+            title: "Total Instructors",
+            value: 22786,
+            iconClass: "icon-online-learning",
+          },
+        ],
+      };
     }
-  });
-
-  // Convert the counts into the desired object format
-  const gradeList = gradeCounts.map((count, index) => ({
-    name: gradeNames[9 - index], // Mapping from the index to the corresponding grade name
-    value: count,
-  }));
-
-  // Close the connection
-  await mongoose.disconnect();
-
-  return {
-    subjectList,
-    gradeList,
-    gradeEntries,
-    states,
-  };
+  } catch (error) {
+    console.error("Error fetching grades data:", error);
+    throw error; // or handle it more gracefully depending on your application's needs
+  }
 }
 
 export async function useFetchQuizData() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await connectDb();
 
-  const mathId = await Quiz.find({ subject: "math" }, "_id");
-  const physicsId = await Quiz.find({ subject: "physics" }, "_id");
-  const extractIds = (arr) => arr.map((item) => item._id);
-  const mathArray = extractIds(mathId);
-  const physicsArray = extractIds(physicsId);
+  // const mathId = await Quiz.find({ subject: "math" }, "_id");
+  // const physicsId = await Quiz.find({ subject: "physics" }, "_id");
+  // const extractIds = (arr) => arr.map((item) => item._id);
+  // const mathArray = extractIds(mathId);
+  // const physicsArray = extractIds(physicsId);
+  const studentId = "64e52ffb1436edfda9379761";
 
-  const mathList = await QuizEntry.find({
-    studentId: "64db5e53c84450e9247d9940",
-    quizId: { $in: mathArray },
-  }).populate({
-    path: "quizId",
-    select: "totalPoints quizNumber academicYear", // Add date here
-  });
+  const mathList = await Student.findOne({ _id: studentId })
+    .populate({
+      path: "quizEntries",
+      select: "openQuestionPoints closedQuestionPoints",
+      populate: {
+        path: "quizId", // Assuming quizId is the reference to the quiz collection
+        select: "quizNumber academicYear", // Selecting only the quizNumber field
+      },
+    })
+    .exec();
 
-  const physicsList = await QuizEntry.find({
-    studentId: "64db5e53c84450e9247d9940",
-    quizId: { $in: physicsArray },
-  }).populate({
-    path: "quizId",
-    select: "totalPoints quizNumber academicYear", // Add date here
-  });
-  // Calculate the percentage for math
-  const mathPercentage = mathList.map(
-    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
-  );
-
-  const physicsPercentage = physicsList.map(
-    (Quiz) => (Quiz.totalPoints / Quiz.quizId.totalPoints) * 100
-  );
-
-  //   console.log(mathPercentage);
-  //   console.log(physicsPercentage);
-
-  mongoose.disconnect();
+  const physicsList = await Student.findOne({ _id: studentId })
+    .populate({
+      path: "quizEntries",
+      select: "openQuestionPoints closedQuestionPoints",
+      populate: {
+        path: "quizId", // Assuming quizId is the reference to the quiz collection
+        select: "quizNumber academicYear", // Selecting only the quizNumber field
+      },
+    })
+    .exec();
 
   const arr = [];
   const names = [
@@ -169,32 +161,47 @@ export async function useFetchQuizData() {
 
   for (let i = 1; i < 11; i++) {
     let obj = { name: names[i - 1] };
-    let mathQuiz = mathList.find((em) => em.quizId.quizNumber === i);
+
+    let mathQuiz = mathList.quizEntries.find(
+      (em) => em.quizId.quizNumber === i
+    );
+    let physicsQuiz = physicsList.quizEntries.find(
+      (em) => em.quizId.quizNumber === i
+    );
+
     if (mathQuiz) {
-      obj.math = (mathQuiz.totalPoints / mathQuiz.quizId.totalPoints) * 100;
-      obj.mathYear = mathQuiz.quizId.academicYear; // Add date here
-    }
-    let physicsQuiz = physicsList.find((em) => em.quizId.quizNumber === i);
-    if (physicsQuiz) {
-      obj.physics =
-        (physicsQuiz.totalPoints / physicsQuiz.quizId.totalPoints) * 100;
-      obj.physicsYear = physicsQuiz.quizId.academicYear; // Add date here
+      obj.math =
+        ((mathQuiz.openQuestionPoints + mathQuiz.closedQuestionPoints) / 100) *
+        100; // Assuming total points are 100
+      obj.mathYear = mathQuiz.quizId.academicYear; // Access academicYear here
     }
 
+    if (physicsQuiz) {
+      obj.physics =
+        ((physicsQuiz.openQuestionPoints + physicsQuiz.closedQuestionPoints) /
+          100) *
+        100; // Assuming total points are 100
+      obj.physicsYear = physicsQuiz.quizId.academicYear; // Access academicYear here
+    }
     if (Object.keys(obj).length > 1) {
       arr.push(obj);
     }
   }
 
+  // Return the array
   return arr;
 }
 
 export default async function DashboardOne() {
-  const { lastThreeDecisions } = await fetchData();
+  // const { lastThreeDecisions } = await fetchData();
   const arr = await useFetchQuizData();
 
   const { subjectList, gradeList, gradeEntries, states } =
     await fetchGradesData();
+
+  console.log("subjectList", subjectList);
+  console.log("gradeList", gradeList);
+  console.log("gradeEntries", gradeEntries);
 
   const academicYearsSet = new Set();
   arr.forEach((item) => {
@@ -228,30 +235,53 @@ export default async function DashboardOne() {
           }}
         >
           <div
-            className=" y-gap-30 col-lg-8 col-md-10 col-sm-12 col-xs-12 x-gap-30"
+            className="card-container col-xl-8 col-lg-8 col-md-12"
             style={{
               display: "flex",
               justifyContent: "space-between",
               flexWrap: "wrap",
+              gap: "20px",
+              margin: "auto",
             }}
           >
             {states.map((elm, i) => (
               <div
                 key={i}
-                className="responsive-card col-lg-6 col-md-8 col-sm-12 "
+                className="responsive-card"
+                style={{
+                  flex: "1 0 calc(50% - 30px)",
+                  maxWidth: "calc(50% - 10px)",
+                  minHeight: "11rem",
+                  // maxWidth: "600px",
+                  borderRadius: "16px",
+                  background: "white",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  padding: "35px 20px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
-                <div
-                  className="d-flex justify-between items-center py-35 px-30 rounded-16 bg-white -dark-bg-dark-1 shadow-4 col-12"
-                  style={{ minHeight: "11rem" }}
-                >
-                  <div>
-                    <div className="lh-1 fw-500">{elm.title}</div>
-                    <div className="text-24 lh-1 fw-700 text-dark-1 mt-20">
-                      {elm.value}
-                    </div>
+                <div>
+                  <div style={{ lineHeight: "1", fontWeight: "500" }}>
+                    {elm.title}
                   </div>
-                  <i className={`text-40 ${elm.iconClass} text-purple-1`}></i>
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      lineHeight: "1",
+                      fontWeight: "700",
+                      marginTop: "20px",
+                      color: "#333",
+                    }}
+                  >
+                    {elm.value}
+                  </div>
                 </div>
+                <i
+                  className={`text-40 ${elm.iconClass}`}
+                  style={{ color: "#9b59b6" }}
+                ></i>
               </div>
             ))}
           </div>
@@ -262,10 +292,14 @@ export default async function DashboardOne() {
           <QuizPerformance options={options} arr={arr} />
           <div className="col-xl-4 col-md-6">
             <GradeIndicator
-              subjectList={subjectList}
-              gradeList={gradeList}
-              gradeEntries={gradeEntries}
+              subjectList={JSON.stringify(subjectList)}
+              gradeList={JSON.stringify(gradeList)}
+              gradeEntries={JSON.stringify(gradeEntries)}
             />
+
+            {/* <p> {JSON.stringify(gradeEntries)} </p>
+            <p> {JSON.stringify(gradeList)} </p>
+            <p> {JSON.stringify(subjectList)} </p> */}
           </div>
         </div>
 
@@ -332,7 +366,7 @@ export default async function DashboardOne() {
             </div>
           </div>
 
-          <div className="col-xl-4 col-md-6">
+          {/* <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
                 <h2 className="text-17 lh-1 fw-500">Recent house points</h2>
@@ -371,7 +405,7 @@ export default async function DashboardOne() {
                         <div className="d-flex items-center x-gap-20 y-gap-10 flex-wrap pt-10">
                           <div className="text-14 lh-1">
                             {new Date(decision.date).toLocaleDateString()}{" "}
-                            {/* Format the date */}
+                           
                           </div>
                           <div className="text-14 lh-1">
                             Points: {decision.pointsAwarded}
@@ -386,7 +420,7 @@ export default async function DashboardOne() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
