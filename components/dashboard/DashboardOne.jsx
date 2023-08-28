@@ -7,7 +7,7 @@ import Link from "next/link";
 const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
-import { Quiz, Student } from "@/data/mongoDb/models";
+import { Quiz, Student, Teacher } from "@/data/mongoDb/models";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
@@ -17,6 +17,15 @@ import { PointsCommissionDecision } from "@/data/mongoDb/models";
 import { connectDb } from "./ConnectToDb";
 import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
 import { fetchData } from "./Reviews";
+
+// export async function fetchTeacher() {
+//   const teacherId = "64e8d8e05ab36dd9eb96add1";
+
+//   const teacher = await Teacher.findOne({ _id: teacherId })
+//     .populate("classTaught")
+//     .exec();
+//   return teacher;
+// }
 
 export async function fetchGradesData() {
   try {
@@ -124,8 +133,6 @@ export async function useFetchQuizData() {
   // const physicsArray = extractIds(physicsId);
   const studentId = "64e52ffb1436edfda9379761";
 
-  const darkmode = true;
-
   const mathList = await Student.findOne({ _id: studentId })
     .populate({
       path: "quizEntries",
@@ -203,22 +210,18 @@ export default async function DashboardOne() {
   const { subjectList, gradeList, gradeEntries, states } =
     await fetchGradesData();
 
-  console.log("subjectList", subjectList);
-  console.log("gradeList", gradeList);
-  console.log("gradeEntries", gradeEntries);
-
   const academicYearsSet = new Set();
   arr.forEach((item) => {
     academicYearsSet.add(item.mathYear);
     academicYearsSet.add(item.physicsYear);
   });
-
   // Convert the set to an array and create the options array
   const options = Array.from(academicYearsSet).map((year) => {
     return { label: year };
   });
 
   options.push({ label: "All" });
+  // return <></>;
 
   return (
     <div className="dashboard__main">

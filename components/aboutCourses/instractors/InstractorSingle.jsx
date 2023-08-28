@@ -1,33 +1,13 @@
-"use client";
-
 import Star from "@/components/common/Star";
 import { coursesData } from "@/data/courses";
-import React, { useState, useEffect } from "react";
-import {
-  teamMembers,
-  teamMembersFull,
-  instractorsEight,
-  instractorsNine,
-  marketingCoordinator,
-} from "@/data/instractors";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-export default function InstractorSingle({ id }) {
-  const [activeTab, setActiveTab] = useState(1);
-  const [pageItem, setPageItem] = useState(teamMembers[0]);
-  useEffect(() => {
-    const filtered = [
-      ...teamMembers,
-      ...teamMembersFull,
-      ...instractorsEight,
-      ...instractorsNine,
-      marketingCoordinator,
-    ].filter((elm) => elm.id == id)[0];
-
-    if (filtered) {
-      setPageItem(filtered);
-    }
-  }, []);
+import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
+export default async function InstractorSingle({ id }) {
+  const activeTab = 1;
+  const { teamMembers } = await fetchTeachers();
+  const pageItem = [...teamMembers].filter((elm) => elm.id == id)[0];
 
   return (
     <>
@@ -118,24 +98,11 @@ export default function InstractorSingle({ id }) {
               <div className="tabs -active-purple-2 js-tabs">
                 <div className="tabs__controls d-flex js-tabs-controls">
                   <button
-                    onClick={() => setActiveTab(1)}
-                    className={`tabs__button js-tabs-button ${
-                      activeTab == 1 ? "is-active" : ""
-                    }`}
+                    className={`tabs__button js-tabs-button`}
                     data-tab-target=".-tab-item-1"
                     type="button"
                   >
                     Overview
-                  </button>
-                  <button
-                    onClick={() => setActiveTab(2)}
-                    className={`tabs__button js-tabs-button ml-30 ${
-                      activeTab == 2 ? "is-active" : ""
-                    } `}
-                    data-tab-target=".-tab-item-2"
-                    type="button"
-                  >
-                    Courses
                   </button>
                 </div>
 
@@ -169,16 +136,9 @@ export default function InstractorSingle({ id }) {
                       project is, then we will learn about low-fidelity
                       wireframes and how to make use of existing UI design kits.
                     </p>
-                    <button className="button underline text-purple-1 mt-30">
-                      Show More
-                    </button>
                   </div>
 
-                  <div
-                    className={`tabs__pane -tab-item-2 ${
-                      activeTab == 2 ? "is-active" : ""
-                    } `}
-                  >
+                  <div className={`tabs__pane -tab-item-2`}>
                     <div className="row">
                       {coursesData.slice(0, 2).map((elm, i) => (
                         <div key={i} className="col-md-6">
@@ -263,7 +223,7 @@ export default function InstractorSingle({ id }) {
                                     />
                                   </div>
                                   <div className="text-14 lh-1">{`${Math.floor(
-                                    elm.duration / 60,
+                                    elm.duration / 60
                                   )}h ${Math.floor(elm.duration % 60)}m`}</div>
                                 </div>
 

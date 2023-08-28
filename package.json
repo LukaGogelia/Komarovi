@@ -63,7 +63,8 @@
     "swiper": "^8.0.0",
     "tsc": "^2.0.4",
     "tsparticles": "^2.11.0",
-    "victory": "^36.6.11"
+    "victory": "^36.6.11",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",

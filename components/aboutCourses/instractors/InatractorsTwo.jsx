@@ -57,6 +57,16 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
     setSortedFilteredData(sortedData);
   }, [currentSortingOption, filteredData]);
 
+  useEffect(() => {
+    console.log("Saving to localStorage:", sortedFilteredData);
+    if (sortedFilteredData) {
+      localStorage.setItem(
+        "sortedFilteredData",
+        JSON.stringify(sortedFilteredData)
+      );
+    }
+  }, [sortedFilteredData]);
+
   // Update this function to work with subject IDs
   const handleFilterCategories = (subjectId) => {
     if (filterCategories.includes(subjectId)) {
@@ -66,6 +76,7 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
     }
   };
 
+  // console.log("sorted data", sortedFilteredData[0].name);
   // console.log("subjects", subjects);
   // console.log("teamMembers", teamMembers);
   // return <></>;
@@ -213,10 +224,7 @@ export default function InatractorsTwo({ teamMembers, subjects }) {
                       </div>
                       <div className="teamCard__content mt-10 px-10 pb-5">
                         <h4 className="teamCard__title">
-                          <Link
-                            className="linkCustom"
-                            href={`/instructors/${elm.id}`}
-                          >
+                          <Link href={`/instructors/${elm.id}`}>
                             {elm.name}
                           </Link>
                         </h4>

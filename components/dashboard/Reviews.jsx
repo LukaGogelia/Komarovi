@@ -10,28 +10,32 @@ import { Student } from "../../data/mongoDb/models.js";
 
 export const fetchData = async () => {
   await connectDb();
+  const studentId = "64e52ffb1436edfda9379761";
 
-  // Fetch all students with their decisions
-  const studentsList = await Student.find().populate(
+  // Fetch the student by ID with their decisions
+  const student = await Student.findOne({ _id: studentId }).populate(
     "pointsCommissionDecision"
   );
 
   let decisionsList = [];
 
-  studentsList.forEach((student, index) => {
-    if (
-      student.pointsCommissionDecision &&
-      student.pointsCommissionDecision.length > 0
-    ) {
-      console.log(
-        `Student ${index + 1} Decisions:`,
-        JSON.stringify(student.pointsCommissionDecision, null, 2) // Nicely formatted JSON
-      );
-      decisionsList.push(...student.pointsCommissionDecision); // Spread and push decisions to decisionsList array
-    } else {
-      console.log(`Student ${index + 1} has no decisions.`);
-    }
-  });
+  if (student && Array.isArray(student.pointsCommissionDecision)) {
+    student.pointsCommissionDecision.forEach((decision, index) => {
+      if (decision && Object.keys(decision).length > 0) {
+        console.log(
+          `Decision ${index + 1}:`,
+          JSON.stringify(decision, null, 2) // Nicely formatted JSON
+        );
+        decisionsList.push(decision); // Push decision to decisionsList array
+      } else {
+        console.log(`Decision ${index + 1} is empty.`);
+      }
+    });
+  } else {
+    console.log("No decisions for this student.");
+  }
+
+  // Get the last five decisions
   const lastFiveDecisionsList = decisionsList.slice(0, 5);
 
   mongoose.connection.close();
@@ -42,7 +46,7 @@ export default async function DecisionsDisplay() {
   const { decisionsList } = await fetchData();
   //   await fetchData();
   //   console.log("Returned decisionsList:", lastFiveDecisionsList);
-  //   return <></>;
+  // return <></>;
 
   return (
     <div className="dashboard__main">
