@@ -9,9 +9,6 @@ import Link from "next/link";
 export default function InatractorsTwo({ teamMembers, subjects }) {
   const [categoryOpen, setCategoryOpen] = useState(true);
   const validTeamMembers = Array.isArray(teamMembers) ? teamMembers : [];
-
-  const allSubjectNames = subjects.map((subj) => subj.subject);
-
   // Now filterCategories will be an array of subject IDs
   const [filterCategories, setFilterCategories] = useState([]);
   const [filteredData, setFilteredData] = useState(validTeamMembers);

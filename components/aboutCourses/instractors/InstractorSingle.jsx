@@ -44,18 +44,6 @@ export default async function InstractorSingle({ id }) {
                   <div className="text-white">{pageItem.role}</div>
                   <div className="d-flex x-gap-20 pt-15">
                     <div className="d-flex items-center text-white">
-                      <div className="icon-star mr-10"></div>
-                      <div className="text-13 lh-1">Instructor Rating</div>
-                    </div>
-
-                    <div className="d-flex items-center text-white">
-                      <div className="icon-video-file mr-10"></div>
-                      <div className="text-13 lh-1">
-                        {pageItem.reviews || 3545} Reviews
-                      </div>
-                    </div>
-
-                    <div className="d-flex items-center text-white">
                       <div className="icon-person-3 mr-10"></div>
                       <div className="text-13 lh-1">
                         {pageItem.students || pageItem.studentCount || 143}{" "}
@@ -73,9 +61,7 @@ export default async function InstractorSingle({ id }) {
                 </div>
 
                 <div className="d-flex items-center mt-30">
-                  <button className="button -md -green-1 text-dark-1">
-                    Send Message
-                  </button>
+                  <button className="button -md -green-1 ">Send Message</button>
 
                   <div className="d-flex items-center x-gap-15 text-white ml-25">
                     {pageItem.socialProfile?.map((itm, index) => (
@@ -98,7 +84,7 @@ export default async function InstractorSingle({ id }) {
               <div className="tabs -active-purple-2 js-tabs">
                 <div className="tabs__controls d-flex js-tabs-controls">
                   <button
-                    className={`tabs__button js-tabs-button`}
+                    className={`tabs__button js-tabs-button text-dark-1`}
                     data-tab-target=".-tab-item-1"
                     type="button"
                   >
