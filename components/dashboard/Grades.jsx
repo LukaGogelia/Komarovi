@@ -1,18 +1,23 @@
 "use client";
-
-import { grades } from "@/data/dashboard";
-import { letters, alphabetItems } from "@/data/dictionary";
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import FooterNine from "../layout/footers/FooterNine";
 import Image from "next/image";
 import PageLinksTwo from "../common/PageLinksTwo";
+import SelectGrade from "../SelectGrade";
 
-export default function Grades() {
-  const [currentLetter, setCurrentLetter] = useState("A");
+export default function Grades({ studentInfoArray }) {
+  const [value, setValue] = useState();
+
+  const handleRateChange = (rate) => {
+    setValue(Number(rate));
+  };
+
   return (
     <div className="dashboard__main">
-      <div className="dashboard__content bg-light-4">
+      <div
+        className="dashboard__content bg-light-4"
+        style={{ minHeight: "80vh" }}
+      >
         <div className="row pb-50 mb-10">
           <div className="col-auto">
             <h1 className="text-30 lh-12 fw-700">Grades</h1>
@@ -29,44 +34,6 @@ export default function Grades() {
               </div>
 
               <div className="py-30 px-30">
-                <div className="row">
-                  <div className="col-auto">Grader Report</div>
-                </div>
-
-                <div className="row y-gap-20 x-gap-20 items-center pt-30">
-                  <div className="col-auto">
-                    <h4 className="text-18 lh-13 fw-500">First name</h4>
-                  </div>
-
-                  <div className="col-12">
-                    <div className="d-flex x-gap-5 y-gap-10 flex-wrap">
-                      <div>
-                        <div className="py-8 pr-5 d-flex justify-center items-center">
-                          All
-                        </div>
-                      </div>
-
-                      {letters.map((elm, i) => (
-                        <div
-                          style={{ cursor: "pointer" }}
-                          key={i}
-                          onClick={() => setCurrentLetter(elm)}
-                        >
-                          <div
-                            className={`size-35 d-flex justify-center items-center border-light rounded-4 ${
-                              currentLetter == elm
-                                ? "bg-dark-1 -dark-bg-dark-2 text-white"
-                                : ""
-                            } `}
-                          >
-                            {elm}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
                 <div className="py-25 px-30 bg-light-7 -dark-bg-dark-2 rounded-8 mt-25">
                   <div className="row y-gap-20 justify-between items-center">
                     <div className="col-xl-3">
@@ -80,9 +47,7 @@ export default function Grades() {
 
                     <div className="col-xl-2">
                       <div className="d-flex justify-between items-center">
-                        <div className="text-purple-1 fw-500">
-                          Are you a Literacy Light...
-                        </div>
+                        <div className="text-purple-1 fw-500">Grade</div>
                         <div className="d-flex y-gap-5 x-gap-10 items-center pl-10">
                           <a href="#">
                             <i className="icon-edit text-16 text-purple-1"></i>
@@ -97,7 +62,7 @@ export default function Grades() {
                     <div className="col-xl-2">
                       <div className="d-flex justify-between items-center">
                         <div className="text-purple-1 fw-500">
-                          Let&#39;s learn about...
+                          Accounting Attendance
                         </div>
                         <div className="d-flex y-gap-5 x-gap-10 items-center pl-10">
                           <a href="#">
@@ -127,7 +92,7 @@ export default function Grades() {
                 </div>
 
                 <div className="border-light-bottom py-20 px-30">
-                  {grades.map((elm, i) => (
+                  {studentInfoArray.map((elm, i) => (
                     <div
                       key={i}
                       className={`row y-gap-20 justify-between items-center ${
@@ -152,7 +117,9 @@ export default function Grades() {
                             alt="image"
                             className="size-40"
                           />
-                          <div className="text-dark-1 ml-10">{elm.name}</div>
+                          <div className="text-dark-1 ml-10">
+                            {elm.fullName}
+                          </div>
                         </div>
                       </div>
 
@@ -162,9 +129,7 @@ export default function Grades() {
 
                       <div className="col-xl-2">
                         <div className="d-flex justify-end">
-                          <a href="#">
-                            <i className="icon-zoom-in text-20"></i>
-                          </a>
+                          <SelectGrade />
                         </div>
                       </div>
 

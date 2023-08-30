@@ -234,7 +234,10 @@ const GradeEntrySchema = new Schema({
   subject: String,
   grade: Number,
   type: String,
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now, // This sets the default value to the current date and time
+  },
 });
 
 const GradeEntry =
@@ -488,6 +491,10 @@ const StudentSchema = new Schema({
       },
     },
   ],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 StudentSchema.methods.getStudentPoints = async function () {
