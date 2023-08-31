@@ -1,49 +1,29 @@
-"use client";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 
-const options = [
-  { label: "1" },
-  { label: "2" },
-  { label: "3" },
-  { label: "4" },
-  { label: "5" },
-  { label: "6" },
-  { label: "7" },
-  { label: "8" },
-  { label: "9" },
-  { label: "10" },
+const typeOptions = [
+  { label: "Test" },
+  { label: "Assignment" },
+  { label: "Quiz" },
+  { label: "Final" },
+  // Add other types as needed
 ];
 
-const SelectGrade = ({ studentId, subject, onRateChange }) => {
+const SelectType = ({ onTypeChange }) => {
   const [ddOpen, setDdOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
-  const [darkMode, setDarkMode] = useState(true);
-  // const [isDropdownClicked, setIsDropdownClicked] = useState(false);
+  const [selectedType, setSelectedType] = useState("");
+  const [darkMode, setDarkMode] = useState(true); // Assuming you want dark mode here too
 
   const handleDropdownClick = () => {
-    // if (ddOpen) {
-    //   setIsDropdownClicked(false);
-    // } else {
-    //   setIsDropdownClicked(true);
-    // }
     setDdOpen((prev) => !prev);
   };
 
   const handleSelectChange = (value) => {
-    setSelectedValue(value);
-    onRateChange(value); // Send the selected grade to the parent
+    setSelectedType(value);
+    onTypeChange(value);
     setDdOpen(false); // Close the dropdown
   };
-
-  // const handleAddGrade = () => {
-  //   // Call the callback provided by the parent component (Grades page)
-  //   onRateChange({
-  //     grade: selectedValue,
-  //     currentStudent: { studentId, subject },
-  //   });
-  // };
 
   return (
     <div style={{ zIndex: "22", width: "100%" }}>
@@ -55,7 +35,7 @@ const SelectGrade = ({ studentId, subject, onRateChange }) => {
           }`}
         >
           <span className="js-button-title">
-            {selectedValue ? selectedValue : "Default"}
+            {selectedType ? selectedType : "Default"}
           </span>
           <FontAwesomeIcon
             icon={faChevronDown}
@@ -72,11 +52,11 @@ const SelectGrade = ({ studentId, subject, onRateChange }) => {
           } ${ddOpen ? "-is-visible" : ""}`}
         >
           <div className="select__options js-options">
-            {options.map((option, i) => (
+            {typeOptions.map((option, i) => (
               <div
                 onClick={() => handleSelectChange(option.label)}
                 className={`select__options__button js-target-title${
-                  selectedValue === option.label ? "-is-choosen" : ""
+                  selectedType === option.label ? "-is-choosen" : ""
                 }`}
                 data-value={option.label}
                 key={i}
@@ -86,13 +66,9 @@ const SelectGrade = ({ studentId, subject, onRateChange }) => {
             ))}
           </div>
         </div>
-        {/* 
-        {isDropdownClicked && (
-          <button onClick={handleAddGrade}>Add Grade</button>
-        )} */}
       </div>
     </div>
   );
 };
 
-export default SelectGrade;
+export default SelectType;

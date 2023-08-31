@@ -26,9 +26,12 @@ export default async function handler(req, res) {
 
         // Find teacher by hardcoded ID
         const teacher = await Teacher.findById(HARDCODED_TEACHER_ID);
+        console.log("Teacher:", teacher); // <-- Debug Log
 
         // Check if teacher teaches the student
         const studentClassId = await Student.findById(studentId, "classIds");
+        console.log("StudentClassId:", studentClassId); // <-- Debug Log
+
         const teachesStudent = teacher.classTaught.some((classTeaching) =>
           studentClassId.classIds.includes(classTeaching.classId.toString())
         );
@@ -47,6 +50,7 @@ export default async function handler(req, res) {
           type,
           date,
         });
+        console.log("New GradeEntry:", newGradeEntry); // <-- Debug Log
 
         // Add the new GradeEntry to the student's receivedGrade array
         const updatedStudent = await Student.findByIdAndUpdate(
@@ -56,6 +60,7 @@ export default async function handler(req, res) {
           },
           { new: true }
         );
+        console.log("Updated Student:", updatedStudent); // <-- Debug Log
 
         if (!updatedStudent) {
           return res
@@ -65,6 +70,7 @@ export default async function handler(req, res) {
 
         return res.status(200).json({ success: true, data: updatedStudent });
       } catch (error) {
+        console.error("Error:", error); // <-- Debug Log
         return res.status(500).json({ success: false, error: "Server Error" });
       }
       break;

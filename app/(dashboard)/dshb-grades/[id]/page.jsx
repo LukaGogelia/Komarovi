@@ -8,7 +8,7 @@ import { fetchClasses } from "../../dshb-grades-list/page";
 import { Student } from "@/data/mongoDb/models";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
 
-async function fetchStudentInfo(classId) {
+async function fetchStudentInfo(classId, subject) {
   await connectDb();
 
   const studentsInClass = await Student.find({ classIds: classId }).populate(
@@ -21,14 +21,17 @@ async function fetchStudentInfo(classId) {
       // Check if student has an associated user
       if (student.userId) {
         return {
+          studentId: student._id, // Include student's ID
           fullName: `${student.userId.firstName} ${student.userId.lastName}`, // Concatenating firstName and lastName
           email: student.userId.email, // Access user's email
+          subject: subject, // Include the subject
         };
       } else {
         return null;
       }
     })
-    .filter((info) => info !== null); // Filter out any null values
+    .filter((info) => info !== null);
+  // Filter out any null values
 
   return studentInfoArray;
 }
@@ -46,7 +49,7 @@ export default async function page({ params }) {
   const classId = classObj._id;
 
   // Assuming fetchStudentInfo has been updated accordingly
-  const studentInfoArray = await fetchStudentInfo(classId);
+  const studentInfoArray = await fetchStudentInfo(classId, classObj.subject);
 
   return (
     <div className="barba-container" data-barba="container">

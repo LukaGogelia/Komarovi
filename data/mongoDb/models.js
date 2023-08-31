@@ -428,12 +428,12 @@ const StudentSchema = new Schema({
       },
     },
   ],
-  receivedPoints: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "PointsCommissionDecision",
-    },
-  ],
+  // receivedPoints: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "PointsCommissionDecision",
+  //   },
+  // ],
   receivedGrade: [
     {
       type: Schema.Types.ObjectId,
@@ -460,12 +460,12 @@ const StudentSchema = new Schema({
       ref: "QuizEntry", // Reference to the QuizEntry collection
     },
   ],
-  gradeEntries: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "GradeEntry", // Reference to the GradeEntry collection
-    },
-  ],
+  // gradeEntries: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "GradeEntry", // Reference to the GradeEntry collection
+  //   },
+  // ],
   pointsCommissionDecision: [
     {
       type: Schema.Types.ObjectId,

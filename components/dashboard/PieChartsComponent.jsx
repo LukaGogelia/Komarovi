@@ -82,7 +82,7 @@ const PieChartComponent = ({ data, averageGrade }) => {
         </Pie>
         <text
           x="50%"
-          y={data?.length === 10 ? "28.5%" : "37%"} // Adjusted positioning for the first line
+          y="35%"
           textAnchor="middle"
           dominantBaseline="central"
           style={{
@@ -95,15 +95,15 @@ const PieChartComponent = ({ data, averageGrade }) => {
         </text>
         <line
           x1="64%"
-          y1={data?.length === 10 ? "33%" : "41.5%"} // Adjusted positioning for the line
+          y1="37.5%"
           x2="35%"
-          y2={data?.length === 10 ? "33%" : "41.5%"}
+          y2="37.5%"
           stroke="#6440FB"
           style={{ strokeWidth: 1 }}
         />
         <text
           x="50%"
-          y={data?.length === 10 ? "40.5%" : "49%"} // Adjusted positioning for the second line
+          y="47%"
           textAnchor="middle"
           dominantBaseline="central"
           style={{

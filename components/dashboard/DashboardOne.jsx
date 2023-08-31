@@ -34,7 +34,7 @@ export async function fetchGradesData() {
     const studentId = "64e52ffb1436edfda9379761";
 
     const student = await Student.findOne({ _id: studentId })
-      .populate("gradeEntries")
+      .populate("receivedGrade")
       .exec();
 
     const pointsDecisions = await PointsCommissionDecision.find({
@@ -63,7 +63,7 @@ export async function fetchGradesData() {
       "ten",
     ];
 
-    const gradeEntries = student.gradeEntries;
+    const gradeEntries = student.receivedGrade;
 
     if (gradeEntries && Array.isArray(gradeEntries)) {
       gradeEntries.forEach((entry) => {
