@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FooterNine from "../layout/footers/FooterNine";
 import Image from "next/image";
 import PageLinksTwo from "../common/PageLinksTwo";
@@ -15,6 +15,31 @@ export default function Grades({ studentInfoArray }) {
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState(""); // 'success' or 'error'
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [visibleCalendars, setVisibleCalendars] = useState({});
+  const [searchTerm, setSearchTerm] = useState(""); // Add this state for search feature
+  const [visibleRows, setVisibleRows] = useState(
+    studentInfoArray.map((student) => student.studentId)
+  );
+
+  const filteredStudents = studentInfoArray.filter((student) =>
+    student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const toggleCalendar = (studentId) => {
+    setVisibleCalendars((prevVisible) => ({
+      ...prevVisible,
+      [studentId]: !prevVisible[studentId],
+    }));
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+  }, []);
 
   const saveGradeData = (data) => {
     // Assuming date is required and using today's date for now
@@ -92,6 +117,45 @@ export default function Grades({ studentInfoArray }) {
     }
   };
 
+  const fetchGradesForDate = (date, studentId) => {
+    axios
+      .get(`/api/accountingGrades?date=${date}&studentId=${studentId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const gradeData = response.data.data;
+          setGradesData((prevData) => ({
+            ...prevData,
+            [studentId]: gradeData,
+          }));
+        } else {
+          console.warn("Received unexpected status:", response.status);
+        }
+      })
+      .catch((error) => {
+        console.error("API Call Error:", error);
+      });
+  };
+
+  const centeredStyles =
+    windowWidth <= 1200
+      ? {
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }
+      : {};
+
+  const columnStyles =
+    windowWidth <= 1200
+      ? {
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }
+      : {};
+
   return (
     <div className="dashboard__main">
       <div
@@ -122,6 +186,19 @@ export default function Grades({ studentInfoArray }) {
             {toastMessage}
           </div>
         )}
+
+        {/* Adding the search feature here */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <input
+              type="text"
+              placeholder="Search student by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: "100%", padding: "10px", borderRadius: "5px" }}
+            />
+          </div>
+        </div>
 
         <div className="row y-gap-30" style={{ marginBottom: "3rem" }}>
           <div className="col-12">
@@ -199,93 +276,136 @@ export default function Grades({ studentInfoArray }) {
                     </div>
                   </div>
                 </div>
+                <div
+                  style={{ ...centeredStyles, padding: "20px 30px" }}
+                  className="border-light-bottom"
+                >
+                  {filteredStudents.map((elm, i) => {
+                    if (!visibleRows.includes(elm.studentId)) return null;
 
-                <div className="border-light-bottom py-20 px-30">
-                  {studentInfoArray.map((elm, i) => (
-                    <div
-                      key={i}
-                      className={`row y-gap-20 justify-between items-center ${
-                        i != 0 ? "border-top-light pt-20 mt-20" : ""
-                      } `}
-                    >
-                      <div className="col-xl-3">
-                        <div className="d-flex items-center">
-                          <div className="d-flex x-gap-10 items-center mr-30">
-                            <a href="#">
-                              <i className="icon-calendar text-16"></i>
-                            </a>
-                            <a href="#">
-                              <i className="icon-edit text-16"></i>
-                            </a>
-                          </div>
+                    const studentGrades = Array.isArray(
+                      gradesData[elm.studentId]
+                    )
+                      ? gradesData[elm.studentId]
+                      : [{}];
 
-                          <Image
-                            width={40}
-                            height={40}
-                            src={elm.avatar}
-                            alt="image"
-                            className="size-40"
-                          />
-                          <div className="text-dark-1 ml-10">
-                            {elm.fullName}
+                    return studentGrades.map((entry, index) => (
+                      <div
+                        key={`${elm.studentId}-${index}`}
+                        style={centeredStyles}
+                        className={`row y-gap-20 justify-between items-center ${
+                          i !== 0 && index === 0
+                            ? "border-top-light pt-40 mt-40"
+                            : ""
+                        }`}
+                      >
+                        <div style={columnStyles} className="col-xl-3">
+                          <div className="d-flex items-center">
+                            <div className="d-flex x-gap-10 items-center mr-30">
+                              {index === 0 && (
+                                <>
+                                  <i
+                                    className="icon-calendar text-16"
+                                    onClick={() =>
+                                      toggleCalendar(elm.studentId)
+                                    }
+                                  ></i>
+                                  {visibleCalendars[elm.studentId] && (
+                                    <input
+                                      type="date"
+                                      onChange={(e) => {
+                                        console.log(
+                                          "Selected Date:",
+                                          e.target.value
+                                        );
+                                        fetchGradesForDate(
+                                          e.target.value,
+                                          elm.studentId
+                                        );
+                                      }}
+                                    />
+                                  )}
+                                </>
+                              )}
+                              <a href="#">
+                                <i className="icon-edit text-16"></i>
+                              </a>
+                            </div>
+                            <div className="text-dark-1 ml-10">
+                              {elm.fullName}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="col-xl-2">
-                        <div className="d-flex justify-end">
+                        <div style={columnStyles} className="col-xl-2">
                           <SelectGrade
+                            initialValue={entry.grade || undefined}
                             studentId={elm.studentId}
                             subject={elm.subject}
                             onRateChange={(grade) =>
-                              handleRateChange(grade, elm)
+                              handleRateChange(grade, elm, index)
                             }
                           />
                         </div>
-                      </div>
 
-                      <div className="col-xl-2">
-                        <div className="d-flex justify-end">
+                        <div style={columnStyles} className="col-xl-3">
                           <SelectType
-                            onTypeChange={(type) => handleTypeChange(type, elm)}
+                            initialValue={entry.type || undefined}
+                            onTypeChange={(type) =>
+                              handleTypeChange(type, elm, index)
+                            }
                           />
                         </div>
-                      </div>
 
-                      <div className="col-xl-2">
-                        {/* <div className="d-flex justify-end">
-                          <SelectType
-                            onTypeChange={(type) => handleTypeChange(type, elm)}
-                          />
-                        </div> */}
-                      </div>
-
-                      <div className="col-xl-2">
-                        <div className="d-flex justify-end">
-                          <button
-                            onClick={() => handleAddGrade(elm)}
-                            style={{
-                              background: "#4A90E2", // Deep blue color
-                              color: "white", // Text color
-                              padding: "10px 20px", // Top-bottom padding, Left-right padding
-                              borderRadius: "5px", // Rounded corners
-                              border: "none", // Remove default borders
-                              cursor: "pointer", // Change cursor on hover
-                              transition: "0.3s", // Smooth transition effect on hover
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.background = "#357ABD";
-                            }} // Slightly darker blue on hover
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.background = "#4A90E2";
-                            }} // Deep blue again when hover ends
-                          >
-                            Add Grade
-                          </button>
+                        <div style={columnStyles} className="col-xl-2">
+                          {!entry.grade && !entry.type ? (
+                            <button
+                              onClick={() => handleAddGrade(elm)}
+                              style={{
+                                background: "#4A90E2",
+                                color: "white",
+                                padding: "10px 20px",
+                                borderRadius: "5px",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "0.3s",
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.background = "#357ABD";
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.background = "#4A90E2";
+                              }}
+                            >
+                              Add Grade
+                            </button>
+                          ) : (
+                            <button
+                              // Logic or handlers for the Remove Data action
+                              style={{
+                                background: "red",
+                                color: "white",
+                                padding: "10px 20px",
+                                borderRadius: "5px",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "0.3s",
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.background = "darkred";
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.background = "red";
+                              }}
+                            >
+                              Remove Data
+                            </button>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ));
+                  })}
+                  <hr />
                 </div>
               </div>
             </div>

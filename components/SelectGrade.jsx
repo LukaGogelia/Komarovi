@@ -1,7 +1,7 @@
 "use client";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const options = [
   { label: "1" },
@@ -16,11 +16,15 @@ const options = [
   { label: "10" },
 ];
 
-const SelectGrade = ({ studentId, subject, onRateChange }) => {
+const SelectGrade = ({ initialValue, studentId, subject, onRateChange }) => {
   const [ddOpen, setDdOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(initialValue);
   const [darkMode, setDarkMode] = useState(true);
   // const [isDropdownClicked, setIsDropdownClicked] = useState(false);
+
+  useEffect(() => {
+    setSelectedValue(initialValue); // Update grade when initialValue changes
+  }, [initialValue]);
 
   const handleDropdownClick = () => {
     // if (ddOpen) {

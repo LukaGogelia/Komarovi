@@ -1,10 +1,8 @@
-// pages/api/teacher/grade.js
 import dbConnect from "@/data/mongoDb/database";
 import { Teacher } from "@/data/mongoDb/models";
 import { Student } from "@/data/mongoDb/models";
-import { GradeEntry } from "@/data/mongoDb/models"; // Importing the GradeEntry model
+import { GradeEntry } from "@/data/mongoDb/models";
 
-// Hardcoded teacher ID
 const HARDCODED_TEACHER_ID = "64e8d8e05ab36dd9eb96add1";
 
 export default async function handler(req, res) {
@@ -13,9 +11,44 @@ export default async function handler(req, res) {
   await dbConnect();
 
   switch (method) {
+    case "GET":
+      try {
+        // Extract date from query
+        const { date } = req.query;
+
+        // Log the requested date for debugging purposes
+        console.log("Requested Date:", date);
+
+        // If date not provided, return an error
+        if (!date) {
+          return res
+            .status(400)
+            .json({ success: false, error: "Date missing in query" });
+        }
+
+        // Modify query to search for entries within a date range
+        const startDate = new Date(date);
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 1);
+
+        const gradeEntries = await GradeEntry.find({
+          date: {
+            $gte: startDate,
+            $lt: endDate,
+          },
+        });
+
+        // Log fetched grade entries for debugging
+        console.log("Fetched Grade Entries:", gradeEntries);
+
+        return res.status(200).json({ success: true, data: gradeEntries });
+      } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ success: false, error: "Server Error" });
+      }
+
     case "POST":
       try {
-        // Get data from request body
         const { studentId, subject, grade, type, date } = req.body;
 
         if (!studentId || !subject || grade === undefined || !type || !date) {
@@ -24,13 +57,11 @@ export default async function handler(req, res) {
             .json({ success: false, error: "Data missing" });
         }
 
-        // Find teacher by hardcoded ID
         const teacher = await Teacher.findById(HARDCODED_TEACHER_ID);
-        console.log("Teacher:", teacher); // <-- Debug Log
+        console.log("Teacher:", teacher);
 
-        // Check if teacher teaches the student
         const studentClassId = await Student.findById(studentId, "classIds");
-        console.log("StudentClassId:", studentClassId); // <-- Debug Log
+        console.log("StudentClassId:", studentClassId);
 
         const teachesStudent = teacher.classTaught.some((classTeaching) =>
           studentClassId.classIds.includes(classTeaching.classId.toString())
@@ -43,16 +74,14 @@ export default async function handler(req, res) {
           });
         }
 
-        // Create a new GradeEntry
         const newGradeEntry = await GradeEntry.create({
           subject,
           grade,
           type,
           date,
         });
-        console.log("New GradeEntry:", newGradeEntry); // <-- Debug Log
+        console.log("New GradeEntry:", newGradeEntry);
 
-        // Add the new GradeEntry to the student's receivedGrade array
         const updatedStudent = await Student.findByIdAndUpdate(
           studentId,
           {
@@ -60,7 +89,7 @@ export default async function handler(req, res) {
           },
           { new: true }
         );
-        console.log("Updated Student:", updatedStudent); // <-- Debug Log
+        console.log("Updated Student:", updatedStudent);
 
         if (!updatedStudent) {
           return res
@@ -70,13 +99,47 @@ export default async function handler(req, res) {
 
         return res.status(200).json({ success: true, data: updatedStudent });
       } catch (error) {
-        console.error("Error:", error); // <-- Debug Log
+        console.error("Error:", error);
         return res.status(500).json({ success: false, error: "Server Error" });
       }
-      break;
+
+    case "DELETE":
+      console.log(req.body); // <-- Add this line
+
+      try {
+        // Extract data from request body
+        const { entryId, studentId } = req.body;
+
+        // Check if both entryId and studentId are provided
+        if (!entryId) {
+          return res
+            .status(400)
+            .json({ success: false, error: "Entry ID missing" });
+        }
+        if (!studentId) {
+          return res
+            .status(400)
+            .json({ success: false, error: "Student ID missing" });
+        }
+
+        // Find and remove the grade entry
+        await GradeEntry.findByIdAndDelete(entryId);
+
+        // Remove the entryId reference from the student's receivedGrade array
+        await Student.findByIdAndUpdate(studentId, {
+          $pull: { receivedGrade: entryId },
+        });
+
+        return res
+          .status(200)
+          .json({ success: true, message: "Entry successfully deleted" });
+      } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ success: false, error: "Server Error" });
+      }
 
     default:
-      res.set("Allow", ["POST"]);
+      res.set("Allow", ["GET", "POST", "DELETE"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

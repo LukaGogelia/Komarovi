@@ -1,6 +1,6 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const typeOptions = [
   { label: "Test" },
@@ -10,10 +10,14 @@ const typeOptions = [
   // Add other types as needed
 ];
 
-const SelectType = ({ onTypeChange }) => {
+const SelectType = ({ onTypeChange, initialValue }) => {
   const [ddOpen, setDdOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(initialValue);
   const [darkMode, setDarkMode] = useState(true); // Assuming you want dark mode here too
+
+  useEffect(() => {
+    setSelectedType(initialValue); // Update grade when initialValue changes
+  }, [initialValue]);
 
   const handleDropdownClick = () => {
     setDdOpen((prev) => !prev);
