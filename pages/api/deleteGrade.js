@@ -56,26 +56,47 @@ export default async function deleteHandler(req, res) {
 
     case "PUT":
       try {
-        const { entryId, gradeValue, gradeType } = req.body;
+        const { entryId, gradeValue, gradeType, studentId } = req.body;
 
-        if (!entryId) {
+        if (!entryId || !studentId) {
           return res
             .status(400)
-            .json({ success: false, error: "Entry ID missing" });
+            .json({ success: false, error: "Entry ID or Student ID missing" });
         }
 
-        // We'll build an update object based on the provided fields.
-        let updateObject = {};
-        if (gradeValue !== undefined) updateObject.grade = gradeValue;
-        if (gradeType !== undefined) updateObject.gradeType = gradeType;
+        // Fetch the student using the provided studentId
+        const student = await Student.findById(studentId);
+        if (!student) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Student not found" });
+        }
 
-        if (Object.keys(updateObject).length === 0) {
+        // Check if the entryId is in the student's receivedGrade array
+        if (!student.receivedGrade.includes(entryId)) {
+          return res
+            .status(403)
+            .json({
+              success: false,
+              error: "The grade entry does not belong to the provided student",
+            });
+        }
+
+        // Build an update object
+        const updateObject = {};
+        if (gradeValue) updateObject.grade = gradeValue;
+        if (gradeType) updateObject.type = gradeType;
+
+        if (!updateObject.grade && !updateObject.type) {
           return res
             .status(400)
-            .json({ success: false, error: "No fields provided for update" });
+            .json({
+              success: false,
+              error: "No valid fields provided for update",
+            });
         }
 
-        // Update the grade entry using the constructed update object.
+        // Update the grade entry using the constructed update object
         const updatedEntry = await GradeEntry.findByIdAndUpdate(
           entryId,
           updateObject,
@@ -89,7 +110,6 @@ export default async function deleteHandler(req, res) {
         }
 
         console.log("Updated Grade Entry:", updatedEntry);
-
         return res
           .status(200)
           .json({ success: true, message: "Entry successfully updated" });

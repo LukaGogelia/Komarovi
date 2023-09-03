@@ -49,10 +49,16 @@ export default async function handler(req, res) {
 
     case "POST":
       try {
-        // Destructure and validate request data
-        const { studentId, subject, grade, type, date } = req.body;
+        // Destructure and validate request data with default date as current date
+        const {
+          studentId,
+          subject,
+          grade,
+          type,
+          date = new Date().toISOString(),
+        } = req.body;
 
-        if (!studentId || !subject || grade === undefined || !type || !date) {
+        if (!studentId || !subject || grade === undefined || !type) {
           return res.status(400).json({
             success: false,
             error: "Required data missing in the request body.",
@@ -99,7 +105,7 @@ export default async function handler(req, res) {
         if (!updatedStudent) {
           return res.status(400).json({
             success: false,
-            error: "Failed to update student with the new grade.",
+            error: "Error updating student data.",
           });
         }
 

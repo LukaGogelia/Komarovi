@@ -1,3 +1,4 @@
+"use client";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
@@ -16,7 +17,7 @@ const SelectType = ({ onTypeChange, initialValue }) => {
   const [darkMode, setDarkMode] = useState(true); // Assuming you want dark mode here too
 
   useEffect(() => {
-    setSelectedType(initialValue); // Update grade when initialValue changes
+    setSelectedType(initialValue); // Update type when initialValue changes
   }, [initialValue]);
 
   const handleDropdownClick = () => {
@@ -25,7 +26,9 @@ const SelectType = ({ onTypeChange, initialValue }) => {
 
   const handleSelectChange = (value) => {
     setSelectedType(value);
-    onTypeChange(value);
+    if (typeof onTypeChange === "function") {
+      onTypeChange(value); // Only call this if onTypeChange is a function
+    }
     setDdOpen(false); // Close the dropdown
   };
 

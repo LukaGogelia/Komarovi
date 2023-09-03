@@ -20,34 +20,22 @@ const SelectGrade = ({ initialValue, studentId, subject, onRateChange }) => {
   const [ddOpen, setDdOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(initialValue);
   const [darkMode, setDarkMode] = useState(true);
-  // const [isDropdownClicked, setIsDropdownClicked] = useState(false);
 
   useEffect(() => {
     setSelectedValue(initialValue); // Update grade when initialValue changes
   }, [initialValue]);
 
   const handleDropdownClick = () => {
-    // if (ddOpen) {
-    //   setIsDropdownClicked(false);
-    // } else {
-    //   setIsDropdownClicked(true);
-    // }
     setDdOpen((prev) => !prev);
   };
 
   const handleSelectChange = (value) => {
     setSelectedValue(value);
-    onRateChange(value); // Send the selected grade to the parent
+    if (typeof onRateChange === "function") {
+      onRateChange(value); // Send the selected grade to the parent
+    }
     setDdOpen(false); // Close the dropdown
   };
-
-  // const handleAddGrade = () => {
-  //   // Call the callback provided by the parent component (Grades page)
-  //   onRateChange({
-  //     grade: selectedValue,
-  //     currentStudent: { studentId, subject },
-  //   });
-  // };
 
   return (
     <div style={{ zIndex: "22", width: "100%" }}>
@@ -90,13 +78,13 @@ const SelectGrade = ({ initialValue, studentId, subject, onRateChange }) => {
             ))}
           </div>
         </div>
-        {/* 
-        {isDropdownClicked && (
-          <button onClick={handleAddGrade}>Add Grade</button>
-        )} */}
       </div>
     </div>
   );
+};
+
+SelectGrade.defaultProps = {
+  onRateChange: () => {},
 };
 
 export default SelectGrade;
