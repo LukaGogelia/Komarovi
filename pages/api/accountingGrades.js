@@ -49,28 +49,37 @@ export default async function handler(req, res) {
 
     case "POST":
       try {
+        // Destructure and validate request data
         const { studentId, subject, grade, type, date } = req.body;
 
         if (!studentId || !subject || grade === undefined || !type || !date) {
-          return res
-            .status(400)
-            .json({ success: false, error: "Data missing" });
+          return res.status(400).json({
+            success: false,
+            error: "Required data missing in the request body.",
+          });
         }
 
         const teacher = await Teacher.findById(HARDCODED_TEACHER_ID);
-        console.log("Teacher:", teacher);
+        if (!teacher) {
+          throw new Error("Specified teacher not found.");
+        }
 
-        const studentClassId = await Student.findById(studentId, "classIds");
-        console.log("StudentClassId:", studentClassId);
+        const student = await Student.findById(studentId, "classIds");
+        if (!student) {
+          return res.status(404).json({
+            success: false,
+            error: "Student not found.",
+          });
+        }
 
         const teachesStudent = teacher.classTaught.some((classTeaching) =>
-          studentClassId.classIds.includes(classTeaching.classId.toString())
+          student.classIds.includes(classTeaching.classId.toString())
         );
 
         if (!teachesStudent) {
-          return res.status(400).json({
+          return res.status(403).json({
             success: false,
-            error: "Teacher doesn't teach this student",
+            error: "Teacher doesn't teach this student.",
           });
         }
 
@@ -80,66 +89,34 @@ export default async function handler(req, res) {
           type,
           date,
         });
-        console.log("New GradeEntry:", newGradeEntry);
 
         const updatedStudent = await Student.findByIdAndUpdate(
           studentId,
-          {
-            $push: { receivedGrade: newGradeEntry._id },
-          },
+          { $push: { receivedGrade: newGradeEntry._id } },
           { new: true }
         );
-        console.log("Updated Student:", updatedStudent);
 
         if (!updatedStudent) {
-          return res
-            .status(400)
-            .json({ success: false, error: "Failed to update student grade" });
+          return res.status(400).json({
+            success: false,
+            error: "Failed to update student with the new grade.",
+          });
         }
 
-        return res.status(200).json({ success: true, data: updatedStudent });
-      } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({ success: false, error: "Server Error" });
-      }
-
-    case "DELETE":
-      console.log(req.body); // <-- Add this line
-
-      try {
-        // Extract data from request body
-        const { entryId, studentId } = req.body;
-
-        // Check if both entryId and studentId are provided
-        if (!entryId) {
-          return res
-            .status(400)
-            .json({ success: false, error: "Entry ID missing" });
-        }
-        if (!studentId) {
-          return res
-            .status(400)
-            .json({ success: false, error: "Student ID missing" });
-        }
-
-        // Find and remove the grade entry
-        await GradeEntry.findByIdAndDelete(entryId);
-
-        // Remove the entryId reference from the student's receivedGrade array
-        await Student.findByIdAndUpdate(studentId, {
-          $pull: { receivedGrade: entryId },
+        return res.status(200).json({
+          success: true,
+          data: {
+            gradeEntry: newGradeEntry,
+            updatedStudent,
+          },
         });
-
-        return res
-          .status(200)
-          .json({ success: true, message: "Entry successfully deleted" });
       } catch (error) {
         console.error("Error:", error);
-        return res.status(500).json({ success: false, error: "Server Error" });
+        return res.status(500).json({ success: false, error: error.message });
       }
 
     default:
-      res.set("Allow", ["GET", "POST", "DELETE"]);
+      res.set("Allow", ["GET", "POST"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
