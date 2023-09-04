@@ -74,12 +74,10 @@ export default async function deleteHandler(req, res) {
 
         // Check if the entryId is in the student's receivedGrade array
         if (!student.receivedGrade.includes(entryId)) {
-          return res
-            .status(403)
-            .json({
-              success: false,
-              error: "The grade entry does not belong to the provided student",
-            });
+          return res.status(403).json({
+            success: false,
+            error: "The grade entry does not belong to the provided student",
+          });
         }
 
         // Build an update object
@@ -88,14 +86,13 @@ export default async function deleteHandler(req, res) {
         if (gradeType) updateObject.type = gradeType;
 
         if (!updateObject.grade && !updateObject.type) {
-          return res
-            .status(400)
-            .json({
-              success: false,
-              error: "No valid fields provided for update",
-            });
+          return res.status(400).json({
+            success: false,
+            error: "No valid fields provided for update",
+          });
         }
 
+        // Update the grade entry using the constructed update object
         // Update the grade entry using the constructed update object
         const updatedEntry = await GradeEntry.findByIdAndUpdate(
           entryId,
@@ -110,9 +107,14 @@ export default async function deleteHandler(req, res) {
         }
 
         console.log("Updated Grade Entry:", updatedEntry);
-        return res
-          .status(200)
-          .json({ success: true, message: "Entry successfully updated" });
+        return res.status(200).json({
+          success: true,
+          updatedGrade: {
+            _id: entryId,
+            grade: updateObject.grade,
+            type: updateObject.type,
+          },
+        });
       } catch (error) {
         console.error("Error:", error);
         return res.status(500).json({ success: false, error: "Server Error" });
