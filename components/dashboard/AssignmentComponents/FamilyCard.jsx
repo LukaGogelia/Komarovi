@@ -15,6 +15,8 @@ const FamilyCard = ({
   updateDetails,
   handleAddChildButtonClick,
   handleselectedElm,
+  handleFamilyResponse,
+  classOptions,
   ...otherProps
 }) => {
   console.log(family);
@@ -49,11 +51,13 @@ const FamilyCard = ({
                 handleselectedElm={(label) =>
                   handleselectedElm(userIndex, label, true)
                 }
+                handleFamilyResponse={handleFamilyResponse}
                 options={options}
                 familyIndex={familyIndex}
                 handleRemove={handleRemove}
                 toggleExpand={toggleExpand}
                 isFamily={true}
+                classOptions={classOptions}
                 {...otherProps}
               />
             );

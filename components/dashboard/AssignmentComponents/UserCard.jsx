@@ -1,11 +1,17 @@
 "use client";
 import React, { useState } from "react";
 
+import ClassesDropdown from "./../../uiElements/ClassesDropdown"; // Assuming ClassesDropdown.jsx is in the same folder
 import HamburgerIcon from "./userCardComponents/HamburgerIcon";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Draggable } from "react-beautiful-dnd";
+import {
+  faChevronDown,
+  faCopy,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,21 +26,69 @@ const UserCard = ({
   updateUser,
   handleRemove,
   toggleExpand,
+  handleFamilyResponse,
+  classOptions,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [selectedClasses, setSelectedClasses] = useState([]);
+
+  const copyToClipboard = (text) => {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
+  };
+
+  const searchForFamily = async () => {
+    try {
+      const response = await axios.post("/api/familyName", {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.text.toLowerCase(), // adding role to the request payload
+      });
+
+      console.log(response.data);
+      handleFamilyResponse(
+        response.data.families[0],
+        user.firstName,
+        user.lastName,
+        user.text
+      );
+      // Handle the response data as necessary, e.g., display it in your component
+    } catch (error) {
+      if (error.response) {
+        console.error(error.response.data.message);
+        // The request was made and the server responded with a status code
+      } else if (error.request) {
+        console.error("No response received from the server.", error.request);
+        // The request was made but no response was received
+      } else {
+        console.error("Error setting up the request", error.message);
+        // Something happened in setting up the request that triggered an Error
+      }
+    }
+
+    // Use the first and last names to identify the requester
+  };
 
   return (
     <>
       <Draggable
         key={index}
-        draggableId={isFamily ? "" : `draggable-${index}`}
+        draggableId={isFamily ? `family-${index}` : `draggable-${index}`}
         index={index}
+        isDragDisabled={isFamily} // Disabling drag for family
       >
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            {...provided.dragHandleProps}
+            {...(isFamily ? {} : provided.dragHandleProps)} // Conditionally provide dragHandleProps
             className="user-card bg-purple-3 card-input"
             style={{
               border: "1px solid #ccc",
@@ -42,7 +96,7 @@ const UserCard = ({
               padding: "20px",
               margin: "23px 0",
               position: "relative",
-              cursor: `${isFamily ? "default" : ""}`,
+              cursor: `${isFamily ? "default" : "move"}`,
               ...provided.draggableProps.style,
             }}
           >
@@ -50,16 +104,16 @@ const UserCard = ({
               <div
                 style={{
                   position: "absolute",
-                  width: "9em",
-                  textAlign: "center",
                   top: "-17px",
-                  left: user.invitationCode ? "calc(50% - 9px)" : "50%",
+
+                  textAlign: "center",
+                  left: user.invitationCode ? "calc(50% - 3px)" : "50%",
                   transform: user.invitationCode
                     ? "translateX(-100%)"
                     : "translateX(-50%)",
                   padding: "5px 10px",
                 }}
-                className="bg-green-1 rounded-2 text-white"
+                className="bg-green-1 rounded-2 text-dark user-invite-label"
               >
                 {user.text}
               </div>
@@ -68,17 +122,29 @@ const UserCard = ({
               <div
                 style={{
                   position: "absolute",
+                  textAlign: "center",
                   top: "-17px",
-                  left: isFamily ? "calc(50% + 9px)" : "50%",
+                  // width: "8rem",
+                  left: isFamily ? "calc(50% + 3px)" : "50%",
                   transform: isFamily ? "translateX(0%)" : "translateX(-50%)",
                   padding: "5px 10px",
-                  cursor: "default",
+                  cursor: "pointer",
                 }}
-                className="bg-purple-1 rounded-2 text-white"
+                className="bg-purple-1 rounded-2 text-white user-invite-label"
+                onClick={() => copyToClipboard(user.invitationCode)}
               >
-                Code: {user.invitationCode}
+                {user.invitationCode}
+                {isCopied ? (
+                  <span style={{ color: "white", marginLeft: "5px" }}>✓</span>
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCopy}
+                    style={{ color: "white", marginLeft: "5px" }}
+                  />
+                )}
               </div>
             )}
+
             {user.visible ? (
               // The expanded state with the form and all details
               <>
@@ -108,6 +174,7 @@ const UserCard = ({
 
                     {/* Display the generated code here */}
                   </div>
+
                   <HamburgerIcon
                     onClick={() => {
                       toggleExpand(index, isFamily);
@@ -118,16 +185,14 @@ const UserCard = ({
                 <form className="contact-form">
                   <div
                     className="input-row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
+                    style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <input
                       className="card-input"
                       style={{
                         flex: "1",
-                        marginRight: "10px",
+                        marginRight: "7px", // Adjusted margin for balance
+                        width: "calc(45% - 7px)", // 45% width to allow space for the icon
                       }}
                       value={user.firstName}
                       onChange={(e) =>
@@ -143,12 +208,28 @@ const UserCard = ({
                       onChange={(e) => updateUser({ lastName: e.target.value })}
                       style={{
                         flex: "1",
-                        marginLeft: "10px",
+                        marginLeft: "7px",
+                        width: "calc(45% - 7px)", // 45% width to allow space for the icon
                       }}
                       required
                       type="text"
                       placeholder="Last Name"
                     />
+
+                    {/* Check if isFamily and both names are filled */}
+                    {isFamily && user.firstName && user.lastName && (
+                      <FontAwesomeIcon
+                        icon={faSearch}
+                        style={{
+                          cursor: "pointer",
+                          alignSelf: "center",
+                          marginLeft: "10px",
+                        }}
+                        // You can add an onClick handler here for the search functionality
+                        onClick={searchForFamily}
+                        className={`me-1 ${ddOpen ? "carrot-flip" : ""}`}
+                      />
+                    )}
                   </div>
                   <div className="input-row" style={{ marginTop: "10px" }}>
                     <input
@@ -194,7 +275,10 @@ const UserCard = ({
                     className="date-input-wrapper"
                     style={{ position: "relative" }}
                   >
-                    <label htmlFor="birthDate" className="my-1 ms-3">
+                    <label
+                      htmlFor="birthDate"
+                      className="my-1 ms-3 text-dark-3"
+                    >
                       Birth Date:
                     </label>
 
@@ -269,6 +353,14 @@ const UserCard = ({
                       </div>
                     </div>
                   </div>
+                  {(user.role === "Teacher" ||
+                    user.role === "Care manager") && (
+                    <ClassesDropdown
+                      options={classOptions}
+                      selectedClasses={selectedClasses}
+                      setSelectedClasses={setSelectedClasses}
+                    />
+                  )}
                 </form>
               </>
             ) : (

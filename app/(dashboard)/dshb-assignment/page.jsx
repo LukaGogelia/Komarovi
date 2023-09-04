@@ -2,6 +2,7 @@ import Preloader from "@/components/common/Preloader";
 import Assignment from "@/components/dashboard/Assignment";
 import DashboardOne from "@/components/dashboard/DashboardOne";
 import Sidebar from "@/components/dashboard/Sidebar";
+import { getCurrentClassesByYear } from "@/data/mongoDb/currentClasses";
 import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
 import React from "react";
 
@@ -12,7 +13,23 @@ export const metadata = {
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
 
-export default function page() {
+const getCurrentAcademicYear = () => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  // If before August (0-based month index: January is 0, December is 11)
+  if (currentDate.getMonth() < 9) {
+    return `${currentYear - 1}-${currentYear}`;
+  } else {
+    return `${currentYear}-${currentYear + 1}`;
+  }
+};
+
+export default async function page() {
+  const currentClasses = await getCurrentClassesByYear(
+    getCurrentAcademicYear()
+  );
+
   return (
     <div className="barba-container" data-barba="container">
       <main className="main-content">
@@ -26,7 +43,7 @@ export default function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <Assignment />
+            <Assignment currentClasses={JSON.stringify(currentClasses)} />
           </div>
         </div>
       </main>
