@@ -6,6 +6,7 @@ import PageLinksTwo from "../common/PageLinksTwo";
 import SelectGrade from "../SelectGrade";
 import SelectType from "../SelectType";
 import axios from "axios"; // at the top of your component file
+import SelectAttendance from "../selectAttendance";
 
 export default function Grades({ studentInfoArray }) {
   const buttonStyles = {
@@ -67,14 +68,16 @@ export default function Grades({ studentInfoArray }) {
   const [editGrade, setEditGrade] = useState("");
   const [editType, setEditType] = useState("");
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [tempAttendance, setTempAttendance] = useState(true);
+  const [attendanceData, setAttendanceData] = useState({});
 
   const [searchTerm, setSearchTerm] = useState(""); // Add this state for search feature
   const [editingRow, setEditingRow] = useState({
     studentId: null,
     entryId: null,
   });
-  const [tempGrade, setTempGrade] = useState("");
-  const [tempType, setTempType] = useState("");
+  const [tempGrade, setTempGrade] = useState(null);
+  const [tempType, setTempType] = useState(null);
 
   const [visibleRows, setVisibleRows] = useState(
     studentInfoArray.map((student) => {
@@ -84,6 +87,11 @@ export default function Grades({ studentInfoArray }) {
   const [editingEntryId, setEditingEntryId] = useState(null);
 
   const [studentGrades, setStudentGrades] = useState([]); // Initial data or an empty array
+  const [mainRow, setMainRow] = useState({
+    date: new Date().toISOString().split("T")[0], // Default to current date in 'YYYY-MM-DD' format
+    studentId: "defaultStudentId", // replace with an appropriate default or an empty string
+    grades: [],
+  });
 
   const filteredStudents = studentInfoArray.filter((student) =>
     student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -112,8 +120,8 @@ export default function Grades({ studentInfoArray }) {
     const gradeData = {
       studentId: student.studentId,
       subject: student.subject,
-      grade: tempGrade,
-      type: tempType,
+      grade: tempGrade || "N/A", // Default value when grade is not provided
+      type: tempType || "N/A", // Default value when type is not provided
       date: currentDate,
     };
 
@@ -200,53 +208,49 @@ export default function Grades({ studentInfoArray }) {
     }
   };
 
-  const fetchGradesForDate = (date, studentId) => {
-    axios
-      .get(`/api/accountingGrades?date=${date}&studentId=${studentId}`)
-      .then((response) => {
-        const gradeData = response.data.data;
+  const fetchGradesForDate = async (date, studentId) => {
+    try {
+      const response = await axios.get(
+        `/api/accountingGrades?date=${date}&studentId=${studentId}`
+      );
+      const gradeData = response.data.data;
 
-        // Map the _id from the response to entryId for the grade data
-        const transformedGradeData = gradeData.map((grade) => ({
-          ...grade,
-          entryId: grade._id,
-        }));
+      const transformedGradeData = gradeData.map((grade) => ({
+        ...grade,
+        entryId: grade._id,
+      }));
 
-        // Create new visible rows using the transformed data
-        const newVisibleRows = transformedGradeData.map((grade) => {
-          return { studentId: studentId, entryId: grade.entryId };
-        });
+      const newVisibleRows = transformedGradeData.map((grade) => ({
+        studentId: studentId,
+        entryId: grade.entryId,
+      }));
 
-        setVisibleRows((prevRows) => {
-          // Remove previous entries for that student, and add new ones
-          const filteredRows = prevRows.filter(
-            (row) => row.studentId !== studentId
-          );
-          return [...filteredRows, ...newVisibleRows];
-        });
-
-        if (response.status === 200) {
-          setGradesData((prevData) => ({
-            ...prevData,
-            [studentId]: transformedGradeData,
-          }));
-        } else {
-          console.warn("Received unexpected status:", response.status);
-        }
-      })
-      .catch((error) => {
-        console.error("API Call Error:", error);
+      setVisibleRows((prevRows) => {
+        const filteredRows = prevRows.filter(
+          (row) => row.studentId !== studentId
+        );
+        return [...filteredRows, ...newVisibleRows];
       });
+
+      if (response.status === 200) {
+        setGradesData((prevData) => ({
+          ...prevData,
+          [studentId]: transformedGradeData,
+        }));
+      } else {
+        console.warn("Received unexpected status:", response.status);
+      }
+    } catch (error) {
+      console.error("API Call Error:", error);
+    }
   };
 
   const handleDateChange = (date, studentId) => {
-    // Update the selectedDates state
     setSelectedDates((prevDates) => ({
       ...prevDates,
       [studentId]: date,
     }));
 
-    // Fetch the grades for the selected date and student
     fetchGradesForDate(date, studentId);
   };
 
@@ -444,6 +448,94 @@ export default function Grades({ studentInfoArray }) {
     setTempGrade(""); // or some default value if not an empty string
     setTempType(""); // or some default value if not an empty string
   };
+  const handleAddAttendance = async (student) => {
+    const currentDate =
+      selectedDates[student.studentId] ||
+      new Date().toISOString().split("T")[0];
+
+    const attendanceData = {
+      studentId: student.studentId,
+      subject: student.subject,
+      attendance: tempAttendance,
+      date: currentDate,
+    };
+
+    // Optimistic UI Update
+    const optimisticID = Math.random().toString();
+    const optimisticAttendanceEntry = {
+      ...attendanceData,
+      _id: optimisticID,
+    };
+
+    setAttendanceData((prevData) => {
+      const updatedData = { ...prevData };
+      if (updatedData[student.studentId]) {
+        updatedData[student.studentId].push(optimisticAttendanceEntry);
+      } else {
+        updatedData[student.studentId] = [optimisticAttendanceEntry];
+      }
+      return updatedData;
+    });
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/accountingAttendance", // Update the API endpoint if different
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(attendanceData),
+        }
+      );
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.error || "Failed to add attendance.");
+      }
+
+      setToastMessage("Attendance saved successfully!");
+      setToastType("success");
+      setToastVisible(true);
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 3000);
+
+      const newAttendance = responseData.data.attendanceEntry;
+
+      setAttendanceData((prevData) => {
+        const updatedData = { ...prevData };
+        const studentAttendance = updatedData[student.studentId].map((entry) =>
+          entry._id === optimisticAttendanceEntry._id ? newAttendance : entry
+        );
+        updatedData[student.studentId] = studentAttendance;
+        return updatedData;
+      });
+
+      // Resetting states
+      setTempAttendance(null);
+      setEditingRow({ studentId: null, entryId: null });
+      setForceUpdate((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error:", error);
+      setToastMessage(`Error: ${error.message}`);
+      setToastType("error");
+      setToastVisible(true);
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 3000);
+
+      // Roll back the optimistic update in case of an error
+      setAttendanceData((prevData) => {
+        const updatedData = { ...prevData };
+        const studentAttendance = updatedData[student.studentId].filter(
+          (entry) => entry._id !== optimisticAttendanceEntry._id
+        );
+        updatedData[student.studentId] = studentAttendance;
+        return updatedData;
+      });
+    }
+  };
 
   // Rest of your component logic and rendering...
   console.log("visible rows:", visibleRows);
@@ -573,60 +665,135 @@ export default function Grades({ studentInfoArray }) {
                   className="border-light-bottom"
                 >
                   {filteredStudents.map((elm, i) => {
-                    const isVisible = visibleRows.some(
-                      (row) => row.studentId === elm.studentId
-                    );
-                    if (!isVisible) return null;
-
                     const studentGrades = Array.isArray(
                       gradesData[elm.studentId]
                     )
                       ? gradesData[elm.studentId]
-                      : [{}];
+                      : [];
                     const isDateSelected = visibleCalendars[elm.studentId];
+
+                    const renderGradesRow = (entry, index) => {
+                      const isEditingCurrentEntry =
+                        editingRow.studentId === elm.studentId &&
+                        editingRow.entryId === entry.entryId;
+                      return (
+                        <div
+                          key={`${elm.studentId}-${index}`}
+                          style={centeredStyles}
+                          className="row y-gap-20 justify-between items-center"
+                        >
+                          <div style={columnStyles} className="col-xl-3">
+                            <div className="d-flex items-center">
+                              <div className="d-flex x-gap-10 items-center mr-30">
+                                {isEditingCurrentEntry ? (
+                                  <span
+                                    onClick={() => {
+                                      saveEditedGrade(
+                                        elm.studentId,
+                                        entry.entryId
+                                      );
+                                      resetGradeInputs();
+                                    }}
+                                  >
+                                    ✅
+                                  </span>
+                                ) : (
+                                  <span
+                                    onClick={() =>
+                                      startEditing(elm.studentId, entry)
+                                    }
+                                  >
+                                    🖊️
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-dark-1 ml-10">
+                                {elm.fullName}
+                              </div>
+                            </div>
+                          </div>
+                          <div style={columnStyles} className="col-xl-2">
+                            <SelectGrade
+                              initialValue={
+                                isEditingCurrentEntry ? tempGrade : entry.grade
+                              }
+                              studentId={elm.studentId}
+                              subject={elm.subject}
+                              onRateChange={
+                                isEditingCurrentEntry ? setTempGrade : null
+                              }
+                            />
+                          </div>
+                          <div style={columnStyles} className="col-xl-3">
+                            <SelectType
+                              initialValue={
+                                isEditingCurrentEntry ? tempType : entry.type
+                              }
+                              onTypeChange={
+                                isEditingCurrentEntry ? setTempType : null
+                              }
+                            />
+                          </div>
+                          <div style={columnStyles} className="col-xl-2">
+                            {entry.grade && entry.type && (
+                              <button
+                                onClick={() =>
+                                  handleRemoveData(elm.studentId, entry._id)
+                                }
+                                {...buttonStyles.red}
+                              >
+                                Remove Data
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    };
 
                     return (
                       <div key={elm.studentId}>
-                        {/* Main Row for adding grades */}
+                        {/* Main row content (Always displayed) */}
                         <div
                           style={centeredStyles}
                           className={`row y-gap-20 justify-between items-center ${
                             i !== 0 ? "border-top-light pt-40 mt-40" : ""
                           }`}
                         >
-                          {/* Student Name and Calendar */}
                           <div style={columnStyles} className="col-xl-3">
-                            <div className="d-flex items-center">
-                              <i
-                                className="icon-calendar text-16"
-                                style={{
-                                  paddingLeft: "0.7rem",
-                                  paddingBottom: "1rem",
-                                }}
-                                onClick={() => toggleCalendar(elm.studentId)}
-                              ></i>
-                              {visibleCalendars[elm.studentId] && (
-                                <input
-                                  type="date"
+                            <div className="d-flex flex-column align-items-start">
+                              <div className="d-flex align-items-center">
+                                <i
+                                  className="icon-calendar text-16"
                                   style={{
-                                    paddingBottom: "0.6rem",
-                                    paddingLeft: "0.5rem",
+                                    paddingLeft: "0.7rem",
+                                    paddingBottom: "0.45rem",
                                   }}
-                                  onChange={(e) =>
-                                    handleDateChange(
-                                      e.target.value,
-                                      elm.studentId
-                                    )
-                                  }
-                                />
-                              )}
-                            </div>
-                            <div className="text-dark-1 ml-10">
-                              {elm.fullName}
+                                  onClick={() => toggleCalendar(elm.studentId)}
+                                ></i>
+                                {visibleCalendars[elm.studentId] && (
+                                  <input
+                                    type="date"
+                                    style={{
+                                      paddingLeft: "0.5rem",
+                                    }}
+                                    onChange={(e) =>
+                                      handleDateChange(
+                                        e.target.value,
+                                        elm.studentId
+                                      )
+                                    }
+                                  />
+                                )}
+                              </div>
+                              <div
+                                className="text-dark-1 mt-10"
+                                style={{ paddingLeft: "0.5rem" }}
+                              >
+                                {elm.fullName}
+                              </div>
                             </div>
                           </div>
 
-                          {/* Placeholder Grade and Type Dropdown */}
                           <div style={columnStyles} className="col-xl-2">
                             <SelectGrade
                               studentId={elm.studentId}
@@ -637,8 +804,16 @@ export default function Grades({ studentInfoArray }) {
                           <div style={columnStyles} className="col-xl-3">
                             <SelectType onTypeChange={setTempType} />
                           </div>
+                          <div
+                            style={{ ...columnStyles, paddingBottom: "2rem" }}
+                            className="col-xl-2"
+                          >
+                            <SelectAttendance
+                              studentId={elm.studentId}
+                              onAttendanceChange={setTempAttendance} // Assuming you have a state hook named setTempAttendance
+                            />
+                          </div>
 
-                          {/* Add Grade Button */}
                           <div style={columnStyles} className="col-xl-2">
                             <button
                               onClick={() => handleAddGrade(elm)}
@@ -649,102 +824,8 @@ export default function Grades({ studentInfoArray }) {
                           </div>
                         </div>
 
-                        {/* Conditionally render rows for existing grades if a date is selected */}
-                        {isDateSelected &&
-                          studentGrades.map((entry, index) => {
-                            const isEditingCurrentEntry =
-                              editingRow.studentId === elm.studentId &&
-                              editingRow.entryId === entry.entryId;
-
-                            return (
-                              <div
-                                key={`${elm.studentId}-${index}`}
-                                style={centeredStyles}
-                                className="row y-gap-20 justify-between items-center"
-                              >
-                                {/* Editing Icons and Student Name */}
-                                <div style={columnStyles} className="col-xl-3">
-                                  <div className="d-flex items-center">
-                                    <div className="d-flex x-gap-10 items-center mr-30">
-                                      {isEditingCurrentEntry ? (
-                                        <span
-                                          onClick={() => {
-                                            saveEditedGrade(
-                                              elm.studentId,
-                                              entry.entryId
-                                            );
-                                            resetGradeInputs();
-                                          }}
-                                        >
-                                          ✅
-                                        </span>
-                                      ) : (
-                                        <span
-                                          onClick={() =>
-                                            startEditing(elm.studentId, entry)
-                                          }
-                                        >
-                                          🖊️
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="text-dark-1 ml-10">
-                                      {elm.fullName}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Existing Grade Dropdown */}
-                                <div style={columnStyles} className="col-xl-2">
-                                  <SelectGrade
-                                    initialValue={
-                                      isEditingCurrentEntry
-                                        ? tempGrade
-                                        : entry.grade
-                                    }
-                                    studentId={elm.studentId}
-                                    subject={elm.subject}
-                                    onRateChange={
-                                      isEditingCurrentEntry
-                                        ? setTempGrade
-                                        : null
-                                    }
-                                  />
-                                </div>
-
-                                {/* Existing Type Dropdown */}
-                                <div style={columnStyles} className="col-xl-3">
-                                  <SelectType
-                                    initialValue={
-                                      isEditingCurrentEntry
-                                        ? tempType
-                                        : entry.type
-                                    }
-                                    onTypeChange={
-                                      isEditingCurrentEntry ? setTempType : null
-                                    }
-                                  />
-                                </div>
-
-                                {/* Remove Button */}
-                                <div style={columnStyles} className="col-xl-2">
-                                  {entry.grade && entry.type && (
-                                    <button
-                                      onClick={() =>
-                                        handleRemoveData(
-                                          elm.studentId,
-                                          entry._id
-                                        )
-                                      }
-                                      {...buttonStyles.red}
-                                    >
-                                      Remove Data
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
+                        {/* Conditionally rendering grades if the date is selected */}
+                        {isDateSelected && studentGrades.map(renderGradesRow)}
                       </div>
                     );
                   })}

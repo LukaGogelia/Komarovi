@@ -413,27 +413,21 @@ const StudentSchema = new Schema({
   classIds: [
     {
       type: Schema.Types.ObjectId,
-      ref: "CurrentClass", // Reference to the Class collection
+      ref: "CurrentClass",
     },
   ],
   houseIds: [
     {
       houseId: {
         type: Schema.Types.ObjectId,
-        ref: "House", // Reference to the House collection
+        ref: "House",
       },
       academicYear: {
         type: Schema.Types.ObjectId,
-        ref: "CurrentHouse", // Reference to the CurrentHouse collection
+        ref: "CurrentHouse",
       },
     },
   ],
-  // receivedPoints: [
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: "PointsCommissionDecision",
-  //   },
-  // ],
   receivedGrade: [
     {
       type: Schema.Types.ObjectId,
@@ -444,32 +438,26 @@ const StudentSchema = new Schema({
     {
       clubId: {
         type: Schema.Types.ObjectId,
-        ref: "Club", // Reference to the Club collection
+        ref: "Club",
       },
       join: {
-        type: Date, // Join date
+        type: Date,
       },
       leave: {
-        type: Date, // Leave date
+        type: Date,
       },
     },
   ],
   quizEntries: [
     {
       type: Schema.Types.ObjectId,
-      ref: "QuizEntry", // Reference to the QuizEntry collection
+      ref: "QuizEntry",
     },
   ],
-  // gradeEntries: [
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: "GradeEntry", // Reference to the GradeEntry collection
-  //   },
-  // ],
   pointsCommissionDecision: [
     {
       type: Schema.Types.ObjectId,
-      ref: "PointsCommissionDecision", // Reference to the PointsCommissionDecision collection
+      ref: "PointsCommissionDecision",
     },
   ],
   quiz: [
@@ -483,11 +471,11 @@ const StudentSchema = new Schema({
     {
       clubId: {
         type: Schema.Types.ObjectId,
-        ref: "Club", // Reference to the Club collection
+        ref: "Club",
       },
       academicYear: {
         type: Schema.Types.ObjectId,
-        ref: "CurrentClass", // Reference to the CurrentClass/Class collection
+        ref: "CurrentClass",
       },
     },
   ],
@@ -495,21 +483,19 @@ const StudentSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  attendanceIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Attendance",
+    },
+  ],
 });
 
 StudentSchema.methods.getStudentPoints = async function () {
-  // Assuming that pointsCommissionDecision contains an array of documents
-  // with a "points" property representing the individual points
-
-  // Find the related PointsCommissionDecision documents
   await this.populate("pointsCommissionDecision").execPopulate();
-
-  // Sum the total points
   const totalPoints = this.pointsCommissionDecision.reduce((sum, decision) => {
-    return sum + decision.points; // assuming "points" is the property containing the individual points
+    return sum + decision.points;
   }, 0);
-
-  // Calculate the personal points and obtained points for the house
   return {
     personalPoints: totalPoints * 0.15,
     obtainedPointsForHouse: totalPoints * 0.85,
@@ -518,6 +504,22 @@ StudentSchema.methods.getStudentPoints = async function () {
 
 const Student =
   mongoose.models.Student || mongoose.model("Student", StudentSchema);
+
+const attendanceSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  isPresent: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+});
+
+const Attendance =
+  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
 // Export models
 module.exports = {
@@ -539,5 +541,6 @@ module.exports = {
   HouseLeader,
   Admin,
   Teacher,
+  Attendance,
   Subject,
 };

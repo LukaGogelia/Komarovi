@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const faker = require("faker");
-const Schema = mongoose.Schema;
 
 // Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
@@ -8,46 +7,40 @@ mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
   useUnifiedTopology: true,
 });
 
-// Define the Subject Schema
-const SubjectSchema = new Schema({
-  subject: {
-    type: String,
+const attendanceSchema = new mongoose.Schema({
+  date: {
+    type: Date,
     required: true,
-    trim: true,
-    unique: true,
+    default: Date.now,
+  },
+  isPresent: {
+    type: Boolean,
+    required: true,
+    default: true,
   },
 });
 
-const Subject =
-  mongoose.models.Subject || mongoose.model("Subject", SubjectSchema);
+const Attendance =
+  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
-// Function to generate fake subjects
-async function generateFakeSubjects() {
-  const numberOfSubjects = 10; // Adjust this as needed
+async function generateFakeData(numRecords = 100) {
+  const attendances = [];
 
-  for (let i = 0; i < numberOfSubjects; i++) {
-    // Generate a random subject name
-    const subjectName = faker.lorem.words(2);
-
-    const subject = new Subject({
-      subject: subjectName,
+  for (let i = 0; i < numRecords; i++) {
+    attendances.push({
+      date: faker.date.recent(365), // Generate a random date from the last 365 days
+      isPresent: faker.random.boolean(), // Generate a random boolean value
     });
-
-    try {
-      await subject.save();
-    } catch (error) {
-      // Handle unique constraint error by skipping this iteration
-      if (error.code === 11000) {
-        console.warn(`Subject "${subjectName}" already exists. Skipping.`);
-        continue;
-      }
-      console.error("Error generating subject:", error);
-    }
   }
 
-  console.log(`${numberOfSubjects} fake subjects generated!`);
+  try {
+    await Attendance.insertMany(attendances);
+    console.log(`Inserted ${numRecords} fake attendance records successfully.`);
+  } catch (error) {
+    console.error("Error inserting data:", error);
+  }
+
+  mongoose.connection.close();
 }
 
-generateFakeSubjects()
-  .then(() => mongoose.connection.close())
-  .catch((error) => console.error(error));
+generateFakeData();
