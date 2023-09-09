@@ -1,9 +1,6 @@
 import dbConnect from "@/data/mongoDb/database";
-import { Teacher } from "@/data/mongoDb/models";
 import { Student } from "@/data/mongoDb/models";
 import { Attendance } from "@/data/mongoDb/models";
-
-const HARDCODED_TEACHER_ID = "64e8d8e05ab36dd9eb96add1";
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -13,20 +10,23 @@ export default async function handler(req, res) {
   switch (method) {
     case "POST":
       try {
-        const { studentId, key, date = new Date().toISOString() } = req.body;
+        // Destructure the request body
+        const {
+          studentId,
+          attendance: key, // Destructured directly to 'key' to match your schema
+          date = new Date(), // Default value is the current date
+          subjectId,
+        } = req.body;
 
-        if (!studentId || key === undefined) {
+        // Input validation
+        if (!studentId || key === undefined || !subjectId) {
           return res.status(400).json({
             success: false,
             error: "Required data missing in the request body.",
           });
         }
 
-        const teacher = await Teacher.findById(HARDCODED_TEACHER_ID);
-        if (!teacher) {
-          throw new Error("Specified teacher not found.");
-        }
-
+        // Fetch the student using the provided ID
         const student = await Student.findById(studentId, "classIds");
         if (!student) {
           return res.status(404).json({
@@ -35,24 +35,14 @@ export default async function handler(req, res) {
           });
         }
 
-        const teachesStudent = teacher.classTaught.some((classTeaching) =>
-          student.classIds.includes(classTeaching.classId.toString())
-        );
-
-        if (!teachesStudent) {
-          return res.status(403).json({
-            success: false,
-            error: "Teacher doesn't teach this student.",
-          });
-        }
-
-        let isPresent = key !== "no";
-
+        // Create a new attendance record, using the provided data
         const newAttendance = await Attendance.create({
-          isPresent: isPresent,
+          key: key,
           date: date,
+          subject: subjectId, // Now storing subjectId
         });
 
+        // Update the student record with the new attendance ID
         const updatedStudent = await Student.findByIdAndUpdate(
           studentId,
           { $push: { attendanceIds: newAttendance._id } },
@@ -66,6 +56,7 @@ export default async function handler(req, res) {
           });
         }
 
+        // Respond with success
         return res.status(200).json({
           success: true,
           data: {

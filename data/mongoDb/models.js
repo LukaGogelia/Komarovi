@@ -231,7 +231,11 @@ const House = mongoose.models.House || mongoose.model("House", HouseSchema);
 
 // Grade Entry model
 const GradeEntrySchema = new Schema({
-  subject: String,
+  subject: {
+    type: Schema.Types.ObjectId,
+    ref: "Subject",
+    required: true,
+  },
   grade: Number,
   type: String,
   date: {
@@ -489,6 +493,12 @@ const StudentSchema = new Schema({
       ref: "Attendance",
     },
   ],
+  subjectIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
+    },
+  ],
 });
 
 StudentSchema.methods.getStudentPoints = async function () {
@@ -505,16 +515,22 @@ StudentSchema.methods.getStudentPoints = async function () {
 const Student =
   mongoose.models.Student || mongoose.model("Student", StudentSchema);
 
-const attendanceSchema = new mongoose.Schema({
+const attendanceSchema = new Schema({
   date: {
     type: Date,
     required: true,
     default: Date.now,
   },
-  isPresent: {
-    type: Boolean,
+  key: {
+    type: String,
+    enum: ["yes", "no"],
     required: true,
-    default: true,
+    default: "yes",
+  },
+  subject: {
+    type: Schema.Types.ObjectId,
+    ref: "Subject", // This assumes that your Subject schema is named 'Subject'
+    required: true,
   },
 });
 

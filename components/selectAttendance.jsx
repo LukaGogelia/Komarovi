@@ -1,20 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const SelectAttendance = ({ initialValue, studentId, onAttendanceChange }) => {
+const SelectAttendance = ({ initialValue, onAttendanceChange }) => {
   const [selectedValue, setSelectedValue] = useState(initialValue === "yes");
-  const [darkMode, setDarkMode] = useState(true); // I've retained this, but it's unclear if you're still using it
 
   useEffect(() => {
-    setSelectedValue(initialValue === "yes"); // Update attendance when initialValue changes
+    setSelectedValue(initialValue === "yes");
   }, [initialValue]);
 
-  const handleSwitchToggle = (event) => {
+  const handleAttendanceChange = (event) => {
     const isChecked = event.target.checked;
     setSelectedValue(isChecked);
 
     if (typeof onAttendanceChange === "function") {
-      onAttendanceChange(isChecked);
+      onAttendanceChange(isChecked ? "yes" : "no");
     }
   };
 
@@ -24,18 +24,25 @@ const SelectAttendance = ({ initialValue, studentId, onAttendanceChange }) => {
         <input
           type="checkbox"
           checked={selectedValue}
-          onChange={handleSwitchToggle}
+          onChange={handleAttendanceChange}
         />
         <span className="switch__slider"></span>
       </div>
-      <div className="text-13 lh-1 text-dark-1 ml-10">yes</div>
+      <div className="text-13 lh-1 text-dark-1 ml-10">
+        {selectedValue ? "yes" : "no"}
+      </div>
     </div>
   );
 };
 
+SelectAttendance.propTypes = {
+  onAttendanceChange: PropTypes.func,
+  initialValue: PropTypes.oneOf(["yes", "no"]),
+};
+
 SelectAttendance.defaultProps = {
   onAttendanceChange: () => {},
-  initialValue: "yes", // Default prop for initialValue set to "yes"
+  initialValue: "yes",
 };
 
 export default SelectAttendance;

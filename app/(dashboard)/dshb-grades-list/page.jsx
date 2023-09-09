@@ -19,7 +19,8 @@ export async function fetchClasses() {
     },
     {
       path: "classTaught.subject",
-      select: "subject", // Only populate the 'subject' property from the Subject schema.
+      model: "Subject", // Specify the model name for proper population
+      select: "subject _id", // Include both 'subject' and '_id' from the Subject schema
     },
   ]);
 
@@ -33,9 +34,11 @@ export async function fetchClasses() {
       parallelNumber: entry.classId.parallelNumber,
       gradeLevel: entry.classId.gradeLevel,
       academicYear: entry.classId.academicYear,
-      subject: entry.subject.subject, // Accessing the populated 'subject' property from the Subject schema.
+      subject: entry.subject.subject, // Accessing the populated 'subject' property from the Subject schema for the name
+      subjectId: entry.subject._id, // Accessing the populated '_id' property from the Subject schema
     };
   });
+
   const updatedArray = classInfoArray.map((classInfo, index) => {
     return {
       ...classInfo,
@@ -44,10 +47,10 @@ export async function fetchClasses() {
   });
 
   const options = [
-    ...new Set(updatedArray.map((classInfo) => classInfo.subject)),
-  ].map((subject) => {
+    ...new Set(updatedArray.map((classInfo) => classInfo.subjectName)),
+  ].map((subjectName) => {
     return {
-      label: subject,
+      label: subjectName,
     };
   });
 

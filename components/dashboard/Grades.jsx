@@ -68,8 +68,9 @@ export default function Grades({ studentInfoArray }) {
   const [editGrade, setEditGrade] = useState("");
   const [editType, setEditType] = useState("");
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [tempAttendance, setTempAttendance] = useState(true);
+  const [tempAttendance, setTempAttendance] = useState("yes");
   const [attendanceData, setAttendanceData] = useState({});
+  const [subjects, setSubjects] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState(""); // Add this state for search feature
   const [editingRow, setEditingRow] = useState({
@@ -113,98 +114,80 @@ export default function Grades({ studentInfoArray }) {
   }, []);
 
   const handleAddGrade = async (student) => {
-    const currentDate =
-      selectedDates[student.studentId] ||
-      new Date().toISOString().split("T")[0];
+    const gradeData = createGradeData(student);
+    const optimisticGradeEntry = optimisticallyUpdateUI(gradeData, student);
 
-    const gradeData = {
+    try {
+      const newGrade = await sendGradeToServer(gradeData);
+      confirmOptimisticUpdate(optimisticGradeEntry, newGrade, student);
+      showToast("Grade saved successfully!", "success");
+
+      if (tempAttendance) {
+        await handleAddAttendance(student);
+      }
+    } catch (error) {
+      rollbackOptimisticUpdate(optimisticGradeEntry, student);
+      showToast(`Error: ${error.message}`, "error");
+    }
+  };
+
+  const createGradeData = (student) => {
+    const currentDate = selectedDates[student.studentId] || getCurrentDate();
+    return {
       studentId: student.studentId,
-      subject: student.subject,
-      grade: tempGrade || "N/A", // Default value when grade is not provided
-      type: tempType || "N/A", // Default value when type is not provided
+      subject: student.subjectId, // Assuming student has a subjectId property pointing to the ObjectId of the subject
+      grade: tempGrade || "N/A",
+      type: tempType || "N/A",
       date: currentDate,
     };
+  };
 
-    // Optimistic UI Update
+  const getCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
+  const optimisticallyUpdateUI = (gradeData, student) => {
     const optimisticID = Math.random().toString();
-    const optimisticGradeEntry = {
-      ...gradeData,
-      _id: optimisticID,
-    };
+    const optimisticGradeEntry = { ...gradeData, _id: optimisticID };
 
     setGradesData((prevData) => {
       const updatedData = { ...prevData };
-      if (updatedData[student.studentId]) {
-        updatedData[student.studentId].push(optimisticGradeEntry);
-      } else {
-        updatedData[student.studentId] = [optimisticGradeEntry];
+      if (!updatedData[student.studentId]) {
+        updatedData[student.studentId] = [];
       }
+      updatedData[student.studentId].push(optimisticGradeEntry);
       return updatedData;
     });
 
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/accountingGrades",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(gradeData),
-        }
-      );
+    return optimisticGradeEntry;
+  };
 
+  const sendGradeToServer = async (gradeData) => {
+    const response = await fetch("http://localhost:3000/api/accountingGrades", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(gradeData),
+    });
+
+    if (!response.ok) {
       const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.error || "Failed to add grade.");
-      }
+      throw new Error(responseData.error || "Failed to add grade.");
+    }
 
-      setToastMessage("Grade saved successfully!");
-      setToastType("success");
-      setToastVisible(true);
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 3000);
+    return (await response.json()).data.gradeEntry;
+  };
 
-      const newGrade = responseData.data.gradeEntry;
+  const confirmOptimisticUpdate = (optimisticGradeEntry, newGrade, student) => {
+    setGradesData((prevData) => {
+      const updatedData = { ...prevData };
+      updatedData[student.studentId] = updatedData[student.studentId].map(
+        (entry) => (entry._id === optimisticGradeEntry._id ? newGrade : entry)
+      );
+      return updatedData;
+    });
 
-      setGradesData((prevData) => {
-        const updatedData = { ...prevData };
-        const studentGrades = updatedData[student.studentId].map((entry) =>
-          entry._id === optimisticGradeEntry._id ? newGrade : entry
-        );
-        updatedData[student.studentId] = studentGrades;
-        return updatedData;
-      });
-
-      // Check if we're editing the optimistic ID and replace it
-      if (editingRow.entryId === optimisticID) {
-        setEditingRow({ studentId: student.studentId, entryId: newGrade._id });
-      }
-
-      // Resetting states
-      setTempGrade(null);
-      setTempType(null);
-      setEditingRow({ studentId: null, entryId: null });
-      setForceUpdate((prev) => prev + 1);
-    } catch (error) {
-      console.error("Error:", error);
-      setToastMessage(`Error: ${error.message}`);
-      setToastType("error");
-      setToastVisible(true);
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 3000);
-
-      // Roll back the optimistic update in case of an error
-      setGradesData((prevData) => {
-        const updatedData = { ...prevData };
-        const studentGrades = updatedData[student.studentId].filter(
-          (entry) => entry._id !== optimisticGradeEntry._id
-        );
-        updatedData[student.studentId] = studentGrades;
-        return updatedData;
-      });
+    if (editingRow.entryId === optimisticGradeEntry._id) {
+      setEditingRow({ studentId: student.studentId, entryId: newGrade._id });
     }
   };
 
@@ -449,92 +432,127 @@ export default function Grades({ studentInfoArray }) {
     setTempType(""); // or some default value if not an empty string
   };
   const handleAddAttendance = async (student) => {
+    console.log("handleAddAttendance called for student:", student.studentId);
+
     const currentDate =
       selectedDates[student.studentId] ||
       new Date().toISOString().split("T")[0];
 
     const attendanceData = {
       studentId: student.studentId,
-      subject: student.subject,
+      subjectId: student.subjectId, // Change 'subject' to 'subjectId'
       attendance: tempAttendance,
       date: currentDate,
     };
 
-    // Optimistic UI Update
+    console.log("Sending Attendance Data:", attendanceData);
+    console.log("Current Subject Name:", student.subject);
+    console.log("Subjects List:", subjects);
+
     const optimisticID = Math.random().toString();
     const optimisticAttendanceEntry = {
       ...attendanceData,
       _id: optimisticID,
     };
 
+    updateAttendanceData(optimisticAttendanceEntry, student.studentId);
+
+    try {
+      const response = await sendAttendanceDataToAPI(attendanceData);
+
+      if (!response.ok) {
+        // Check this according to your backend response structure
+        throw new Error(response.error || "Failed to add attendance.");
+      }
+
+      showSuccessToast();
+      replaceOptimisticUpdateWithRealData(
+        response.data.attendanceEntry,
+        student.studentId
+      );
+
+      resetStates();
+    } catch (error) {
+      showErrorToast(error);
+      rollbackOptimisticUpdate(
+        optimisticAttendanceEntry._id,
+        student.studentId
+      );
+    }
+  };
+
+  const sendAttendanceDataToAPI = async (data) => {
+    const response = await fetch("http://localhost:3000/api/attendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  };
+
+  const updateAttendanceData = (entry, studentId) => {
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
-      if (updatedData[student.studentId]) {
-        updatedData[student.studentId].push(optimisticAttendanceEntry);
+      if (updatedData[studentId]) {
+        updatedData[studentId].push(entry);
       } else {
-        updatedData[student.studentId] = [optimisticAttendanceEntry];
+        updatedData[studentId] = [entry];
       }
       return updatedData;
     });
+  };
 
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/accountingAttendance", // Update the API endpoint if different
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(attendanceData),
-        }
+  const replaceOptimisticUpdateWithRealData = (newAttendance, studentId) => {
+    setAttendanceData((prevData) => {
+      const updatedData = { ...prevData };
+      const studentAttendance = updatedData[studentId].map((entry) =>
+        entry._id === newAttendance._id ? newAttendance : entry
       );
+      updatedData[studentId] = studentAttendance; // Fix here
+      return updatedData;
+    });
+  };
 
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.error || "Failed to add attendance.");
-      }
+  const showSuccessToast = () => {
+    setToastMessage("Attendance saved successfully!");
+    setToastType("success");
+    setToastVisible(true);
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+  };
 
-      setToastMessage("Attendance saved successfully!");
-      setToastType("success");
-      setToastVisible(true);
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 3000);
+  const showErrorToast = (error) => {
+    setToastMessage(`Error: ${error.message}`);
+    setToastType("error");
+    setToastVisible(true);
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+  };
 
-      const newAttendance = responseData.data.attendanceEntry;
+  const rollbackOptimisticUpdate = (id, studentId) => {
+    setAttendanceData((prevData) => {
+      const updatedData = { ...prevData };
+      const studentAttendance = updatedData[studentId].filter(
+        (entry) => entry._id !== id
+      );
+      updatedData[studentId] = studentAttendance;
+      return updatedData;
+    });
+  };
 
-      setAttendanceData((prevData) => {
-        const updatedData = { ...prevData };
-        const studentAttendance = updatedData[student.studentId].map((entry) =>
-          entry._id === optimisticAttendanceEntry._id ? newAttendance : entry
-        );
-        updatedData[student.studentId] = studentAttendance;
-        return updatedData;
-      });
+  const resetStates = () => {
+    setTempAttendance(null);
+    setEditingRow({ studentId: null, entryId: null });
+    setForceUpdate((prev) => prev + 1);
+  };
 
-      // Resetting states
-      setTempAttendance(null);
-      setEditingRow({ studentId: null, entryId: null });
-      setForceUpdate((prev) => prev + 1);
-    } catch (error) {
-      console.error("Error:", error);
-      setToastMessage(`Error: ${error.message}`);
-      setToastType("error");
-      setToastVisible(true);
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 3000);
-
-      // Roll back the optimistic update in case of an error
-      setAttendanceData((prevData) => {
-        const updatedData = { ...prevData };
-        const studentAttendance = updatedData[student.studentId].filter(
-          (entry) => entry._id !== optimisticAttendanceEntry._id
-        );
-        updatedData[student.studentId] = studentAttendance;
-        return updatedData;
-      });
-    }
+  const handleButtonClick = async (student) => {
+    await handleAddGrade(student);
+    await handleAddAttendance(student);
   };
 
   // Rest of your component logic and rendering...
@@ -816,7 +834,7 @@ export default function Grades({ studentInfoArray }) {
 
                           <div style={columnStyles} className="col-xl-2">
                             <button
-                              onClick={() => handleAddGrade(elm)}
+                              onClick={() => handleButtonClick(elm)}
                               {...buttonStyles.blue}
                             >
                               Add Grade
