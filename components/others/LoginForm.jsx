@@ -1,12 +1,7 @@
 "use client";
-
-import Link from "next/link";
-import { JWT } from "jose";
 import React, { useState } from "react";
-import axios from "axios";
-axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
-  "jwtToken"
-)}`;
+import { signIn } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [identifier, setIdentifier] = useState("");
@@ -14,29 +9,27 @@ export default function LoginForm() {
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      identifier,
-      password,
-      stayLoggedIn, // true or false
-    };
-
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/login",
-        payload
-      );
+      const res = await signIn("credentials", {
+        identifier,
+        password,
+        redirect: false,
+      });
 
-      // Save JWT to localStorage
-      localStorage.setItem("jwtToken", response.data.token);
+      if (res.error) {
+        setErrorMessage("Invalid Credentials");
+        return;
+      }
 
-      setSuccessMessage("Login successful!");
-      // Handle the response data as required, e.g., save tokens, navigate to another page, etc.
+      console.log("sucsess");
+      router.replace("dashboard");
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Login failed!");
+      console.log(error);
     }
   };
 
