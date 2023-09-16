@@ -1,5 +1,5 @@
-// import { Quiz } from "@/data/mongoDb/models";
-// import { QuizEntry } from "@/data/mongoDb/models";
+// import { Quiz } from "@/data/mongoDb/models/quiz";
+// import { QuizEntry } from "@/data/mongoDb/models/quizEntry";
 // import mongoose from "mongoose";
 
 // export async function useFetchQuizData() {

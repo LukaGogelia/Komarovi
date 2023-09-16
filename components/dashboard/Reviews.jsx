@@ -1,10 +1,10 @@
 import React from "react";
 import mongoose from "mongoose";
-import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
+import { PointsCommissionDecision } from "../../data/mongoDb/models/pointsCommissionDecision";
 import Star from "../common/Star";
 import Image from "next/image";
 
-import { ExamEntry } from "../../data/mongoDb/models.js";
+import { ExamEntry } from "../../data/mongoDb/models/examEntry";
 import dbConnect from "@/data/mongoDb/database.js";
 
 // require("./../../data/mongoDb/database.js");

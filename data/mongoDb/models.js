@@ -1,56 +1,59 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
-const { Schema, model } = mongoose;
+// const { Schema, model } = mongoose;
 
-// RegistrationCode model
+// // RegistrationCode model
 
-// News model
+// // News model
 
-// Category model
+// // Category model
 
-// Club model
-// const ClubSchema = new Schema({
-//   name: String,
-//   description: String,
-//   presidentId: Schema.Types.ObjectId,
-//   members: [Schema.Types.ObjectId],
-// });
+// // Club model
+// // const ClubSchema = new Schema({
 
-// const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
+let GAUKMEBULIA = GAUKMEBULIA;
 
-// House model
+// //   name: String,
+// //   description: String,
+// //   presidentId: Schema.Types.ObjectId,
+// //   members: [Schema.Types.ObjectId],
+// // });
 
-// Grade Entry model
+// // const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
 
-// Exam Entry model
+// // House model
 
-// Exam model
+// // Grade Entry model
 
-// HouseLeader Schema
+// // Exam Entry model
 
-// Club model
+// // Exam model
 
-// Export models
-module.exports = {
-  User,
-  Club,
-  House,
-  GradeEntry,
-  QuizEntry,
-  Student,
-  Quiz,
-  News,
-  PointsCommissionDecision,
-  CurrentClass,
-  Category,
-  CareManager,
-  RegistrationCode,
-  Family,
-  ClubPresident, // Added export
-  FamilyRelation,
-  HouseLeader,
-  Admin,
-  Teacher,
-  UserInvitation,
-  Subject,
-};
+// // HouseLeader Schema
+
+// // Club model
+
+// // Export models
+// module.exports = {
+//   User,
+//   Club,
+//   House,
+//   GradeEntry,
+//   QuizEntry,
+//   Student,
+//   Quiz,
+//   News,
+//   PointsCommissionDecision,
+//   CurrentClass,
+//   Category,
+//   CareManager,
+//   RegistrationCode,
+//   Family,
+//   ClubPresident, // Added export
+//   FamilyRelation,
+//   HouseLeader,
+//   Admin,
+//   Teacher,
+//   UserInvitation,
+//   Subject,
+// };

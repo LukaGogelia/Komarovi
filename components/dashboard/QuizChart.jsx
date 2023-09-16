@@ -1,7 +1,7 @@
 import React from "react";
 import mongoose from "mongoose";
-import { Quiz } from "@/data/mongoDb/models";
-import { QuizEntry } from "@/data/mongoDb/models";
+import { Quiz } from "@/data/mongoDb/models/quiz";
+import { QuizEntry } from "@/data/mongoDb/models/quizEntry";
 
 export async function fetchQuizData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {

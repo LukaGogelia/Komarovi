@@ -1,5 +1,5 @@
 import dbConnect from "@/data/mongoDb/database";
-import { User } from "@/data/mongoDb/models";
+import { User } from "@/data/mongoDb/models/user";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";

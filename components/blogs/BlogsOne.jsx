@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 
 import Link from "next/link";
 
-import { Category, News } from "@/data/mongoDb/models.js";
+import { News } from "@/data/mongoDb/models/news";
+import { Category } from "@/data/mongoDb/models/category";
 
 async function getData(props) {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {

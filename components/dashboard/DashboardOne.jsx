@@ -9,11 +9,11 @@ const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 import { fetchData } from "./Reviews";
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
-import { Quiz } from "@/data/mongoDb/models";
-import { QuizEntry } from "@/data/mongoDb/models";
+import { Quiz } from "@/data/mongoDb/models/quiz";
+import { QuizEntry } from "@/data/mongoDb/models/quizEntry";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
-import { GradeEntry } from "@/data/mongoDb/models";
+import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
 export async function fetchGradesData() {
   await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
     useNewUrlParser: true,
