@@ -111,7 +111,7 @@ export const sidebarItems = [
   },
   {
     id: 8,
-    href: "/",
+    href: "/api/auth/signout",
     iconClass: "text-20 icon-power",
     text: "Logout",
   },

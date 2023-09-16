@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CurrentClass } from "./../../data/mongoDb/models"; // Adjust this import path accordingly
+import { CurrentClass } from "../../data/mongoDb/models"; // Adjust this import path accordingly
 
 // Connect to the MongoDB database
 const connectDb = async () => {

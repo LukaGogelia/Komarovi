@@ -8,9 +8,9 @@ import AuthImageMove from "@/components/others/AuthImageMove";
 import LoginForm from "@/components/others/LoginForm";
 import Terms from "@/components/terms/Terms";
 import { redirect } from "next/navigation";
-import React from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import React from "react";
 export const metadata = {
   title:
     "Login || Educrat - Professional LMS Online Education Course NextJS Template",
@@ -19,7 +19,9 @@ export const metadata = {
 };
 export default function page() {
   const session = getServerSession(authOptions);
-  if (session) redirect("/dashboard");
+  // if (session) redirect(`${process.env.NEXTAUTH_URL}dashboard`);
+  console.log("andrew");
+  if (session) console.log("tate");
 
   return (
     <div className="main-content  ">

@@ -1,14 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { CldUploadWidget } from "next-cloudinary";
 
 export default function EditProfile({ activeTab }) {
   const [previewImage, setPreviewImage] = useState(
-    "/assets/img/dashboard/edit/1.png",
+    "/assets/img/dashboard/edit/1.png"
   );
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    setSelectedFile(file);
 
     if (file) {
       const reader = new FileReader();
@@ -20,8 +24,45 @@ export default function EditProfile({ activeTab }) {
       reader.readAsDataURL(file);
     }
   };
-  const handleSubmit = (e) => {
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "xdfggik7"); // replace 'your_upload_preset' with your actual preset
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dhwthoh1u/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.secure_url) {
+      return data.secure_url;
+    } else {
+      throw new Error("Failed to upload to Cloudinary");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      if (selectedFile) {
+        const cloudinaryUrl = await uploadToCloudinary(selectedFile);
+        console.log("Image uploaded to Cloudinary:", cloudinaryUrl);
+
+        // Once you have the Cloudinary URL, you can save it along with other profile information
+        // SaveProfileFunction({ imageURL: cloudinaryUrl, ...otherProfileData })
+      }
+
+      // ... rest of your profile saving logic
+    } catch (error) {
+      console.error("There was an error:", error.message);
+    }
   };
   return (
     <div
@@ -44,6 +85,7 @@ export default function EditProfile({ activeTab }) {
               className="size-100"
               src={previewImage}
               alt={previewImage ? "image" : ""}
+              style={{ objectFit: "cover", overflow: "hidden" }}
             />
           )}
         </label>
