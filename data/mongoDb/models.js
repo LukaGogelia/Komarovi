@@ -38,6 +38,11 @@ const CurrentClassSchema = new Schema({
       message: (props) => `${props.value} is not a valid academic year format!`,
     },
   },
+  timeTableId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "TimeTable",
+    required: true,
+  },
 });
 
 const CurrentClass =
@@ -537,6 +542,34 @@ const attendanceSchema = new Schema({
 const Attendance =
   mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
+const TimeTableSchema = new mongoose.Schema({
+  day: {
+    type: String,
+    required: true,
+    enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  },
+  lessons: [
+    {
+      subject: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subject",
+        required: true,
+      },
+      timeSlot: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const TimeTable =
+  mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
+
 // Export models
 module.exports = {
   User,
@@ -559,4 +592,5 @@ module.exports = {
   Teacher,
   Attendance,
   Subject,
+  TimeTable,
 };

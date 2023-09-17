@@ -7,30 +7,44 @@ import React from "react";
 import { fetchClasses } from "../../dshb-grades-list/page";
 import { Student } from "@/data/mongoDb/models";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
+import { CurrentClass } from "@/data/mongoDb/models";
+import { TimeTable } from "@/data/mongoDb/models";
 
 async function fetchStudentInfo(classId, subjectName, subjectId) {
+  // 1. Fetch the associated timetable ID for the class
+  const currentClass = await CurrentClass.findById(classId).lean();
+  const timetableId = currentClass.timeTableId;
+
+  // 2. Fetch the timetable details
+  const timeTableInfo = await TimeTable.findById(timetableId).lean();
+
   const studentsInClass = await Student.find({ classIds: classId }).populate(
     "userId"
   );
 
-  // Map to extract required student information
   const studentInfoArray = studentsInClass
     .map((student) => {
-      // Check if student has an associated user
       if (student.userId) {
         return {
-          studentId: student._id, // Include student's ID
-          fullName: `${student.userId.firstName} ${student.userId.lastName}`, // Concatenating firstName and lastName
-          email: student.userId.email, // Access user's email
-          subjectName: subjectName, // Include the subject's name
-          subjectId: subjectId, // Include the subject's ID
+          studentId: student._id,
+          fullName: `${student.userId.firstName} ${student.userId.lastName}`,
+          email: student.userId.email,
+          subjectName: subjectName,
+          subjectId: subjectId,
+          timeTable: {
+            day: timeTableInfo.day,
+            date: timeTableInfo.date,
+            lessons: timeTableInfo.lessons.map((lesson) => ({
+              subject: lesson.subject, // Assuming each lesson has a 'subject' field
+              timeSlot: lesson.timeSlot, // Assuming each lesson has a 'timeSlot' field
+            })),
+          },
         };
       } else {
         return null;
       }
     })
     .filter((info) => info !== null);
-  // Filter out any null values
 
   return studentInfoArray;
 }
@@ -44,10 +58,21 @@ export const metadata = {
 
 export default async function page({ params }) {
   const { updatedArray } = await fetchClasses();
-  const classObj = updatedArray.find((item) => item.id === parseInt(params.id));
+
+  // Find the matching class object based on the provided id from params
+  const classObj = updatedArray.find(
+    (item) => String(item.id) === String(params.id)
+  );
+
+  // If no matching class is found, throw an error or handle it as needed
+  if (!classObj) {
+    throw new Error(`No class found with ID: ${params.id}`);
+  }
+
+  // Extract the class ID from the found class object
   const classId = classObj._id;
 
-  // Assuming fetchStudentInfo has been updated accordingly
+  // Fetch student information based on the class's details
   const studentInfoArray = await fetchStudentInfo(
     classId,
     classObj.subject,

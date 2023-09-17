@@ -8,32 +8,46 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// Define GradeEntry and Subject models
-const GradeEntrySchema = new mongoose.Schema({
-  subject: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Subject",
+// Assuming SubjectSchema is already defined
+const Subject =
+  mongoose.models.Subject ||
+  mongoose.model(
+    "Subject",
+    new mongoose.Schema({
+      name: String,
+    })
+  );
+
+const TimeTableSchema = new mongoose.Schema({
+  day: {
+    type: String,
     required: true,
+    enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   },
-  grade: Number,
-  type: String,
+  lessons: [
+    {
+      subject: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subject",
+        required: true,
+      },
+      timeSlot: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   date: {
     type: Date,
     default: Date.now,
   },
 });
 
-const GradeEntry = mongoose.model("GradeEntry", GradeEntrySchema);
+const TimeTable =
+  mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
 
-const SubjectSchema = new mongoose.Schema({
-  name: String,
-  // Assuming 'name' is the main field, add others if needed
-});
-const Subject = mongoose.model("Subject", SubjectSchema);
-
-async function seedGradeEntries(numEntries = 10) {
+async function seedTimeTables(numEntries = 10) {
   try {
-    // Fetch existing Subject _ids
     const subjectIds = await Subject.find().select("_id").lean();
 
     if (subjectIds.length === 0) {
@@ -43,15 +57,28 @@ async function seedGradeEntries(numEntries = 10) {
       return;
     }
 
-    const fakeEntries = Array.from({ length: numEntries }).map(() => ({
-      subject: faker.random.arrayElement(subjectIds)._id,
-      grade: faker.datatype.number({ min: 0, max: 100 }),
-      type: faker.random.arrayElement(["exam", "test", "assignment"]),
-      date: faker.date.past(1), // Date within the last year
+    const fakeTimeTables = Array.from({ length: numEntries }).map(() => ({
+      day: faker.random.arrayElement([
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+      ]),
+      lessons: Array.from({
+        length: faker.datatype.number({ min: 1, max: 5 }),
+      }).map(() => ({
+        subject: faker.random.arrayElement(subjectIds)._id,
+        timeSlot: `${faker.datatype.number({
+          min: 8,
+          max: 12,
+        })}:00 - ${faker.datatype.number({ min: 1, max: 4 })}:00`,
+      })),
+      date: faker.date.recent(30), // Any date within the last 30 days
     }));
 
-    await GradeEntry.insertMany(fakeEntries);
-    console.log(`Successfully added ${numEntries} fake grade entries.`);
+    await TimeTable.insertMany(fakeTimeTables);
+    console.log(`Successfully added ${numEntries} fake time tables.`);
   } catch (error) {
     console.error("Error seeding fake data:", error);
   } finally {
@@ -59,4 +86,4 @@ async function seedGradeEntries(numEntries = 10) {
   }
 }
 
-seedGradeEntries();
+seedTimeTables();

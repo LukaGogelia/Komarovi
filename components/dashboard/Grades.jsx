@@ -71,26 +71,23 @@ export default function Grades({ studentInfoArray }) {
   const [tempAttendance, setTempAttendance] = useState("yes");
   const [attendanceData, setAttendanceData] = useState({});
   const [subjects, setSubjects] = useState([]);
-
-  const [searchTerm, setSearchTerm] = useState(""); // Add this state for search feature
+  const [searchTerm, setSearchTerm] = useState("");
   const [editingRow, setEditingRow] = useState({
     studentId: null,
     entryId: null,
   });
   const [tempGrade, setTempGrade] = useState(null);
   const [tempType, setTempType] = useState(null);
-
   const [visibleRows, setVisibleRows] = useState(
     studentInfoArray.map((student) => {
-      return { studentId: student.studentId, entryId: null }; // or whatever initial entryId should be
+      return { studentId: student.studentId, entryId: null };
     })
   );
   const [editingEntryId, setEditingEntryId] = useState(null);
-
-  const [studentGrades, setStudentGrades] = useState([]); // Initial data or an empty array
+  const [studentGrades, setStudentGrades] = useState([]);
   const [mainRow, setMainRow] = useState({
-    date: new Date().toISOString().split("T")[0], // Default to current date in 'YYYY-MM-DD' format
-    studentId: "defaultStudentId", // replace with an appropriate default or an empty string
+    date: new Date().toISOString().split("T")[0],
+    studentId: "defaultStudentId",
     grades: [],
   });
 
@@ -110,7 +107,7 @@ export default function Grades({ studentInfoArray }) {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleAddGrade = async (student) => {
@@ -121,10 +118,6 @@ export default function Grades({ studentInfoArray }) {
       const newGrade = await sendGradeToServer(gradeData);
       confirmOptimisticUpdate(optimisticGradeEntry, newGrade, student);
       showToast("Grade saved successfully!", "success");
-
-      if (tempAttendance) {
-        await handleAddAttendance(student);
-      }
     } catch (error) {
       rollbackOptimisticUpdate(optimisticGradeEntry, student);
       showToast(`Error: ${error.message}`, "error");
@@ -228,6 +221,23 @@ export default function Grades({ studentInfoArray }) {
     }
   };
 
+  const fetchAttendanceForDate = async (date, studentId) => {
+    const response = await fetch(
+      `/api/attendance?date=${date}&studentId=${studentId}`
+    );
+
+    if (!response.ok) {
+      console.error("Failed to fetch attendance for date:", date);
+      return;
+    }
+
+    const data = await response.json();
+    setAttendanceData((prevData) => ({
+      ...prevData,
+      [studentId]: data,
+    }));
+  };
+
   const handleDateChange = (date, studentId) => {
     setSelectedDates((prevDates) => ({
       ...prevDates,
@@ -235,6 +245,8 @@ export default function Grades({ studentInfoArray }) {
     }));
 
     fetchGradesForDate(date, studentId);
+
+    fetchAttendanceForDate(date, studentId);
   };
 
   const centeredStyles =
@@ -431,23 +443,20 @@ export default function Grades({ studentInfoArray }) {
     setTempGrade(""); // or some default value if not an empty string
     setTempType(""); // or some default value if not an empty string
   };
-  const handleAddAttendance = async (student) => {
-    console.log("handleAddAttendance called for student:", student.studentId);
 
+  // add attendance
+
+  const handleAddAttendance = async (student) => {
     const currentDate =
       selectedDates[student.studentId] ||
       new Date().toISOString().split("T")[0];
 
     const attendanceData = {
       studentId: student.studentId,
-      subjectId: student.subjectId, // Change 'subject' to 'subjectId'
+      subjectId: student.subjectId,
       attendance: tempAttendance,
       date: currentDate,
     };
-
-    console.log("Sending Attendance Data:", attendanceData);
-    console.log("Current Subject Name:", student.subject);
-    console.log("Subjects List:", subjects);
 
     const optimisticID = Math.random().toString();
     const optimisticAttendanceEntry = {
@@ -460,20 +469,24 @@ export default function Grades({ studentInfoArray }) {
     try {
       const response = await sendAttendanceDataToAPI(attendanceData);
 
-      if (!response.ok) {
-        // Check this according to your backend response structure
-        throw new Error(response.error || "Failed to add attendance.");
+      // Validate response body
+      if (response.bodyUsed) {
+        throw new Error("Response body has already been read.");
       }
 
-      showSuccessToast();
-      replaceOptimisticUpdateWithRealData(
-        response.data.attendanceEntry,
-        student.studentId
-      );
+      // Parse response body
+      const responseData = await response.json();
 
+      // Check for the response status and structure
+      if (!response.ok || !responseData.data) {
+        throw new Error(responseData.error || "Failed to add attendance.");
+      }
+
+      showToast("Attendance saved successfully!", "success");
+      replaceOptimisticUpdateWithRealData(attendanceData, student.studentId);
       resetStates();
     } catch (error) {
-      showErrorToast(error);
+      showToast(`Error: ${error.message}`, "error");
       rollbackOptimisticUpdate(
         optimisticAttendanceEntry._id,
         student.studentId
@@ -489,10 +502,20 @@ export default function Grades({ studentInfoArray }) {
       },
       body: JSON.stringify(data),
     });
-    return await response.json();
+
+    // Check for OK status but don't read the body here
+    if (!response.ok) {
+      // Optionally clone the response if you think it's being read elsewhere
+      const clonedResponse = response.clone();
+      const errorData = await clonedResponse.json();
+      throw new Error(errorData.message || "Failed to add attendance.");
+    }
+
+    return response; // Return the raw response, don't convert it to JSON here
   };
 
   const updateAttendanceData = (entry, studentId) => {
+    console.log("[updateAttendanceData] - Updating with entry:", entry);
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
       if (updatedData[studentId]) {
@@ -505,35 +528,25 @@ export default function Grades({ studentInfoArray }) {
   };
 
   const replaceOptimisticUpdateWithRealData = (newAttendance, studentId) => {
+    console.log(
+      "[replaceOptimisticUpdateWithRealData] - Replacing optimistic update with:",
+      newAttendance
+    );
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
       const studentAttendance = updatedData[studentId].map((entry) =>
         entry._id === newAttendance._id ? newAttendance : entry
       );
-      updatedData[studentId] = studentAttendance; // Fix here
+      updatedData[studentId] = studentAttendance;
       return updatedData;
     });
   };
 
-  const showSuccessToast = () => {
-    setToastMessage("Attendance saved successfully!");
-    setToastType("success");
-    setToastVisible(true);
-    setTimeout(() => {
-      setToastVisible(false);
-    }, 3000);
-  };
-
-  const showErrorToast = (error) => {
-    setToastMessage(`Error: ${error.message}`);
-    setToastType("error");
-    setToastVisible(true);
-    setTimeout(() => {
-      setToastVisible(false);
-    }, 3000);
-  };
-
   const rollbackOptimisticUpdate = (id, studentId) => {
+    console.log(
+      "[rollbackOptimisticUpdate] - Rolling back update with id:",
+      id
+    );
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
       const studentAttendance = updatedData[studentId].filter(
@@ -545,14 +558,18 @@ export default function Grades({ studentInfoArray }) {
   };
 
   const resetStates = () => {
+    console.log("[resetStates] - Resetting states.");
     setTempAttendance(null);
     setEditingRow({ studentId: null, entryId: null });
     setForceUpdate((prev) => prev + 1);
   };
 
   const handleButtonClick = async (student) => {
-    await handleAddGrade(student);
-    await handleAddAttendance(student);
+    if (tempGrade && tempType) {
+      await handleAddGrade(student);
+    } else {
+      await handleAddAttendance(student);
+    }
   };
 
   // Rest of your component logic and rendering...
@@ -791,6 +808,10 @@ export default function Grades({ studentInfoArray }) {
                                 {visibleCalendars[elm.studentId] && (
                                   <input
                                     type="date"
+                                    value={
+                                      selectedDates[elm.studentId] ||
+                                      getCurrentDate()
+                                    }
                                     style={{
                                       paddingLeft: "0.5rem",
                                     }}

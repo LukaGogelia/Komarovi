@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-const SelectAttendance = ({ initialValue, onAttendanceChange }) => {
+const SelectAttendance = ({
+  initialValue = "yes",
+  onAttendanceChange = () => {},
+}) => {
   const [selectedValue, setSelectedValue] = useState(initialValue === "yes");
 
   useEffect(() => {
@@ -40,9 +43,6 @@ SelectAttendance.propTypes = {
   initialValue: PropTypes.oneOf(["yes", "no"]),
 };
 
-SelectAttendance.defaultProps = {
-  onAttendanceChange: () => {},
-  initialValue: "yes",
-};
+// Removed the defaultProps
 
 export default SelectAttendance;

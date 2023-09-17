@@ -8,25 +8,83 @@ export default async function handler(req, res) {
   await dbConnect();
 
   switch (method) {
-    case "POST":
+    case "GET":
       try {
-        // Destructure the request body
-        const {
-          studentId,
-          attendance: key, // Destructured directly to 'key' to match your schema
-          date = new Date(), // Default value is the current date
-          subjectId,
-        } = req.body;
+        const { studentId, date = new Date().toISOString().split("T")[0] } =
+          req.query;
 
-        // Input validation
-        if (!studentId || key === undefined || !subjectId) {
+        if (!studentId) {
           return res.status(400).json({
             success: false,
-            error: "Required data missing in the request body.",
+            error: "studentId is missing in the request query.",
           });
         }
 
-        // Fetch the student using the provided ID
+        // Fetching the student's attendanceIds
+        const student = await Student.findById(studentId);
+        if (
+          !student ||
+          !student.attendanceIds ||
+          student.attendanceIds.length === 0
+        ) {
+          return res.status(404).json({
+            success: false,
+            error: "No attendance records found for the given student.",
+          });
+        }
+
+        // Fetching the attendance data for the student on the given date
+        const attendanceData = await Attendance.find({
+          _id: { $in: student.attendanceIds },
+          date: new Date(date), // Assuming the date format matches the stored format
+        }).populate("subject");
+
+        if (!attendanceData || attendanceData.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: "Attendance data not found for the given date.",
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: attendanceData,
+        });
+      } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ success: false, error: error.message });
+      }
+
+    case "POST":
+      try {
+        const {
+          studentId,
+          attendance: key,
+          date = new Date(),
+          subjectId,
+        } = req.body;
+
+        if (!studentId) {
+          return res.status(400).json({
+            success: false,
+            error: "studentId missing in the request body.",
+          });
+        }
+
+        if (key === undefined) {
+          return res.status(400).json({
+            success: false,
+            error: "attendance key missing in the request body.",
+          });
+        }
+
+        if (!subjectId) {
+          return res.status(400).json({
+            success: false,
+            error: "subjectId missing in the request body.",
+          });
+        }
+
         const student = await Student.findById(studentId, "classIds");
         if (!student) {
           return res.status(404).json({
@@ -35,14 +93,13 @@ export default async function handler(req, res) {
           });
         }
 
-        // Create a new attendance record, using the provided data
         const newAttendance = await Attendance.create({
           key: key,
           date: date,
-          subject: subjectId, // Now storing subjectId
+          subject: subjectId,
+          student: studentId, // assuming you have a "student" field in Attendance model
         });
 
-        // Update the student record with the new attendance ID
         const updatedStudent = await Student.findByIdAndUpdate(
           studentId,
           { $push: { attendanceIds: newAttendance._id } },
@@ -52,11 +109,10 @@ export default async function handler(req, res) {
         if (!updatedStudent) {
           return res.status(400).json({
             success: false,
-            error: "Error updating student data.",
+            error: "Error updating student data with new attendance record.",
           });
         }
 
-        // Respond with success
         return res.status(200).json({
           success: true,
           data: {
@@ -70,7 +126,7 @@ export default async function handler(req, res) {
       }
 
     default:
-      res.set("Allow", ["POST"]);
+      res.set("Allow", ["GET", "POST"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
