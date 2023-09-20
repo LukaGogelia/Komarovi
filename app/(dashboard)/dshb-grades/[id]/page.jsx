@@ -9,42 +9,68 @@ import { Student } from "@/data/mongoDb/models";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
 import { CurrentClass } from "@/data/mongoDb/models";
 import { TimeTable } from "@/data/mongoDb/models";
+import { ObjectId } from "mongodb";
+
+// Utility functions:
+
+function countLessonsUpToDate(timeTable, subject, targetDate) {
+  return timeTable.lessons.filter((lesson) => {
+    const lessonDate = new Date(lesson.date);
+    return (
+      lessonDate <= targetDate && lesson.subject._id.toString() === subject
+    );
+  }).length;
+}
 
 async function fetchStudentInfo(classId, subjectName, subjectId) {
-  // 1. Fetch the associated timetable ID for the class
+  // 1. Fetch the associated timetable IDs for the class
   const currentClass = await CurrentClass.findById(classId).lean();
-  const timetableId = currentClass.timeTableId;
+  const timetableIds = currentClass.timeTableIds;
 
-  // 2. Fetch the timetable details
-  const timeTableInfo = await TimeTable.findById(timetableId).lean();
+  if (!timetableIds || timetableIds.length === 0) {
+    throw new Error("No timetables associated with this class.");
+  }
+
+  // 2. Fetch the timetable details for all associated timetables
+  // 2. Fetch the timetable details for all associated timetables
+  const timeTables = await TimeTable.find({ _id: { $in: timetableIds } })
+    .populate("lessons.subject")
+    .populate("lessons.timeSlotId") // <-- Change this line
+    .lean();
 
   const studentsInClass = await Student.find({ classIds: classId }).populate(
     "userId"
   );
 
-  const studentInfoArray = studentsInClass
-    .map((student) => {
-      if (student.userId) {
-        return {
-          studentId: student._id,
-          fullName: `${student.userId.firstName} ${student.userId.lastName}`,
-          email: student.userId.email,
-          subjectName: subjectName,
-          subjectId: subjectId,
-          timeTable: {
-            day: timeTableInfo.day,
-            date: timeTableInfo.date,
-            lessons: timeTableInfo.lessons.map((lesson) => ({
-              subject: lesson.subject, // Assuming each lesson has a 'subject' field
-              timeSlot: lesson.timeSlot, // Assuming each lesson has a 'timeSlot' field
-            })),
-          },
-        };
-      } else {
-        return null;
-      }
-    })
-    .filter((info) => info !== null);
+  const today = new Date();
+
+  const studentInfoArray = studentsInClass.flatMap((student) => {
+    if (!student.userId) return [];
+
+    return timeTables.map((timeTableInfo) => {
+      const lessonsUntilTodayCount = countLessonsUpToDate(
+        timeTableInfo,
+        subjectId,
+        today
+      );
+
+      return {
+        studentId: student._id,
+        fullName: `${student.userId.firstName} ${student.userId.lastName}`,
+        email: student.userId.email,
+        subjectName: subjectName,
+        subjectId: subjectId,
+        lessonsUntilToday: lessonsUntilTodayCount,
+        timeTable: {
+          day: timeTableInfo.day,
+          lessons: timeTableInfo.lessons.map((lesson) => ({
+            subject: lesson.subject.name,
+            timeSlot: lesson.timeSlot.time,
+          })),
+        },
+      };
+    });
+  });
 
   return studentInfoArray;
 }
@@ -78,6 +104,9 @@ export default async function page({ params }) {
     classObj.subject,
     classObj.subjectId
   );
+
+  // console.log(studentInfoArray);
+  // return <></>;
 
   return (
     <div className="barba-container" data-barba="container">

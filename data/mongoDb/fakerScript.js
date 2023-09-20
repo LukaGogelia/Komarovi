@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const faker = require("faker");
 
-// Connect to the database
 const MONGODB_URI = "mongodb://127.0.0.1:27017/komarovi";
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// Assuming SubjectSchema is already defined
+// Assuming Subject and TimeSlot models have already been defined elsewhere in your code:
+
 const Subject =
   mongoose.models.Subject ||
   mongoose.model(
@@ -18,6 +18,17 @@ const Subject =
     })
   );
 
+const TimeSlot =
+  mongoose.models.TimeSlot ||
+  mongoose.model(
+    "TimeSlot",
+    new mongoose.Schema({
+      number: Number,
+      time: String,
+    })
+  );
+
+// TimeTable Schema
 const TimeTableSchema = new mongoose.Schema({
   day: {
     type: String,
@@ -32,7 +43,8 @@ const TimeTableSchema = new mongoose.Schema({
         required: true,
       },
       timeSlot: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TimeSlot",
         required: true,
       },
     },
@@ -49,10 +61,11 @@ const TimeTable =
 async function seedTimeTables(numEntries = 10) {
   try {
     const subjectIds = await Subject.find().select("_id").lean();
+    const timeSlotIds = await TimeSlot.find().select("_id").lean();
 
-    if (subjectIds.length === 0) {
+    if (subjectIds.length === 0 || timeSlotIds.length === 0) {
       console.error(
-        "No subjects found. Make sure you have some subjects in your database."
+        "No subjects or time slots found. Make sure you have some subjects and time slots in your database."
       );
       return;
     }
@@ -69,10 +82,7 @@ async function seedTimeTables(numEntries = 10) {
         length: faker.datatype.number({ min: 1, max: 5 }),
       }).map(() => ({
         subject: faker.random.arrayElement(subjectIds)._id,
-        timeSlot: `${faker.datatype.number({
-          min: 8,
-          max: 12,
-        })}:00 - ${faker.datatype.number({ min: 1, max: 4 })}:00`,
+        timeSlot: faker.random.arrayElement(timeSlotIds)._id,
       })),
       date: faker.date.recent(30), // Any date within the last 30 days
     }));

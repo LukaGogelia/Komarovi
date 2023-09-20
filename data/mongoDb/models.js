@@ -38,11 +38,13 @@ const CurrentClassSchema = new Schema({
       message: (props) => `${props.value} is not a valid academic year format!`,
     },
   },
-  timeTableId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "TimeTable",
-    required: true,
-  },
+  timeTableIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TimeTable",
+      required: true,
+    },
+  ],
 });
 
 const CurrentClass =
@@ -555,20 +557,41 @@ const TimeTableSchema = new mongoose.Schema({
         ref: "Subject",
         required: true,
       },
-      timeSlot: {
-        type: String,
+      timeSlotId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TimeSlot",
         required: true,
       },
     },
   ],
-  date: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
 const TimeTable =
   mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
+
+const timeSlotSchema = new mongoose.Schema({
+  number: {
+    type: Number,
+    required: true,
+    unique: true, // Assuming each time slot has a unique number
+  },
+  time: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        // This regex will validate a string of format "HH:MM - HH:MM"
+        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(
+          v
+        );
+      },
+      message: (props) => `${props.value} is not a valid time slot format!`,
+    },
+  },
+});
+
+const TimeSlot =
+  mongoose.models.TimeSlot || mongoose.model("TimeSlot", timeSlotSchema);
 
 // Export models
 module.exports = {
@@ -593,4 +616,5 @@ module.exports = {
   Attendance,
   Subject,
   TimeTable,
+  TimeSlot,
 };
