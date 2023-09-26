@@ -83,6 +83,9 @@ export default function Grades({ studentInfoArray }) {
       return { studentId: student.studentId, entryId: null };
     })
   );
+  const [attendanceCount, setAttendanceCount] = useState({});
+  const [attendanceDataForDate, setAttendanceDataForDate] = useState({});
+
   const [editingEntryId, setEditingEntryId] = useState(null);
   const [studentGrades, setStudentGrades] = useState([]);
   const [mainRow, setMainRow] = useState({
@@ -450,41 +453,75 @@ export default function Grades({ studentInfoArray }) {
     const currentDate =
       selectedDates[student.studentId] ||
       new Date().toISOString().split("T")[0];
+    const dayOfWeek = getDayOfWeek(currentDate);
 
-    const attendanceData = {
-      studentId: student.studentId,
-      subjectId: student.subjectId,
-      attendance: tempAttendance,
-      date: currentDate,
-    };
+    const studentTimeTable = student.timeTables.find(
+      (tt) => tt.day === dayOfWeek
+    );
 
-    const optimisticID = Math.random().toString();
-    const optimisticAttendanceEntry = {
-      ...attendanceData,
-      _id: optimisticID,
-    };
+    if (!studentTimeTable) {
+      showToast(`No timetable found for the student on ${dayOfWeek}.`, "error");
+      return;
+    }
 
-    updateAttendanceData(optimisticAttendanceEntry, student.studentId);
+    const lessonsForTheDay = studentTimeTable.lessons;
+    if (!lessonsForTheDay || lessonsForTheDay.length === 0) {
+      showToast(`No lessons scheduled for ${dayOfWeek}.`, "error");
+      return;
+    }
+
+    const selectedSubjectName = student.subjectName;
+    const lessonsForSelectedSubject = lessonsForTheDay.filter(
+      (lesson) => String(lesson.subject) === selectedSubjectName
+    );
+
+    if (lessonsForSelectedSubject.length === 0) {
+      showToast(
+        `No lessons on ${dayOfWeek} for the selected subject.`,
+        "error"
+      );
+      return;
+    }
 
     try {
-      const response = await sendAttendanceDataToAPI(attendanceData);
-
-      // Validate response body
-      if (response.bodyUsed) {
-        throw new Error("Response body has already been read.");
-      }
-
-      // Parse response body
+      // Fetch the existing attendance data for the given student, subject, and date
+      const response = await fetch(
+        `http://localhost:3000/api/attendance?studentId=${student.studentId}&date=${currentDate}`
+      );
       const responseData = await response.json();
 
-      // Check for the response status and structure
-      if (!response.ok || !responseData.data) {
-        throw new Error(responseData.error || "Failed to add attendance.");
+      if (
+        responseData.data &&
+        responseData.data.length >= lessonsForSelectedSubject.length
+      ) {
+        showToast(
+          `Attendance already recorded for all lessons of the subject on ${dayOfWeek}.`,
+          "error"
+        );
+        return;
       }
 
+      const attendanceData = {
+        studentId: student.studentId,
+        subjectId: student.subjectId,
+        attendance: tempAttendance,
+        date: currentDate,
+      };
+
+      const optimisticID = Math.random().toString();
+      const optimisticAttendanceEntry = {
+        ...attendanceData,
+        _id: optimisticID,
+      };
+      updateAttendanceData(optimisticAttendanceEntry, student.studentId);
+
+      const postResponse = await sendAttendanceDataToAPI(attendanceData);
+      const postResponseData = await postResponse.json();
+      if (!postResponse.ok || !postResponseData.data) {
+        throw new Error(postResponseData.error || "Failed to add attendance.");
+      }
       showToast("Attendance saved successfully!", "success");
       replaceOptimisticUpdateWithRealData(attendanceData, student.studentId);
-      resetStates();
     } catch (error) {
       showToast(`Error: ${error.message}`, "error");
       rollbackOptimisticUpdate(
@@ -518,11 +555,10 @@ export default function Grades({ studentInfoArray }) {
     console.log("[updateAttendanceData] - Updating with entry:", entry);
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
-      if (updatedData[studentId]) {
-        updatedData[studentId].push(entry);
-      } else {
-        updatedData[studentId] = [entry];
+      if (!updatedData[studentId] || !Array.isArray(updatedData[studentId])) {
+        updatedData[studentId] = [];
       }
+      updatedData[studentId].push(entry);
       return updatedData;
     });
   };
@@ -571,6 +607,45 @@ export default function Grades({ studentInfoArray }) {
       await handleAddAttendance(student);
     }
   };
+
+  function getDayOfWeek(date) {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return days[new Date(date).getDay()];
+  }
+
+  useEffect(() => {
+    async function fetchAttendanceDataForSelectedDate(studentId, selectedDate) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/attendance?studentId=${studentId}&date=${selectedDate}`
+        );
+        const responseData = await response.json();
+
+        if (responseData.success && responseData.data) {
+          setAttendanceDataForDate((prevData) => ({
+            ...prevData,
+            [studentId]: responseData.data,
+          }));
+        } else {
+          console.error("Failed to fetch attendance data:", responseData.error);
+        }
+      } catch (error) {
+        console.error("Error fetching attendance data:", error);
+      }
+    }
+
+    Object.entries(selectedDates).forEach(([studentId, date]) => {
+      fetchAttendanceDataForSelectedDate(studentId, date);
+    });
+  }, [selectedDates]);
 
   // Rest of your component logic and rendering...
   console.log("visible rows:", visibleRows);
@@ -700,20 +775,95 @@ export default function Grades({ studentInfoArray }) {
                   className="border-light-bottom"
                 >
                   {filteredStudents.map((elm, i) => {
-                    const studentGrades = Array.isArray(
-                      gradesData[elm.studentId]
-                    )
-                      ? gradesData[elm.studentId]
-                      : [];
+                    const studentGrades = gradesData[elm.studentId] || [];
                     const isDateSelected = visibleCalendars[elm.studentId];
+                    const attendanceForStudentDate =
+                      attendanceDataForDate[elm.studentId] || [];
+                    const lessonsOnSelectedDate =
+                      attendanceForStudentDate.filter(
+                        (entry) =>
+                          new Date(entry.date).toISOString().split("T")[0] ===
+                            selectedDates[elm.studentId] &&
+                          entry.subject._id === elm.subjectId
+                      );
 
-                    const renderGradesRow = (entry, index) => {
+                    const renderMainRow = () => (
+                      <div
+                        style={centeredStyles}
+                        className={`row y-gap-20 justify-between items-center ${
+                          i !== 0 ? "border-top-light pt-40 mt-40" : ""
+                        }`}
+                      >
+                        <div style={columnStyles} className="col-xl-3">
+                          <div className="d-flex align-items-center">
+                            <i
+                              className="icon-calendar text-16"
+                              style={{
+                                paddingLeft: "0.7rem",
+                                paddingBottom: "0.45rem",
+                              }}
+                              onClick={() => toggleCalendar(elm.studentId)}
+                            ></i>
+                            {visibleCalendars[elm.studentId] && (
+                              <input
+                                type="date"
+                                value={
+                                  selectedDates[elm.studentId] ||
+                                  getCurrentDate()
+                                }
+                                style={{ paddingLeft: "0.5rem" }}
+                                onChange={(e) =>
+                                  handleDateChange(
+                                    e.target.value,
+                                    elm.studentId
+                                  )
+                                }
+                              />
+                            )}
+                            <div
+                              className="text-dark-1 mt-10"
+                              style={{ paddingLeft: "0.5rem" }}
+                            >
+                              {elm.fullName}
+                            </div>
+                          </div>
+                        </div>
+                        <div style={columnStyles} className="col-xl-2">
+                          <SelectGrade
+                            studentId={elm.studentId}
+                            subject={elm.subjectId}
+                            onRateChange={setTempGrade}
+                          />
+                        </div>
+                        <div style={columnStyles} className="col-xl-3">
+                          <SelectType onTypeChange={setTempType} />
+                        </div>
+                        <div style={columnStyles} className="col-xl-2">
+                          <SelectAttendance
+                            studentId={elm.studentId}
+                            onAttendanceChange={setTempAttendance}
+                            style={{ paddingBottom: "10px" }}
+                          />
+                        </div>
+                        <div style={columnStyles} className="col-xl-2">
+                          <button
+                            onClick={() => handleButtonClick(elm)}
+                            {...buttonStyles.blue}
+                          >
+                            Add Grade
+                          </button>
+                        </div>
+                      </div>
+                    );
+
+                    const renderGradesRow = (student, entry, index) => {
                       const isEditingCurrentEntry =
-                        editingRow.studentId === elm.studentId &&
+                        editingRow.studentId === student.studentId &&
                         editingRow.entryId === entry.entryId;
+
                       return (
                         <div
-                          key={`${elm.studentId}-${index}`}
+                          key={`${student.studentId}-${index}`}
                           style={centeredStyles}
                           className="row y-gap-20 justify-between items-center"
                         >
@@ -724,7 +874,7 @@ export default function Grades({ studentInfoArray }) {
                                   <span
                                     onClick={() => {
                                       saveEditedGrade(
-                                        elm.studentId,
+                                        student.studentId,
                                         entry.entryId
                                       );
                                       resetGradeInputs();
@@ -735,7 +885,7 @@ export default function Grades({ studentInfoArray }) {
                                 ) : (
                                   <span
                                     onClick={() =>
-                                      startEditing(elm.studentId, entry)
+                                      startEditing(student.studentId, entry)
                                     }
                                   >
                                     🖊️
@@ -743,7 +893,7 @@ export default function Grades({ studentInfoArray }) {
                                 )}
                               </div>
                               <div className="text-dark-1 ml-10">
-                                {elm.fullName}
+                                {student.fullName}
                               </div>
                             </div>
                           </div>
@@ -752,8 +902,8 @@ export default function Grades({ studentInfoArray }) {
                               initialValue={
                                 isEditingCurrentEntry ? tempGrade : entry.grade
                               }
-                              studentId={elm.studentId}
-                              subject={elm.subject}
+                              studentId={student.studentId}
+                              subject={student.subject}
                               onRateChange={
                                 isEditingCurrentEntry ? setTempGrade : null
                               }
@@ -773,7 +923,7 @@ export default function Grades({ studentInfoArray }) {
                             {entry.grade && entry.type && (
                               <button
                                 onClick={() =>
-                                  handleRemoveData(elm.studentId, entry._id)
+                                  handleRemoveData(student.studentId, entry._id)
                                 }
                                 {...buttonStyles.red}
                               >
@@ -787,84 +937,11 @@ export default function Grades({ studentInfoArray }) {
 
                     return (
                       <div key={elm.studentId}>
-                        {/* Main row content (Always displayed) */}
-                        <div
-                          style={centeredStyles}
-                          className={`row y-gap-20 justify-between items-center ${
-                            i !== 0 ? "border-top-light pt-40 mt-40" : ""
-                          }`}
-                        >
-                          <div style={columnStyles} className="col-xl-3">
-                            <div className="d-flex flex-column align-items-start">
-                              <div className="d-flex align-items-center">
-                                <i
-                                  className="icon-calendar text-16"
-                                  style={{
-                                    paddingLeft: "0.7rem",
-                                    paddingBottom: "0.45rem",
-                                  }}
-                                  onClick={() => toggleCalendar(elm.studentId)}
-                                ></i>
-                                {visibleCalendars[elm.studentId] && (
-                                  <input
-                                    type="date"
-                                    value={
-                                      selectedDates[elm.studentId] ||
-                                      getCurrentDate()
-                                    }
-                                    style={{
-                                      paddingLeft: "0.5rem",
-                                    }}
-                                    onChange={(e) =>
-                                      handleDateChange(
-                                        e.target.value,
-                                        elm.studentId
-                                      )
-                                    }
-                                  />
-                                )}
-                              </div>
-                              <div
-                                className="text-dark-1 mt-10"
-                                style={{ paddingLeft: "0.5rem" }}
-                              >
-                                {elm.fullName}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div style={columnStyles} className="col-xl-2">
-                            <SelectGrade
-                              studentId={elm.studentId}
-                              subject={elm.subject}
-                              onRateChange={setTempGrade}
-                            />
-                          </div>
-                          <div style={columnStyles} className="col-xl-3">
-                            <SelectType onTypeChange={setTempType} />
-                          </div>
-                          <div
-                            style={{ ...columnStyles, paddingBottom: "2rem" }}
-                            className="col-xl-2"
-                          >
-                            <SelectAttendance
-                              studentId={elm.studentId}
-                              onAttendanceChange={setTempAttendance} // Assuming you have a state hook named setTempAttendance
-                            />
-                          </div>
-
-                          <div style={columnStyles} className="col-xl-2">
-                            <button
-                              onClick={() => handleButtonClick(elm)}
-                              {...buttonStyles.blue}
-                            >
-                              Add Grade
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Conditionally rendering grades if the date is selected */}
-                        {isDateSelected && studentGrades.map(renderGradesRow)}
+                        {lessonsOnSelectedDate.length > 0 && renderMainRow()}
+                        {lessonsOnSelectedDate.length === 0 && renderMainRow()}
+                        {studentGrades.map((entry, index) =>
+                          renderGradesRow(elm, entry, index)
+                        )}
                       </div>
                     );
                   })}

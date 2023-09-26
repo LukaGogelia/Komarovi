@@ -21,8 +21,7 @@ function countLessonsUpToDate(timeTable, subject, targetDate) {
     );
   }).length;
 }
-
-async function fetchStudentInfo(classId, subjectName, subjectId) {
+const fetchStudentInfo = async (classId, subjectName, subjectId) => {
   // 1. Fetch the associated timetable IDs for the class
   const currentClass = await CurrentClass.findById(classId).lean();
   const timetableIds = currentClass.timeTableIds;
@@ -32,48 +31,59 @@ async function fetchStudentInfo(classId, subjectName, subjectId) {
   }
 
   // 2. Fetch the timetable details for all associated timetables
-  // 2. Fetch the timetable details for all associated timetables
   const timeTables = await TimeTable.find({ _id: { $in: timetableIds } })
-    .populate("lessons.subject")
-    .populate("lessons.timeSlotId") // <-- Change this line
+    .populate({
+      path: "lessons.subject",
+      model: "Subject",
+      select: "subject",
+    })
+    .populate({
+      path: "lessons.timeSlotId",
+      model: "TimeSlot",
+      select: "time",
+    })
     .lean();
+
+  // Debugging output
+  console.log("Fetched timeTables:", timeTables);
+
+  for (const timeTable of timeTables) {
+    for (const lesson of timeTable.lessons) {
+      if (!lesson.subject) {
+        console.error(`Missing subject for lesson:`, lesson);
+      }
+    }
+  }
 
   const studentsInClass = await Student.find({ classIds: classId }).populate(
     "userId"
   );
-
   const today = new Date();
 
-  const studentInfoArray = studentsInClass.flatMap((student) => {
-    if (!student.userId) return [];
+  const studentInfoArray = studentsInClass.map((student) => {
+    if (!student.userId) return null;
 
-    return timeTables.map((timeTableInfo) => {
-      const lessonsUntilTodayCount = countLessonsUpToDate(
-        timeTableInfo,
-        subjectId,
-        today
-      );
+    const studentTimeTables = timeTables.map((timeTableInfo) => ({
+      day: timeTableInfo.day,
+      lessons: timeTableInfo.lessons.map((lesson) => ({
+        subject: lesson.subject?.subject || "Unknown Subject",
+        timeSlot: lesson.timeSlotId?.time || "Unknown TimeSlot",
+      })),
+      lessonsUntilToday: countLessonsUpToDate(timeTableInfo, subjectId, today),
+    }));
 
-      return {
-        studentId: student._id,
-        fullName: `${student.userId.firstName} ${student.userId.lastName}`,
-        email: student.userId.email,
-        subjectName: subjectName,
-        subjectId: subjectId,
-        lessonsUntilToday: lessonsUntilTodayCount,
-        timeTable: {
-          day: timeTableInfo.day,
-          lessons: timeTableInfo.lessons.map((lesson) => ({
-            subject: lesson.subject.name,
-            timeSlot: lesson.timeSlot.time,
-          })),
-        },
-      };
-    });
+    return {
+      studentId: student._id,
+      fullName: `${student.userId.firstName} ${student.userId.lastName}`,
+      email: student.userId.email,
+      subjectName: subjectName,
+      subjectId: subjectId,
+      timeTables: studentTimeTables,
+    };
   });
 
-  return studentInfoArray;
-}
+  return studentInfoArray.filter((info) => info !== null);
+};
 
 export const metadata = {
   title:
@@ -105,7 +115,10 @@ export default async function page({ params }) {
     classObj.subjectId
   );
 
-  // console.log(studentInfoArray);
+  // if (studentInfoArray && studentInfoArray.length > 0) {
+  //   console.log(studentInfoArray[0].timeTables[0]);
+  // }
+
   // return <></>;
 
   return (
