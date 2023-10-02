@@ -54,6 +54,16 @@ export default function Grades({ studentInfoArray }) {
       setToastVisible(false);
     }, duration);
   };
+  const showToastMessage = (message, type = "success") => {
+    setToastMessage(message);
+    setToastType(type);
+    setToastVisible(true);
+
+    // Auto-hide the toast after 3 seconds
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+  };
 
   const [value, setValue] = useState();
   const [message, setMessage] = useState("");
@@ -83,6 +93,8 @@ export default function Grades({ studentInfoArray }) {
       return { studentId: student.studentId, entryId: null };
     })
   );
+  const [updatingAttendanceId, setUpdatingAttendanceId] = useState(null);
+
   const [attendanceCount, setAttendanceCount] = useState({});
   const [attendanceDataForDate, setAttendanceDataForDate] = useState({});
 
@@ -93,6 +105,10 @@ export default function Grades({ studentInfoArray }) {
     studentId: "defaultStudentId",
     grades: [],
   });
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [editedAttendanceId, setEditedAttendanceId] = useState(null);
+  const [editedAttendanceValue, setEditedAttendanceValue] = useState(null);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const filteredStudents = studentInfoArray.filter((student) =>
     student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -647,6 +663,8 @@ export default function Grades({ studentInfoArray }) {
     });
   }, [selectedDates]);
 
+  const currentDate = new Date().toISOString().split("T")[0];
+
   // Rest of your component logic and rendering...
   console.log("visible rows:", visibleRows);
 
@@ -689,7 +707,13 @@ export default function Grades({ studentInfoArray }) {
               placeholder="Search student by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: "100%", padding: "10px", borderRadius: "5px" }}
+              className="-dark-bg-dark-1"
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                color: "#fff", // adjust the text color to white for better readability against a dark background
+              }}
             />
           </div>
         </div>
@@ -776,18 +800,31 @@ export default function Grades({ studentInfoArray }) {
                 >
                   {filteredStudents.map((elm, i) => {
                     const studentGrades = gradesData[elm.studentId] || [];
-                    const isDateSelected = visibleCalendars[elm.studentId];
                     const attendanceForStudentDate =
                       attendanceDataForDate[elm.studentId] || [];
+
+                    console.log(
+                      "attendanceForStudentDate for student:",
+                      elm.studentId,
+                      "is:",
+                      attendanceForStudentDate
+                    );
+
+                    // Logging selected dates
+                    console.log("selectedDates:", selectedDates);
+
                     const lessonsOnSelectedDate =
                       attendanceForStudentDate.filter(
                         (entry) =>
                           new Date(entry.date).toISOString().split("T")[0] ===
-                            selectedDates[elm.studentId] &&
-                          entry.subject._id === elm.subjectId
+                          selectedDates[elm.studentId]
                       );
 
-                    const renderMainRow = () => (
+                    if (lessonsOnSelectedDate.length === 0) {
+                      lessonsOnSelectedDate.push({ status: "no" });
+                    }
+
+                    const renderMainRow = (attendanceRecord) => (
                       <div
                         style={centeredStyles}
                         className={`row y-gap-20 justify-between items-center ${
@@ -811,13 +848,25 @@ export default function Grades({ studentInfoArray }) {
                                   selectedDates[elm.studentId] ||
                                   getCurrentDate()
                                 }
+                                max={currentDate} // This restricts the date selection
                                 style={{ paddingLeft: "0.5rem" }}
-                                onChange={(e) =>
-                                  handleDateChange(
-                                    e.target.value,
-                                    elm.studentId
-                                  )
-                                }
+                                onChange={(e) => {
+                                  const selectedDate = e.target.value;
+                                  if (
+                                    new Date(selectedDate) >
+                                    new Date(currentDate)
+                                  ) {
+                                    showToastMessage(
+                                      "Cannot select a future date!"
+                                    );
+                                  } else {
+                                    handleDateChange(
+                                      selectedDate,
+                                      elm.studentId
+                                    );
+                                  }
+                                }}
+                                className="-dark-bg-dark-1"
                               />
                             )}
                             <div
@@ -838,13 +887,20 @@ export default function Grades({ studentInfoArray }) {
                         <div style={columnStyles} className="col-xl-3">
                           <SelectType onTypeChange={setTempType} />
                         </div>
-                        <div style={columnStyles} className="col-xl-2">
+                        <div
+                          style={{ ...columnStyles, marginTop: "-1.3rem" }} // added marginTop to existing styles
+                          className="col-xl-2"
+                        >
                           <SelectAttendance
                             studentId={elm.studentId}
                             onAttendanceChange={setTempAttendance}
                             style={{ paddingBottom: "10px" }}
+                            initialValue={
+                              attendanceRecord?.key === "no" ? "no" : "yes"
+                            }
                           />
                         </div>
+
                         <div style={columnStyles} className="col-xl-2">
                           <button
                             onClick={() => handleButtonClick(elm)}
@@ -853,6 +909,140 @@ export default function Grades({ studentInfoArray }) {
                             Add Grade
                           </button>
                         </div>
+                        <hr className="hr-style" />
+                      </div>
+                    );
+
+                    const renderAttendanceRow = (attendanceRecord) => (
+                      <div
+                        style={{
+                          ...centeredStyles,
+                          padding: "10px 0",
+                        }}
+                        className="row y-gap-20 justify-between items-center"
+                      >
+                        <div
+                          style={{
+                            color: "#333",
+                          }}
+                          className="col-xl-3"
+                        >
+                          {elm.fullName}
+                        </div>
+
+                        <div
+                          style={{
+                            ...columnStyles,
+                            fontStyle: "italic",
+                            paddingRight: "25px",
+                          }}
+                          className="col-xl-3"
+                        ></div>
+
+                        <div style={columnStyles} className="col-xl-2">
+                          <SelectAttendance
+                            studentId={elm.studentId}
+                            onAttendanceChange={(status) => {
+                              if (
+                                updatingAttendanceId === attendanceRecord._id
+                              ) {
+                                setEditedAttendanceValue(status);
+                              } else {
+                                handleAttendanceUpdate(
+                                  elm.studentId,
+                                  attendanceRecord.date,
+                                  status
+                                );
+                              }
+                            }}
+                            style={{
+                              paddingBottom: "10px",
+                              paddingTop: "10px",
+                              border: "1px solid #d1d1d1",
+                              borderRadius: "5px",
+                            }}
+                            initialValue={
+                              attendanceRecord.key === "no" ? "no" : "yes"
+                            }
+                          />
+                        </div>
+
+                        <div style={columnStyles} className="col-xl-2">
+                          <button
+                            onClick={async () => {
+                              if (
+                                updatingAttendanceId === attendanceRecord._id
+                              ) {
+                                try {
+                                  const response = await fetch(
+                                    "/api/attendance",
+                                    {
+                                      method: "PUT",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      },
+                                      body: JSON.stringify({
+                                        attendanceId: attendanceRecord._id,
+                                        key: editedAttendanceValue,
+                                      }),
+                                    }
+                                  );
+
+                                  const responseData = await response.json();
+
+                                  if (responseData.success) {
+                                    showToastMessage(
+                                      "Data saved successfully!"
+                                    );
+                                  } else {
+                                    showToastMessage(
+                                      "Failed to save data!",
+                                      "error"
+                                    );
+                                  }
+
+                                  setUpdatingAttendanceId(null);
+                                } catch (error) {
+                                  showToastMessage(
+                                    "Failed to save data!",
+                                    "error"
+                                  );
+                                }
+                              } else {
+                                setUpdatingAttendanceId(attendanceRecord._id);
+                              }
+                            }}
+                            style={{
+                              padding: "10px 15px",
+                              borderRadius: "5px",
+                              border: "none",
+                              cursor: "pointer",
+                              backgroundColor:
+                                updatingAttendanceId === attendanceRecord._id
+                                  ? "green"
+                                  : "#4a90e2",
+                              color: "white",
+                              transition: "0.3s ease",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                updatingAttendanceId === attendanceRecord._id
+                                  ? "darkgreen"
+                                  : "#357ABD";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                updatingAttendanceId === attendanceRecord._id
+                                  ? "green"
+                                  : "#4a90e2";
+                            }}
+                          >
+                            {updatingAttendanceId === attendanceRecord._id
+                              ? "Save Data"
+                              : "Update Data"}
+                          </button>
+                        </div>
+                        <hr className="hr-style" />
                       </div>
                     );
 
@@ -923,7 +1113,10 @@ export default function Grades({ studentInfoArray }) {
                             {entry.grade && entry.type && (
                               <button
                                 onClick={() =>
-                                  handleRemoveData(student.studentId, entry._id)
+                                  handleRemoveData(
+                                    student.studentId,
+                                    entry.entryId
+                                  )
                                 }
                                 {...buttonStyles.red}
                               >
@@ -931,14 +1124,23 @@ export default function Grades({ studentInfoArray }) {
                               </button>
                             )}
                           </div>
+                          <hr className="hr-style" />
                         </div>
                       );
                     };
 
                     return (
                       <div key={elm.studentId}>
-                        {lessonsOnSelectedDate.length > 0 && renderMainRow()}
-                        {lessonsOnSelectedDate.length === 0 && renderMainRow()}
+                        {renderMainRow()}
+
+                        {/* Check if a date has been selected for this student */}
+                        {selectedDates[elm.studentId] &&
+                          lessonsOnSelectedDate.map((attendanceRecord, idx) => (
+                            <div key={idx}>
+                              {renderAttendanceRow(attendanceRecord)}
+                            </div>
+                          ))}
+
                         {studentGrades.map((entry, index) =>
                           renderGradesRow(elm, entry, index)
                         )}

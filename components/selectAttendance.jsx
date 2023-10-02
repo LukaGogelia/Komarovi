@@ -6,6 +6,7 @@ const SelectAttendance = ({
   initialValue = "yes",
   onAttendanceChange = () => {},
 }) => {
+  // Convert "yes"/"no" string to boolean for checkbox
   const [selectedValue, setSelectedValue] = useState(initialValue === "yes");
 
   useEffect(() => {
@@ -16,9 +17,7 @@ const SelectAttendance = ({
     const isChecked = event.target.checked;
     setSelectedValue(isChecked);
 
-    if (typeof onAttendanceChange === "function") {
-      onAttendanceChange(isChecked ? "yes" : "no");
-    }
+    onAttendanceChange(isChecked ? "yes" : "no");
   };
 
   return (
@@ -42,7 +41,5 @@ SelectAttendance.propTypes = {
   onAttendanceChange: PropTypes.func,
   initialValue: PropTypes.oneOf(["yes", "no"]),
 };
-
-// Removed the defaultProps
 
 export default SelectAttendance;
