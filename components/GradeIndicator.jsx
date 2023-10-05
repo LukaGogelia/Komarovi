@@ -34,9 +34,13 @@ export default function GradeIndicator({
 
   const filteredGradeEntries = useMemo(() => {
     return selectedSubject
-      ? gradeEntries.filter((entry) => entry.subject === selectedSubject)
+      ? gradeEntries.filter(
+          (entry) => entry.subject.subject === selectedSubject
+        )
       : gradeEntries;
   }, [selectedSubject, gradeEntries]);
+
+  console.log("grades", filteredGradeEntries);
 
   const computedGradeList = useMemo(() => {
     const gradeCounts = new Array(10).fill(0);

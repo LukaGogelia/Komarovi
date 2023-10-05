@@ -3,24 +3,18 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 
-const options = [
-  { label: "20" },
-  { label: "10" },
-  { label: "73" },
-  { label: "62" },
-  { label: "90" },
-];
-
-const SelectSubject = ({ onRateChange }) => {
+const SelectSubject = ({ onRateChange, attendances }) => {
   const [ddOpen, setDdOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("This Week");
   const [darkMode, setDarkMode] = useState(true);
 
   const handleSelectChange = (value) => {
     setSelectedValue(value);
-    onRateChange(value); // Call the passed-in function
-    setDdOpen(false); // Close the dropdown
+    onRateChange(value);
+    setDdOpen(false);
   };
+
+  console.log("attendance", attendances);
 
   return (
     <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
@@ -63,17 +57,17 @@ const SelectSubject = ({ onRateChange }) => {
           } ${ddOpen ? "-is-visible" : ""}`}
         >
           <div className="select__options js-options">
-            {options.map((option, i) => (
+            {attendances.map((option, i) => (
               <div
-                onClick={() => handleSelectChange(option.label)}
+                onClick={() => handleSelectChange(option.subject)}
                 className={`select__options__button js-target-title${
-                  selectedValue === option.label ? "-is-choosen" : ""
+                  selectedValue === option.subject ? "-is-choosen" : ""
                 }`}
-                data-value={option.label}
+                data-value={option.subject}
                 key={i}
               >
                 {/* Checkbox removed */}
-                <span className="ml-10">{option.label}</span>
+                <span className="ml-10">{option.subject}</span>
               </div>
             ))}
           </div>

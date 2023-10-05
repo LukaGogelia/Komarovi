@@ -17,15 +17,7 @@ import { PointsCommissionDecision } from "@/data/mongoDb/models";
 import { connectDb } from "./ConnectToDb";
 import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
 import { fetchData } from "./Reviews";
-
-// export async function fetchTeacher() {
-//   const teacherId = "64e8d8e05ab36dd9eb96add1";
-
-//   const teacher = await Teacher.findOne({ _id: teacherId })
-//     .populate("classTaught")
-//     .exec();
-//   return teacher;
-// }
+import { Attendance } from "@/data/mongoDb/models";
 
 export async function fetchGradesData() {
   try {
@@ -33,8 +25,14 @@ export async function fetchGradesData() {
 
     const studentId = "64e52ffb1436edfda9379761";
 
+    // Populate both the receivedGrade and the subject inside it
     const student = await Student.findOne({ _id: studentId })
-      .populate("receivedGrade")
+      .populate({
+        path: "receivedGrade",
+        populate: {
+          path: "subject",
+        },
+      })
       .exec();
 
     const pointsDecisions = await PointsCommissionDecision.find({
@@ -79,11 +77,13 @@ export async function fetchGradesData() {
         value: count,
       }));
 
-      // Deduplicate subjects
-      const uniqueSubjects = [
-        ...new Set(gradeEntries.map((entry) => entry.subject)),
+      // Deduplicate subjects by name
+      const uniqueSubjectNames = [
+        ...new Set(gradeEntries.map((entry) => entry.subject.subject)),
       ];
-      const subjectList = uniqueSubjects.map((subject) => ({ label: subject }));
+      const subjectList = uniqueSubjectNames.map((subjectName) => ({
+        label: subjectName,
+      }));
 
       return {
         subjectList,
@@ -119,7 +119,7 @@ export async function fetchGradesData() {
     }
   } catch (error) {
     console.error("Error fetching grades data:", error);
-    throw error; // or handle it more gracefully depending on your application's needs
+    throw error;
   }
 }
 
@@ -202,10 +202,81 @@ export async function useFetchQuizData() {
   return arr;
 }
 
+export async function fetchAttendance() {
+  await connectDb();
+
+  const studentId = "64e52ffb1436edfda9379761";
+
+  try {
+    // Fetch the student by their ID
+    const student = await Student.findById(studentId).exec();
+
+    // If student doesn't exist or if they have no attendance IDs, return an empty array
+    if (!student || !student.attendanceIds || !student.attendanceIds.length) {
+      return [];
+    }
+
+    // Fetch the attendance records for the student using the attendanceIds
+    const attendances = await Attendance.find({
+      _id: { $in: student.attendanceIds },
+    })
+      .populate("subject")
+      .exec();
+    // console.log("attendance", attendances);
+    return attendances;
+  } catch (error) {
+    console.error("Error fetching attendance data:", error);
+    throw error;
+  }
+}
+
+const getCurrentSemester = (date) => {
+  const firstSemesterStart = new Date(date.getFullYear(), 8, 15); // 15 September
+  const firstSemesterEnd = new Date(date.getFullYear(), 11, 29); // 29 December
+
+  const secondSemesterStart = new Date(date.getFullYear(), 0, 15); // 15 January
+  const secondSemesterEnd = new Date(date.getFullYear(), 5, 15); // 15 June
+
+  if (date >= firstSemesterStart && date <= firstSemesterEnd) {
+    return 1;
+  } else if (date >= secondSemesterStart && date <= secondSemesterEnd) {
+    return 2;
+  } else {
+    return null; // Not in any semester (e.g., during vacations)
+  }
+};
+
 export default async function DashboardOne() {
   const { lastFiveDecisionsList } = await fetchData();
   const arr = await useFetchQuizData();
   const { lastFiveTeamMembers } = await fetchTeachers();
+  const attendancesResult = await fetchAttendance();
+  const uniqueSubjectSet = new Set(
+    attendancesResult.map((item) => item.subject.subject)
+  );
+
+  // Transforming the unique subject set into the desired attendance format
+  const attendances = [...uniqueSubjectSet].map((subjectName) => {
+    const subjectAttendances = attendancesResult.filter(
+      (item) => item.subject.subject === subjectName
+    );
+
+    const attended = subjectAttendances.filter(
+      (item) => item.key === "yes"
+    ).length;
+    const total = subjectAttendances.length;
+
+    // We'll use the date of the first attendance record for this subject to determine its semester.
+    // This assumes that each subject has at least one attendance record.
+    const semester = getCurrentSemester(new Date(subjectAttendances[0].date));
+
+    return {
+      subject: subjectName,
+      attended: attended,
+      total: total,
+      semester: semester,
+    };
+  });
 
   const { subjectList, gradeList, gradeEntries, states } =
     await fetchGradesData();
@@ -293,7 +364,7 @@ export default async function DashboardOne() {
             ))}
           </div>
 
-          <ApplyGauge />
+          <ApplyGauge attendances={attendances} />
         </div>
         <div className="row y-gap-30 pt-30">
           <QuizPerformance options={options} arr={arr} />

@@ -4,12 +4,26 @@ import { useState } from "react";
 import SelectSubject from "./SelectSubject";
 import Gauge from "./Gauge";
 
-const ApplyGauge = () => {
-  const [value, setValue] = useState(50);
+const ApplyGauge = ({ attendances }) => {
+  const [value, setValue] = useState(50); // default value
 
-  const handleRateChange = (rate) => {
-    setValue(Number(rate));
+  const handleRateChange = (selectedSubject) => {
+    // Find the attendance data for the selected subject
+    const attendanceData = attendances.find(
+      (item) => item.subject === selectedSubject
+    );
+
+    if (attendanceData) {
+      const percentage = Math.round(
+        (attendanceData.attended / attendanceData.total) * 100
+      );
+      setValue(percentage);
+    } else {
+      console.warn(`No attendance data found for ${selectedSubject}`);
+    }
   };
+
+  console.log("attendance data passed as prop:", attendances); // Log the initial attendance data
 
   return (
     <div className="col-xl-4 col-md-12">
@@ -18,7 +32,10 @@ const ApplyGauge = () => {
           style={{ display: "flex", flexDirection: "column" }}
           // className="d-flex justify-between items-center py-20 px-30 border-bottom-light"
         >
-          <SelectSubject onRateChange={handleRateChange} />
+          <SelectSubject
+            onRateChange={handleRateChange}
+            attendances={attendances}
+          />
           <div
             style={{
               flex: 1,
