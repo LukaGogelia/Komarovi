@@ -593,6 +593,20 @@ const timeSlotSchema = new mongoose.Schema({
 const TimeSlot =
   mongoose.models.TimeSlot || mongoose.model("TimeSlot", timeSlotSchema);
 
+const dayOffSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+    unique: true, // Assuming each date can only have one day off entry
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+const DayOff = mongoose.models.DayOff || mongoose.model("DayOff", dayOffSchema);
+
 // Export models
 module.exports = {
   User,
@@ -617,4 +631,5 @@ module.exports = {
   Subject,
   TimeTable,
   TimeSlot,
+  DayOff,
 };

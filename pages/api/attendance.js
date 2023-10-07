@@ -1,6 +1,7 @@
 import dbConnect from "@/data/mongoDb/database";
 import { Student } from "@/data/mongoDb/models";
 import { Attendance } from "@/data/mongoDb/models";
+import autoFillAttendanceForDate from "@/data/autoFillAttendance";
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -71,13 +72,6 @@ export default async function handler(req, res) {
           });
         }
 
-        if (key === undefined) {
-          return res.status(400).json({
-            success: false,
-            error: "attendance key missing in the request body.",
-          });
-        }
-
         if (!subjectId) {
           return res.status(400).json({
             success: false,
@@ -93,11 +87,32 @@ export default async function handler(req, res) {
           });
         }
 
+        // Check if attendance data already exists for the given date
+        const existingAttendance = await Attendance.findOne({
+          student: studentId,
+          date: new Date(date.toISOString().split("T")[0]),
+        });
+
+        if (existingAttendance) {
+          return res.status(400).json({
+            success: false,
+            error: "Attendance data already exists for the given date.",
+          });
+        }
+
+        // Before creating a new attendance record for today, ensure that any missing attendance records for the previous day are created
+        const yesterday = new Date(date);
+        yesterday.setDate(yesterday.getDate() - 1);
+        await autoFillAttendanceForDate(yesterday);
+
+        // If the attendance key is not provided, default it to "yes"
+        const attendanceKey = key !== undefined ? key : "yes";
+
         const newAttendance = await Attendance.create({
-          key: key,
+          key: attendanceKey,
           date: date,
           subject: subjectId,
-          student: studentId, // assuming you have a "student" field in Attendance model
+          student: studentId,
         });
 
         const updatedStudent = await Student.findByIdAndUpdate(
