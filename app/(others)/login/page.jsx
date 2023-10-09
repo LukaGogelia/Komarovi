@@ -17,9 +17,9 @@ export const metadata = {
   description:
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
-export default function page() {
-  const session = getServerSession(authOptions);
-  // if (session) redirect(`${process.env.NEXTAUTH_URL}dashboard`);
+export default async function page() {
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/dashboard");
   console.log("andrew");
   if (session) console.log("tate");
 

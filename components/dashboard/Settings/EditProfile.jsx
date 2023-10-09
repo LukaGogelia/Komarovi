@@ -1,28 +1,97 @@
 "use client";
 
-import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import React, { useState } from "react";
+import ImageUpload from "./editProfileComponents/ImageUpload";
+import TextField from '@mui/material/TextField';
+import ConfirmModal from "./editProfileComponents/ConfirmModal";
+import Grid from '@mui/material/Grid';
+import RegionDropdowns from './editProfileComponents/RegionDropdowns';
 
-export default function EditProfile({ activeTab }) {
-  const [previewImage, setPreviewImage] = useState(
-    "/assets/img/dashboard/edit/1.png"
-  );
-  const [selectedFile, setSelectedFile] = useState(null);
+
+export default function EditProfile({ activeTab, editProfileProps: data }) {
+
+  console.log(data);
+
+  const initialState = data.initialState;
+
+  const [state, setState] = useState(initialState);
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  }
+
+  const isValidEmail = (email) => {
+    const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return email.length === 0 ? true : pattern.test(email);
+  };
+
+  const isValidPhone = (phone) => {
+    const pattern = /^[\d\s()-]+$/;
+    return phone.length === 0 ? true : pattern.test(phone);
+  };
+
+  const handleInputChange = (field, value) => {
+    setState(prev => ({ ...prev, [field]: value }));
+  };
+
+
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    handleInputChange('email', value);
+    if (!isValidEmail(value)) {
+      setEmailError("Invalid email format");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    handleInputChange('phone', value);
+    if (!isValidPhone(value)) {
+      setPhoneError("Invalid phone format");
+    } else {
+      setPhoneError("");
+    }
+  };
+
+  const handleRegionSelection = (type, region) => {
+    setState(prev => ({ ...prev, selectedRegions: { ...prev.selectedRegions, [type]: region } }));
+  };
+
+  const handleUnitSelection = (type, unit) => {
+    setState(prev => ({ ...prev, selectedUnits: { ...prev.selectedUnits, [type]: unit } }));
+  };
+
+  const handleAddressChange = (type, address) => {
+    setState(prev => ({ ...prev, addresses: { ...prev.addresses, [type]: address } }));
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
-
     if (file) {
       const reader = new FileReader();
-
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
+        setState(prev => ({ ...prev, previewImage: reader.result, selectedFile: file }));
       };
-
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleImageClear = () => {
+    setState(prev => ({ ...prev, previewImage: "" }));
+  };
+
+  const hasStateChanged = () => {
+    return (JSON.stringify(initialState) !== JSON.stringify(state) && !phoneError && !emailError);
   };
 
   const uploadToCloudinary = async (file) => {
@@ -50,167 +119,193 @@ export default function EditProfile({ activeTab }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Return early if there are no changes.
+    if (!hasStateChanged()) {
+      return;
+    }
+
     try {
-      if (selectedFile) {
-        const cloudinaryUrl = await uploadToCloudinary(selectedFile);
-        console.log("Image uploaded to Cloudinary:", cloudinaryUrl);
+      // Define the request data here
+      const requestData = {
+        email: state.email === initialState.email ? '' : state.email,
+        phone: state.phone === initialState.phone ? '' : state.phone,
+        actualAddress: {
+          region: state.selectedRegions.actual,
+          administrativeUnit: state.selectedUnits.actual,
+        },
+        registrationAddress: {
+          region: state.selectedRegions.registration,
+          administrativeUnit: state.selectedUnits.registration,
+        },
+      };
 
-        // Once you have the Cloudinary URL, you can save it along with other profile information
-        // SaveProfileFunction({ imageURL: cloudinaryUrl, ...otherProfileData })
+      const response = await fetch('/api/validateProfileEdit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        if (data.error) {
+          if (data.error.includes('Email')) {
+            setEmailError(data.error);
+          }
+          if (data.error.includes('Phone')) {
+            setPhoneError(data.error);
+          }
+        }
+      } else {
+        // Display the modal if the request was successful
+        handleOpenModal();
       }
-
-      // ... rest of your profile saving logic
     } catch (error) {
       console.error("There was an error:", error.message);
     }
   };
+
+
+
+  // ... [the rest of your imports and code above]
+
   return (
-    <div
-      className={`tabs__pane -tab-item-1 ${activeTab == 1 ? "is-active" : ""} `}
-    >
-      <div className="row y-gap-20 x-gap-20 items-center">
-        <label
-          className="col-auto"
-          htmlFor="imageUpload"
-          style={
-            previewImage
-              ? {}
-              : { backgroundColor: "#f2f3f4", width: 100, height: 100 }
-          }
-        >
-          {previewImage && (
-            <Image
-              width={100}
-              height={100}
-              className="size-100"
-              src={previewImage}
-              alt={previewImage ? "image" : ""}
-              style={{ objectFit: "cover", overflow: "hidden" }}
-            />
-          )}
-        </label>
+    <div className={`tabs__pane -tab-item-1 ${activeTab == 1 ? "is-active" : ""}`}>
 
-        <div className="col-auto">
-          <div className="text-16 fw-500 text-dark-1">Your avatar</div>
-          <div className="text-14 lh-1 mt-10">
-            PNG or JPG no bigger than 800px wide and tall.
-          </div>
-
-          <div className="d-flex x-gap-10 y-gap-10 flex-wrap pt-15">
-            <div>
-              <div className="d-flex justify-center items-center size-40 rounded-8 bg-light-3">
-                <label
-                  style={{ cursor: "pointer" }}
-                  htmlFor="imageUpload1"
-                  className="icon-cloud text-16"
-                ></label>
-                <input
-                  required
-                  id="imageUpload1"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: "none" }}
-                />
-              </div>
-            </div>
-            <div>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  document.getElementById("imageUpload1").value = "";
-                  setPreviewImage("");
-                }}
-                className="d-flex justify-center items-center size-40 rounded-8 bg-light-3"
-              >
-                <div className="icon-bin text-16"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ConfirmModal selectedFile={state.selectedFile} open={isModalOpen} onClose={() => handleCloseModal()} state={JSON.stringify(state)} initialState={JSON.stringify(initialState)} />
+      <ImageUpload
+        handleImageChange={handleImageChange}
+        handleImageClear={handleImageClear}
+        previewImage={state.previewImage}
+      />
 
       <div className="border-top-light pt-30 mt-30">
-        <form onSubmit={handleSubmit} className="contact-form row y-gap-30">
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              First Name
-            </label>
+        <form onSubmit={handleSubmit} className='new-input' >
+          <Grid container spacing={3}>  {/* Start of the Grid container */}
 
-            <input required type="text" placeholder="First Name" />
-          </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                id="first-name"
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                className="new-disabled-input"
+                disabled
+                value={data?.firstName}
+              />
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Last Name
-            </label>
+            <Grid item xs={12} md={6}>
+              <TextField
+                id="last-name"
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                className="new-disabled-input"
+                disabled
+                value={data?.lastName}
+              />
+            </Grid>
 
-            <input required type="text" placeholder="Last Name" />
-          </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                id="national-id"
+                label="National ID Number"
+                variant="outlined"
+                fullWidth
+                className="new-disabled-input"
+                disabled
+                value={data?.nationalId}
+              />
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Phone
-            </label>
+            <Grid item xs={12} md={6}>
+              <TextField
+                id="birthday"
+                label="Birthday"
+                variant="outlined"
+                fullWidth
+                className="new-disabled-input"
+                disabled
+                value={data?.birthDate}
+              />
+            </Grid>
 
-            <input required type="text" placeholder="Phone" />
-          </div>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Birthday
-            </label>
+            <Grid item xs={12} md={6}>
+              <TextField
+                sx={{
+                  '& .MuiFormLabel-root.Mui-error': {
+                    color: '#D32F2F', // This will make the label red when there's an error
+                  }
+                }}
+                id="telephone-number"
+                label="Telephone Number"
+                placeholder="Enter your primary phone number"
+                variant="outlined"
+                fullWidth
+                value={state.phone}
 
-            <input required type="text" placeholder="Birthday" />
-          </div>
+                onChange={handlePhoneChange}
+                error={Boolean(phoneError)}
+                helperText={phoneError}
+              />
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Address Line 1
-            </label>
+            <Grid item xs={12} md={6}>
+              <TextField
+                sx={{
+                  '& .MuiFormLabel-root.Mui-error': {
+                    color: '#D32F2F', // This will make the label red when there's an error
+                  }
+                }}
+                id="email"
+                label="Email"
+                placeholder="Enter your active email address"
+                variant="outlined"
+                fullWidth
+                value={state.email}
 
-            <input required type="text" placeholder="Address Line 1" />
-          </div>
+                onChange={handleEmailChange}
+                error={Boolean(emailError)}
+                helperText={emailError}
+              />
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Address Line 2
-            </label>
+            <Grid item xs={12}>
+              <RegionDropdowns
+                type="registration"
+                onRegionChange={handleRegionSelection}
+                onUnitChange={handleUnitSelection}
+                onAddressChange={handleAddressChange}
+                addressState={{ region: state.selectedRegions.registration, adminUnit: state.selectedUnits.registration, addressLine: state.addresses.registration }}
+              />
+            </Grid>
 
-            <input required type="text" placeholder="Address Line 2" />
-          </div>
+            <Grid item xs={12}>
+              <RegionDropdowns
+                type="actual"
+                onRegionChange={handleRegionSelection}
+                onUnitChange={handleUnitSelection}
+                onAddressChange={handleAddressChange}
+                addressState={{ region: state.selectedRegions.actual, adminUnit: state.selectedUnits.actual, addressLine: state.addresses.actual }}
+              />
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              State
-            </label>
+            <Grid item xs={12}>
+              <button className={`button -md ${hasStateChanged() ? '-purple-1 text-white' : '-purple-3 text-purple-1 btn-disabled'}`} disabled={!hasStateChanged()}>
 
-            <input required type="text" placeholder="State" />
-          </div>
+                Update Profile
+              </button>
+            </Grid>
 
-          <div className="col-md-6">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Country
-            </label>
 
-            <input required type="text" placeholder="Country" />
-          </div>
-
-          <div className="col-12">
-            <label className="text-16 lh-1 fw-500 text-dark-1 mb-10">
-              Personal info
-            </label>
-
-            <textarea required placeholder="Text..." rows="7"></textarea>
-          </div>
-
-          <div className="col-12">
-            <button className="button -md -purple-1 text-white">
-              Update Profile
-            </button>
-          </div>
+          </Grid>  {/* End of the Grid container */}
         </form>
       </div>
     </div>
   );
+
 }

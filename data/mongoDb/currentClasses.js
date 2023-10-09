@@ -1,5 +1,5 @@
 import { CurrentClass } from "./models/currentClass";
-import dbConnect from "./database";
+import dbConnect from "./utils/database";
 
 const isValidAcademicYear = (year) => {
   const regex = /^\d{4}-\d{4}$/;

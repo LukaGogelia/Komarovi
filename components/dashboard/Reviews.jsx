@@ -4,8 +4,8 @@ import { PointsCommissionDecision } from "../../data/mongoDb/models/pointsCommis
 import Star from "../common/Star";
 import Image from "next/image";
 
-import { ExamEntry } from "../../data/mongoDb/models/examEntry";
-import dbConnect from "@/data/mongoDb/database.js";
+
+import dbConnect from "@/data/mongoDb/utils/database.js";
 
 // require("./../../data/mongoDb/database.js");
 
@@ -48,9 +48,8 @@ export default async function DecisionsDisplay() {
                   {decisionsList.map((decision, i) => (
                     <div key={i} className="md:direction-column">
                       <div
-                        className={`d-flex ${
-                          i != 0 ? "border-top-light" : ""
-                        }  pt-30`}
+                        className={`d-flex ${i != 0 ? "border-top-light" : ""
+                          }  pt-30`}
                       >
                         <div className="mr-20">
                           {/* Assuming the `studentId` is a reference and has an avatarSrc, 

@@ -1,4 +1,4 @@
-import dbConnect from "@/data/mongoDb/database";
+import dbConnect from "@/data/mongoDb/utils/database";
 import { FamilyRelation } from "@/data/mongoDb/models";
 
 export default async function getFamilyName(req, res) {
