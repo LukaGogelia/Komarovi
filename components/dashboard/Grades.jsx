@@ -857,7 +857,7 @@ export default function Grades({ studentInfoArray }) {
                                     new Date(currentDate)
                                   ) {
                                     showToastMessage(
-                                      "Cannot select a future date!"
+                                      "Cannot select the future date!"
                                     );
                                   } else {
                                     handleDateChange(
