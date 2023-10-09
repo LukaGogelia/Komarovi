@@ -1,40 +1,47 @@
 "use client";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const SelectSubject = ({ onRateChange, attendances }) => {
+const options = [
+  { label: "1" },
+  { label: "2" },
+  { label: "3" },
+  { label: "4" },
+  { label: "5" },
+  { label: "6" },
+  { label: "7" },
+  { label: "8" },
+  { label: "9" },
+  { label: "10" },
+];
+
+const SelectGrade = ({ initialValue, studentId, subject, onRateChange }) => {
   const [ddOpen, setDdOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("This Week");
+  const [selectedValue, setSelectedValue] = useState(initialValue);
   const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    setSelectedValue(initialValue); // Update grade when initialValue changes
+  }, [initialValue]);
+
+  const handleDropdownClick = () => {
+    setDdOpen((prev) => !prev);
+  };
 
   const handleSelectChange = (value) => {
     setSelectedValue(value);
-    onRateChange(value);
-    setDdOpen(false);
+    if (typeof onRateChange === "function") {
+      onRateChange(value); // Send the selected grade to the parent
+    }
+    setDdOpen(false); // Close the dropdown
   };
 
-  console.log("attendance", attendances);
-
   return (
-    <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-      <div style={{ textAlign: "center", margin: "auto" }}>
-        <h3
-          className="text-16 lh-1 fw-500 text-dark-1 mb-10"
-          style={{ textAlign: "center" }}
-        >
-          Attendance rate
-        </h3>
-      </div>
-
-      <div
-        className={`select js-multiple-select col-lg-6 col-md-6 col-sm-4 ${
-          darkMode ? " " : ""
-        }`}
-        style={{ textAlign: "center", margin: "auto" }}
-      >
+    <div style={{ zIndex: "22", width: "100%" }}>
+      <div className={`select js-multiple-select ${darkMode ? " " : ""}`}>
         <button
-          onClick={() => setDdOpen((prev) => !prev)}
+          onClick={handleDropdownClick}
           className={`select__button js-button ${
             darkMode ? "-dark-bg-dark-1 -dark-border-white-10" : ""
           }`}
@@ -57,17 +64,16 @@ const SelectSubject = ({ onRateChange, attendances }) => {
           } ${ddOpen ? "-is-visible" : ""}`}
         >
           <div className="select__options js-options">
-            {attendances.map((option, i) => (
+            {options.map((option, i) => (
               <div
-                onClick={() => handleSelectChange(option.subject)}
+                onClick={() => handleSelectChange(option.label)}
                 className={`select__options__button js-target-title${
-                  selectedValue === option.subject ? "-is-choosen" : ""
+                  selectedValue === option.label ? "-is-choosen" : ""
                 }`}
-                data-value={option.subject}
+                data-value={option.label}
                 key={i}
               >
-                {/* Checkbox removed */}
-                <span className="ml-10">{option.subject}</span>
+                <span className="ml-10">{option.label}</span>
               </div>
             ))}
           </div>
@@ -77,4 +83,8 @@ const SelectSubject = ({ onRateChange, attendances }) => {
   );
 };
 
-export default SelectSubject;
+SelectGrade.defaultProps = {
+  onRateChange: () => {},
+};
+
+export default SelectGrade;

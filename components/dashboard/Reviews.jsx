@@ -3,29 +3,50 @@ import mongoose from "mongoose";
 import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
 import Star from "../common/Star";
 import Image from "next/image";
-
-import { ExamEntry } from "../../data/mongoDb/models.js";
+import { connectDb } from "./ConnectToDb.jsx";
+import { Student } from "../../data/mongoDb/models.js";
 
 // require("./../../data/mongoDb/database.js");
 
+export const fetchData = async () => {
+  await connectDb();
+  const studentId = "64e52ffb1436edfda9379761";
 
-export async function fetchData() {
-  // Consider moving the connection logic outside this function so that
-  // you don't connect every time you fetch data
-  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  const decisionsList = await PointsCommissionDecision.find().populate(
-    "studentId"
+  // Fetch the student by ID with their decisions
+  const student = await Student.findOne({ _id: studentId }).populate(
+    "pointsCommissionDecision"
   );
-  const lastThreeDecisions = decisionsList.slice(-5);
-  return { decisionsList, lastThreeDecisions };
-}
+
+  let decisionsList = [];
+
+  if (student && Array.isArray(student.pointsCommissionDecision)) {
+    student.pointsCommissionDecision.forEach((decision, index) => {
+      if (decision && Object.keys(decision).length > 0) {
+        console.log(
+          `Decision ${index + 1}:`,
+          JSON.stringify(decision, null, 2) // Nicely formatted JSON
+        );
+        decisionsList.push(decision); // Push decision to decisionsList array
+      } else {
+        console.log(`Decision ${index + 1} is empty.`);
+      }
+    });
+  } else {
+    console.log("No decisions for this student.");
+  }
+
+  // Get the last five decisions
+  const lastFiveDecisionsList = decisionsList.slice(0, 5);
+
+  mongoose.connection.close();
+  return { decisionsList, lastFiveDecisionsList };
+};
 
 export default async function DecisionsDisplay() {
   const { decisionsList } = await fetchData();
+  //   await fetchData();
+  //   console.log("Returned decisionsList:", lastFiveDecisionsList);
+  // return <></>;
 
   return (
     <div className="dashboard__main">
@@ -56,10 +77,10 @@ export default async function DecisionsDisplay() {
                         }  pt-30`}
                       >
                         <div className="mr-20">
-                          {/* Assuming the `studentId` is a reference and has an avatarSrc, 
-                 you would need to populate and destructure the student data. 
+                          {/* Assuming the `studentId` is a reference and has an avatarSrc,
+                 you would need to populate and destructure the student data.
                  This is a placeholder. */}
-                          <Image
+                          {/* <Image
                             width={60}
                             height={60}
                             src={
@@ -67,13 +88,13 @@ export default async function DecisionsDisplay() {
                               "/path/to/default/avatar.png"
                             }
                             alt="student-avatar"
-                          />
+                          /> */}
                         </div>
 
                         <div className="comments__body md:mt-15">
                           <div className="comments__header">
                             <h4 className="text-17 fw-500 lh-15">
-                              {decision.studentId.name}{" "}
+                              {/* {decision.studentId.name}{" "} */}
                               {/* Assuming studentId is populated with student details */}
                               <span className="text-13 text-light-1 fw-400 ml-5">
                                 {new Date(decision.date).toLocaleDateString()}{" "}
@@ -82,7 +103,7 @@ export default async function DecisionsDisplay() {
                             </h4>
 
                             <div className="d-flex x-gap-5 items-center mt-15">
-                              <Star star={decision.pointsAwarded} />
+                              <h2> Points Awarded {decision.pointsAwarded} </h2>
                             </div>
                           </div>
 

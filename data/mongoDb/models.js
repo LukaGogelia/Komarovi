@@ -2,6 +2,55 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
+const SubjectSchema = new Schema({
+  subject: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
+});
+
+const Subject =
+  mongoose.models.Subject || mongoose.model("Subject", SubjectSchema);
+
+const CurrentClassSchema = new Schema({
+  parallelNumber: {
+    type: Number,
+    required: true,
+  },
+  gradeLevel: {
+    type: Number,
+    required: true,
+    min: 7,
+    max: 12,
+  },
+  academicYear: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return (
+          /^\d{4}-\d{4}$/.test(v) &&
+          parseInt(v.substr(5, 4)) - parseInt(v.substr(0, 4)) === 1
+        );
+      },
+      message: (props) => `${props.value} is not a valid academic year format!`,
+    },
+  },
+  timeTableIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TimeTable",
+      required: true,
+    },
+  ],
+});
+
+const CurrentClass =
+  mongoose.models.CurrentClass ||
+  mongoose.model("CurrentClass", CurrentClassSchema);
+
 // RegistrationCode model
 const RegistrationCodeSchema = new Schema({
   code: {
@@ -29,6 +78,45 @@ const RegistrationCodeSchema = new Schema({
   ],
 });
 
+const teacherSchema = new mongoose.Schema({
+  classTaught: [
+    {
+      classId: { type: mongoose.Schema.Types.ObjectId, ref: "CurrentClass" },
+      subject: { type: mongoose.Schema.Types.ObjectId, ref: "Subject" },
+    },
+  ],
+  grade: { type: mongoose.Schema.Types.ObjectId, ref: "GradeEntry" },
+  quiz: [{ type: Schema.Types.ObjectId, ref: "QuizEntry" }],
+  socialProfile: [
+    {
+      icon: { type: String },
+      url: {
+        type: String,
+        validate: {
+          validator: function (url) {
+            return url.includes("facebook") || url.includes("instagram");
+          },
+          message: (props) => `${props.value} is not a valid URL!`,
+        },
+      },
+    },
+  ],
+});
+
+teacherSchema.pre("save", function (next) {
+  this.socialProfile.forEach((profile) => {
+    if (profile.url.includes("facebook")) {
+      profile.icon = "icon-facebook";
+    } else if (profile.url.includes("instagram")) {
+      profile.icon = "icon-instagram";
+    }
+  });
+  next();
+});
+
+const Teacher =
+  mongoose.models.Teacher || mongoose.model("Teacher", teacherSchema);
+
 const RegistrationCode =
   mongoose.models.RegistrationCode ||
   mongoose.model("RegistrationCode", RegistrationCodeSchema);
@@ -54,20 +142,53 @@ const FamilySchema = new Schema({
 
 const Family = mongoose.models.Family || mongoose.model("Family", FamilySchema);
 
-const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  password: String, // Ensure to hash this before saving
-  phone: String,
-  nationalIdNumber: String, // New field for national ID number
-  roles: [String],
-  houseId: Schema.Types.ObjectId,
-  clubIds: [Schema.Types.ObjectId],
-  bookmarkedNews: [{ type: Schema.Types.ObjectId, ref: "News" }],
+const userSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+    lowercase: true,
+  },
+  passwordHashed: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  nationalIdNumber: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  roles: {
+    type: [String],
+    required: true,
+    enum: [
+      "student",
+      "teacher",
+      "caremanager",
+      "admin",
+      "parent",
+      "commissionmember",
+    ],
+  },
 });
 
-const User = mongoose.models.User || mongoose.model("User", UserSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 // News model
 const NewsSchema = new Schema({
@@ -95,14 +216,14 @@ const Category =
   mongoose.models.Category || mongoose.model("Category", CategorySchema);
 
 // Club model
-const ClubSchema = new Schema({
-  name: String,
-  description: String,
-  presidentId: Schema.Types.ObjectId,
-  members: [Schema.Types.ObjectId],
-});
+// const ClubSchema = new Schema({
+//   name: String,
+//   description: String,
+//   presidentId: Schema.Types.ObjectId,
+//   members: [Schema.Types.ObjectId],
+// });
 
-const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
+// const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
 
 // House model
 const HouseSchema = new Schema({
@@ -117,12 +238,17 @@ const House = mongoose.models.House || mongoose.model("House", HouseSchema);
 
 // Grade Entry model
 const GradeEntrySchema = new Schema({
-  studentId: Schema.Types.ObjectId,
-  teacherId: Schema.Types.ObjectId,
-  subject: String,
+  subject: {
+    type: Schema.Types.ObjectId,
+    ref: "Subject",
+    required: true,
+  },
   grade: Number,
   type: String,
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now, // This sets the default value to the current date and time
+  },
 });
 
 const GradeEntry =
@@ -130,12 +256,12 @@ const GradeEntry =
 
 // Exam Entry model
 const QuizEntrySchema = new Schema({
-  studentId: Schema.Types.ObjectId,
+  // Remove studentId property
+  // studentId: Schema.Types.ObjectId,
   quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
   openQuestionPoints: Number,
   closedQuestionPoints: Number,
   totalPoints: Number,
-  teacherId: Schema.Types.ObjectId,
   date: Date,
   pass: Boolean,
 });
@@ -188,11 +314,6 @@ const QuizSchema = new Schema({
 const Quiz = mongoose.models.Quiz || mongoose.model("Quiz", QuizSchema);
 
 const PointsCommissionDecisionSchema = new Schema({
-  studentId: {
-    type: Schema.Types.ObjectId,
-    ref: "User", // Assuming students are also stored under the User model
-    required: true,
-  },
   description: {
     type: String,
     required: true,
@@ -223,6 +344,269 @@ const PointsCommissionDecision =
   mongoose.models.PointsCommissionDecision ||
   mongoose.model("PointsCommissionDecision", PointsCommissionDecisionSchema);
 
+const ClubPresidentSchema = new Schema({
+  president: [
+    {
+      studentId: {
+        type: Schema.Types.ObjectId,
+        ref: "Student", // Reference to the Student collection
+      },
+      academicYear: {
+        type: Schema.Types.ObjectId,
+        ref: "CurrentClass", // Reference to the CurrentClass collection
+      },
+    },
+  ],
+});
+
+const ClubPresident =
+  mongoose.models.ClubPresident ||
+  mongoose.model("ClubPresident", ClubPresidentSchema);
+
+// HouseLeader Schema
+const HouseLeaderSchema = new Schema({
+  leader: [
+    {
+      academicYear: { type: Schema.Types.ObjectId, ref: "House" }, // Reference to House collection
+    },
+  ],
+});
+
+const HouseLeader =
+  mongoose.models.HouseLeader ||
+  mongoose.model("HouseLeader", HouseLeaderSchema);
+
+// Club model
+const ClubSchema = new Schema({
+  name: String,
+  description: String,
+  presidentId: Schema.Types.ObjectId,
+  members: [Schema.Types.ObjectId],
+});
+
+const Club = mongoose.models.Club || mongoose.model("Club", ClubSchema);
+
+const AdminSchema = new Schema({
+  permissions: [
+    {
+      type: String,
+    },
+  ],
+  assignedBy: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
+    required: true,
+  },
+  dateAssigned: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const Admin = mongoose.models.Admin || mongoose.model("Admin", AdminSchema);
+
+const CareManagerSchema = new Schema({
+  classIds: [
+    {
+      classId: {
+        type: Schema.Types.ObjectId,
+        ref: "CurrentClass", // Reference to the Class collection
+      },
+    },
+  ],
+});
+
+const CareManager =
+  mongoose.models.CareManager ||
+  mongoose.model("CareManager", CareManagerSchema);
+
+const StudentSchema = new Schema({
+  classIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "CurrentClass",
+    },
+  ],
+  houseIds: [
+    {
+      houseId: {
+        type: Schema.Types.ObjectId,
+        ref: "House",
+      },
+      academicYear: {
+        type: Schema.Types.ObjectId,
+        ref: "CurrentHouse",
+      },
+    },
+  ],
+  receivedGrade: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "GradeEntry",
+    },
+  ],
+  clubParticipant: [
+    {
+      clubId: {
+        type: Schema.Types.ObjectId,
+        ref: "Club",
+      },
+      join: {
+        type: Date,
+      },
+      leave: {
+        type: Date,
+      },
+    },
+  ],
+  quizEntries: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "QuizEntry",
+    },
+  ],
+  pointsCommissionDecision: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "PointsCommissionDecision",
+    },
+  ],
+  quiz: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Quiz",
+    },
+  ],
+  decision: [{ type: Schema.Types.ObjectId, ref: "PointsCommissionDecision" }],
+  clubIds: [
+    {
+      clubId: {
+        type: Schema.Types.ObjectId,
+        ref: "Club",
+      },
+      academicYear: {
+        type: Schema.Types.ObjectId,
+        ref: "CurrentClass",
+      },
+    },
+  ],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  attendanceIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Attendance",
+    },
+  ],
+  subjectIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
+    },
+  ],
+});
+
+StudentSchema.methods.getStudentPoints = async function () {
+  await this.populate("pointsCommissionDecision").execPopulate();
+  const totalPoints = this.pointsCommissionDecision.reduce((sum, decision) => {
+    return sum + decision.points;
+  }, 0);
+  return {
+    personalPoints: totalPoints * 0.15,
+    obtainedPointsForHouse: totalPoints * 0.85,
+  };
+};
+
+const Student =
+  mongoose.models.Student || mongoose.model("Student", StudentSchema);
+
+const attendanceSchema = new Schema({
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  key: {
+    type: String,
+    enum: ["yes", "no"],
+    required: true,
+    default: "yes",
+  },
+  subject: {
+    type: Schema.Types.ObjectId,
+    ref: "Subject", // This assumes that your Subject schema is named 'Subject'
+    required: true,
+  },
+});
+
+const Attendance =
+  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
+
+const TimeTableSchema = new mongoose.Schema({
+  day: {
+    type: String,
+    required: true,
+    enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  },
+  lessons: [
+    {
+      subject: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subject",
+        required: true,
+      },
+      timeSlotId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TimeSlot",
+        required: true,
+      },
+    },
+  ],
+});
+
+const TimeTable =
+  mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
+
+const timeSlotSchema = new mongoose.Schema({
+  number: {
+    type: Number,
+    required: true,
+    unique: true, // Assuming each time slot has a unique number
+  },
+  time: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        // This regex will validate a string of format "HH:MM - HH:MM"
+        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(
+          v
+        );
+      },
+      message: (props) => `${props.value} is not a valid time slot format!`,
+    },
+  },
+});
+
+const TimeSlot =
+  mongoose.models.TimeSlot || mongoose.model("TimeSlot", timeSlotSchema);
+
+const dayOffSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+    unique: true, // Assuming each date can only have one day off entry
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+const DayOff = mongoose.models.DayOff || mongoose.model("DayOff", dayOffSchema);
+
 // Export models
 module.exports = {
   User,
@@ -230,11 +614,22 @@ module.exports = {
   House,
   GradeEntry,
   QuizEntry,
+  Student,
   Quiz,
   News,
   PointsCommissionDecision,
-  News,
+  CurrentClass,
   Category,
+  CareManager,
   RegistrationCode,
   Family,
+  ClubPresident, // Added export
+  HouseLeader,
+  Admin,
+  Teacher,
+  Attendance,
+  Subject,
+  TimeTable,
+  TimeSlot,
+  DayOff,
 };

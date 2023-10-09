@@ -15761,7 +15761,6 @@ table.table td {
   background: white;
 }
 
-
 /* Your existing CSS file */
 .-dark-mode .tox-tinymce {
   background-color: #333; /* Or any dark color */
@@ -15937,4 +15936,11 @@ table.table td {
 
 .react-datepicker__navigation--next:before {
   border-left-color: rgb(117, 84, 253);
+}
+.hr-style {
+  border: 0; /* Removes existing borders */
+  height: 0.5px; /* Set the height you want */
+  background-color: #e5e5e5; /* Choose a color */
+  margin-top: 10px; /* Optional: Spacing above the line */
+  margin-bottom: 10px; /* Optional: Spacing below the line */
 }

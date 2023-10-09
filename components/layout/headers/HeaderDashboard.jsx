@@ -94,6 +94,20 @@ export default function HeaderDashboard() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const [isBelow680, setIsBelow680] = useState(false);
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setIsBelow680(window.innerWidth < 680);
+    };
+
+    checkWindowSize();
+
+    window.addEventListener("resize", checkWindowSize);
+
+    return () => window.removeEventListener("resize", checkWindowSize);
+  }, []);
   return (
     <>
       <header className="header -dashboard -dark-bg-dark-1 js-header">
@@ -200,108 +214,112 @@ export default function HeaderDashboard() {
                   <MyCourses />
                 </div>
 
-                <div className="d-flex items-center sm:d-none">
-                  <div className="relative">
-                    <div className="form-switch d-flex items-center">
-                      <div className="switch">
-                        <input type="checkbox" />
-                        <span className="switch__slider"></span>
+                {!isBelow680 && (
+                  <div className="d-flex items-center">
+                    <div className="relative">
+                      <div className="form-switch d-flex items-center">
+                        <div className="switch">
+                          <input type="checkbox" />
+                          <span className="switch__slider"></span>
+                        </div>
+                        <div className="text-13 lh-1 text-dark-1 ml-10">
+                          ქარ
+                        </div>
                       </div>
-                      <div className="text-13 lh-1 text-dark-1 ml-10">ქარ</div>
                     </div>
-                  </div>
 
-                  <div className="relative">
-                    <button
-                      onClick={handleDarkmode}
-                      className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                    >
-                      <i className="text-24 icon icon-night"></i>
-                    </button>
-                  </div>
+                    <div className="relative">
+                      <button
+                        onClick={handleDarkmode}
+                        className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                      >
+                        <i className="text-24 icon icon-night"></i>
+                      </button>
+                    </div>
 
-                  <div className="relative">
-                    <button
-                      onClick={() => handleFullScreenToggle()}
-                      className="d-flex text-light-1 items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                    >
-                      <i className="text-24 icon icon-maximize"></i>
-                    </button>
-                  </div>
+                    <div className="relative">
+                      <button
+                        onClick={() => handleFullScreenToggle()}
+                        className="d-flex text-light-1 items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                      >
+                        <i className="text-24 icon icon-maximize"></i>
+                      </button>
+                    </div>
 
-                  <CartToggle
-                    parentClassess={"relative"}
-                    allClasses={
-                      "d-flex items-center text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                    }
-                  />
-
-                  <div
-                    className="relative"
-                    onClick={() => setMessageOpen(true)}
-                  >
-                    <a
-                      href="#"
-                      className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
-                      data-el-toggle=".js-msg-toggle"
-                    >
-                      <i className="text-24 icon icon-email"></i>
-                    </a>
-                  </div>
-
-                  <div
-                    className="relative"
-                    onClick={() => setIsOnNotification((pre) => !pre)}
-                  >
-                    <a
-                      href="#"
-                      className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
-                      data-el-toggle=".js-notif-toggle"
-                    >
-                      <i className="text-24 icon icon-notification"></i>
-                    </a>
+                    <CartToggle
+                      parentClassess={"relative"}
+                      allClasses={
+                        "d-flex items-center text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                      }
+                    />
 
                     <div
-                      className={`toggle-element js-notif-toggle  ${
-                        isOnNotification ? "-is-el-visible" : ""
-                      } -`}
+                      className="relative"
+                      onClick={() => setMessageOpen(true)}
                     >
-                      <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
-                        <div className="py-30 px-30">
-                          <div className="y-gap-40">
-                            {notifications.map((elm, i) => (
-                              <div
-                                key={i}
-                                className={`d-flex items-center  ${
-                                  i !== 0
-                                    ? "border-top-light -dark-border-top-light-5"
-                                    : ""
-                                } `}
-                              >
-                                <div className="shrink-0">
-                                  <Image
-                                    width={40}
-                                    height={40}
-                                    src={elm.imageSrc}
-                                    alt="image"
-                                  />
-                                </div>
-                                <div className="ml-12">
-                                  <h4 className="text-15 lh-1 fw-500 -dark-text-dark-1">
-                                    {elm.heading}
-                                  </h4>
-                                  <div className="text-13 lh-1 mt-10">
-                                    {elm.time} Hours Ago
+                      <a
+                        href="#"
+                        className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
+                        data-el-toggle=".js-msg-toggle"
+                      >
+                        <i className="text-24 icon icon-email"></i>
+                      </a>
+                    </div>
+
+                    <div
+                      className="relative"
+                      onClick={() => setIsOnNotification((pre) => !pre)}
+                    >
+                      <a
+                        href="#"
+                        className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
+                        data-el-toggle=".js-notif-toggle"
+                      >
+                        <i className="text-24 icon icon-notification"></i>
+                      </a>
+
+                      <div
+                        className={`toggle-element js-notif-toggle  ${
+                          isOnNotification ? "-is-el-visible" : ""
+                        } -`}
+                      >
+                        <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
+                          <div className="py-30 px-30">
+                            <div className="y-gap-40">
+                              {notifications.map((elm, i) => (
+                                <div
+                                  key={i}
+                                  className={`d-flex items-center  ${
+                                    i !== 0
+                                      ? "border-top-light -dark-border-top-light-5"
+                                      : ""
+                                  } `}
+                                >
+                                  <div className="shrink-0">
+                                    <Image
+                                      width={40}
+                                      height={40}
+                                      src={elm.imageSrc}
+                                      alt="image"
+                                    />
+                                  </div>
+                                  <div className="ml-12">
+                                    <h4 className="text-15 lh-1 fw-500 -dark-text-dark-1">
+                                      {elm.heading}
+                                    </h4>
+                                    <div className="text-13 lh-1 mt-10">
+                                      {elm.time} Hours Ago
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <div
                   className="relative d-flex items-center ml-10"

@@ -81,7 +81,7 @@ export const sidebarItems = [
   },
   {
     id: 15,
-    href: "/dshb-grades",
+    href: "/dshb-grades-list",
     text: "Grades",
     iconClass: "text-20 icon-badge",
   },
