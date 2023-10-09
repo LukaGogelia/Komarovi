@@ -7,6 +7,7 @@ import SocialProfiles from "./SocialProfiles";
 import CloseAccount from "./CloseAccount";
 import FooterNine from "@/components/layout/footers/FooterNine";
 import Notification from "./Notifications";
+import { useSession } from "next-auth/react";
 
 const buttons = [
   "Edit Profile",
@@ -16,9 +17,10 @@ const buttons = [
   "Close Account",
 ];
 
-export default function Settings() {
+export default function Settings({ editProfileProps }) {
   const [activeTab, setActiveTab] = useState(1);
-
+  // const { status, data: session } = useSession();
+  // console.log(editProfileProps);
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
@@ -35,14 +37,13 @@ export default function Settings() {
           <div className="col-12">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="tabs -active-purple-2 js-tabs pt-0">
-                <div className="tabs__controls d-flex  x-gap-30 y-gap-20 flex-wrap items-center pt-20 px-30 border-bottom-light js-tabs-controls">
+                <div className="tabs__controls d-flex justify-content-around x-gap-30 y-gap-20 flex-wrap items-center pt-20 px-30 border-bottom-light js-tabs-controls">
                   {buttons.map((elm, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveTab(i + 1)}
-                      className={`tabs__button text-light-1 js-tabs-button ${
-                        activeTab == i + 1 ? "is-active" : ""
-                      } `}
+                      className={`tabs__button text-light-1 js-tabs-button ${activeTab == i + 1 ? "is-active" : ""
+                        } `}
                       type="button"
                     >
                       {elm}
@@ -51,7 +52,7 @@ export default function Settings() {
                 </div>
 
                 <div className="tabs__content py-30 px-30 js-tabs-content">
-                  <EditProfile activeTab={activeTab} />
+                  <EditProfile activeTab={activeTab} editProfileProps={editProfileProps} />
                   <Password activeTab={activeTab} />
                   <SocialProfiles activeTab={activeTab} />
                   <Notification activeTab={activeTab} />

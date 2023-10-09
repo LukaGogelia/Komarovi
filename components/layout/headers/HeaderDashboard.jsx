@@ -61,17 +61,17 @@ export default function HeaderDashboard() {
   };
 
   const closeFullscreen = () => {
-    if (document?.exitFullscreen) {
-      document?.exitFullscreen();
-    } else if (document?.webkitExitFullscreen) {
-      /* Safari */
-      document?.webkitExitFullscreen();
+    if (document?.fullscreenElement) {
+      document?.exitFullscreen?.();
+    } else if (document?.webkitIsFullScreen) {
+      // For Safari
+      document?.webkitExitFullscreen?.();
     } else if (document?.msExitFullscreen) {
       /* IE11 */
       document?.msExitFullscreen();
     }
   };
-  const handleResize = () => {};
+  const handleResize = () => { };
   useEffect(() => {
     if (window.innerWidth < 990) {
       document
@@ -214,28 +214,15 @@ export default function HeaderDashboard() {
                   <MyCourses />
                 </div>
 
-                {!isBelow680 && (
-                  <div className="d-flex items-center">
-                    <div className="relative">
-                      <div className="form-switch d-flex items-center">
-                        <div className="switch">
-                          <input type="checkbox" />
-                          <span className="switch__slider"></span>
-                        </div>
-                        <div className="text-13 lh-1 text-dark-1 ml-10">
-                          ქარ
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="relative">
-                      <button
-                        onClick={handleDarkmode}
-                        className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                      >
-                        <i className="text-24 icon icon-night"></i>
-                      </button>
-                    </div>
+                <div className="d-flex items-center sm:d-none">
+                  <div className="relative">
+                    <button
+                      onClick={handleDarkmode}
+                      className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                    >
+                      <i className="text-24 icon icon-night"></i>
+                    </button>
+                  </div>
 
                     <div className="relative">
                       <button
@@ -319,7 +306,7 @@ export default function HeaderDashboard() {
                       </div>
                     </div>
                   </div>
-                )}
+                
 
                 <div
                   className="relative d-flex items-center ml-10"
@@ -336,9 +323,8 @@ export default function HeaderDashboard() {
                   </a>
 
                   <div
-                    className={`toggle-element js-profile-toggle ${
-                      isOnProfile ? "-is-el-visible" : ""
-                    } -`}
+                    className={`toggle-element js-profile-toggle ${isOnProfile ? "-is-el-visible" : ""
+                      } -`}
                   >
                     <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
                       <div className="px-30 py-30">
@@ -346,16 +332,15 @@ export default function HeaderDashboard() {
                           {sidebarItems.map((elm, i) => (
                             <div
                               key={i}
-                              className={`sidebar__item ${
-                                elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
-                              }`}
+                              className={`sidebar__item ${elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
+                                }`}
                             >
                               <a
                                 href={elm.href}
                                 className="d-flex items-center text-17 lh-1 fw-500 "
                               >
                                 <i className={elm.iconClass}></i>
-                                {elm.text}
+                                <span className="ms-3">{elm.text}</span>
                               </a>
                             </div>
                           ))}

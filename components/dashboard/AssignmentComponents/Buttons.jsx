@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
 
-export default function Buttons({ roles, handleButtonClick }) {
+export default function Buttons({ roles, handleButtonClick, addFamily }) {
   return (
-    <div className="col-auto">
+    <div className="col-auto mb-30">
       <div className="row x-gap-10 y-gap-10 justify-content-center">
         <div className="col-auto">
-          <button className="button -md -green-1 text-dark-1">
+          <button
+            className="button -md -green-1 xl"
+            onClick={() => addFamily()}
+          >
             Add Family
           </button>
         </div>
@@ -22,5 +25,16 @@ export default function Buttons({ roles, handleButtonClick }) {
         ))}
       </div>
     </div>
+  );
+}
+
+export function AddChildButton({ handleAddChildButtonClick }) {
+  return (
+    <button
+      className="button -md -purple-3 text-purple-1"
+      onClick={() => handleAddChildButtonClick()}
+    >
+      Add another child
+    </button>
   );
 }

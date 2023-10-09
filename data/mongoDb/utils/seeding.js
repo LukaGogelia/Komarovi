@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Quiz, QuizEntry } = require("./models");
+// const { Quiz, QuizEntry } = require("./models");
 const { ObjectId } = require("mongodb");
 // Modify this path to the actual path of your models
 

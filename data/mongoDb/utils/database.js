@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-const connectionString = "mongodb://127.0.0.1:27017/komarovi";
 let cached = global.mongoose;
 
 if (!cached) {
@@ -19,7 +18,7 @@ async function dbConnect() {
     };
 
     cached.promise = mongoose
-      .connect(connectionString, opts)
+      .connect(process.env.DATABASE_URI, opts)
       .then((mongoose) => {
         console.log("Successfully connected to MongoDB");
         return mongoose;

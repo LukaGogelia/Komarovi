@@ -1,6 +1,6 @@
 import React from "react";
 import mongoose from "mongoose";
-import { PointsCommissionDecision } from "../../data/mongoDb/models.js";
+import { PointsCommissionDecision } from "../../data/mongoDb/models/pointsCommissionDecision";
 import Star from "../common/Star";
 import Image from "next/image";
 import { connectDb } from "./ConnectToDb.jsx";
@@ -72,9 +72,8 @@ export default async function DecisionsDisplay() {
                   {decisionsList.map((decision, i) => (
                     <div key={i} className="md:direction-column">
                       <div
-                        className={`d-flex ${
-                          i != 0 ? "border-top-light" : ""
-                        }  pt-30`}
+                        className={`d-flex ${i != 0 ? "border-top-light" : ""
+                          }  pt-30`}
                       >
                         <div className="mr-20">
                           {/* Assuming the `studentId` is a reference and has an avatarSrc,

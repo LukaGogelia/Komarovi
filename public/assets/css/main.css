@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .ratio {
   position: relative;
   display: block;
@@ -311,14 +312,17 @@
     transform-origin: 0 50%;
     transform: scaleX(0);
   }
+
   42% {
     transform-origin: 0 50%;
     transform: scaleX(1);
   }
+
   58% {
     transform-origin: 100% 50%;
     transform: scaleX(1);
   }
+
   100% {
     transform-origin: 100% 50%;
     transform: scaleX(0);
@@ -330,14 +334,17 @@
     transform-origin: 0 50%;
     transform: scaleX(0);
   }
+
   42% {
     transform-origin: 0 50%;
     transform: scaleX(1);
   }
+
   58% {
     transform-origin: 100% 50%;
     transform: scaleX(1);
   }
+
   100% {
     transform-origin: 100% 50%;
     transform: scaleX(0);
@@ -349,14 +356,17 @@
     transform-origin: 50% 100%;
     transform: scaleY(0);
   }
+
   42% {
     transform-origin: 50% 100%;
     transform: scaleY(1);
   }
+
   58% {
     transform-origin: 50% 0;
     transform: scaleY(1);
   }
+
   100% {
     transform-origin: 50% 0;
     transform: scaleY(0);
@@ -368,14 +378,17 @@
     transform-origin: 50% 100%;
     transform: scaleY(0);
   }
+
   42% {
     transform-origin: 50% 100%;
     transform: scaleY(1);
   }
+
   58% {
     transform-origin: 50% 0;
     transform: scaleY(1);
   }
+
   100% {
     transform-origin: 50% 0;
     transform: scaleY(0);
@@ -459,6 +472,7 @@
   0% {
     transform: scaleX(1);
   }
+
   100% {
     transform: scaleX(0);
   }
@@ -468,6 +482,7 @@
   0% {
     transform: scaleX(1);
   }
+
   100% {
     transform: scaleX(0);
   }
@@ -477,6 +492,7 @@
   0% {
     transform: scale(1.4);
   }
+
   100% {
     transform: scale(1.01);
   }
@@ -486,6 +502,7 @@
   0% {
     transform: scale(1.4);
   }
+
   100% {
     transform: scale(1.01);
   }
@@ -604,6 +621,7 @@
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(-3%);
   }
@@ -613,6 +631,7 @@
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(-3%);
   }
@@ -627,6 +646,7 @@
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(-15px);
   }
@@ -636,6 +656,7 @@
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(-15px);
   }
@@ -667,10 +688,12 @@
     opacity: 0.6;
     transform: scale(1);
   }
+
   75% {
     opacity: 0;
     transform: scale(1.6);
   }
+
   100% {
     opacity: 0;
     transform: scale(1.6);
@@ -682,10 +705,12 @@
     opacity: 0.6;
     transform: scale(1);
   }
+
   75% {
     opacity: 0;
     transform: scale(1.6);
   }
+
   100% {
     opacity: 0;
     transform: scale(1.6);
@@ -1109,14 +1134,16 @@ html.-dark-mode .icon-arrow-left,
 html.-dark-mode .icon-arrow-right {
   color: white !important;
 }
+
 html.-dark-mode .pagination-white-dot-dark > * {
   background-color: #fff !important;
   opacity: 1 !important;
 
   --swiper-pagination-color: white !important;
 }
+
 html.-dark-mode .pagination-white-dot-dark .swiper-pagination-bullet-active {
-  background-color: var(--color-purple-1) !important ;
+  background-color: var(--color-purple-1) !important;
 }
 
 html.-dark-mode .header.-base-sidebar {
@@ -1799,6 +1826,20 @@ button:focus {
   color: white !important;
 }
 
+.button.-cancel {
+  border: 2px solid #6440fb;
+}
+
+.-dark-mode .button.-cancel:hover {
+  background-color: #6440fb;
+  color: white !important;
+}
+
+.button.-cancel:hover {
+  background-color: #f4f1fe;
+  border-color: transparent;
+}
+
 .button.-purple-2 {
   background-color: var(--color-purple-2);
   border: 2px solid var(--color-purple-2);
@@ -1824,11 +1865,16 @@ button:focus {
   border: 2px solid var(--color-purple-3);
 }
 
-.button.-purple-3:hover {
-  background-color: transparent !important;
-  color: var(--color-purple-3) !important;
+/* .button.-purple-3:hover {
+  background-color: transparent
+     !important
+;
+color: var(--color-purple-3)
+ !important
+;
 }
 
+*/
 .button.-outline-purple-3 {
   border: 2px solid var(--color-purple-3);
 }
@@ -2656,10 +2702,10 @@ button:focus {
   color: var(--color-dark-1) !important;
 }
 
-.button.-purple-3:hover {
+/* .button.-purple-3:hover {
   color: white !important;
   background-color: var(--color-purple-1) !important;
-}
+} */
 
 .button.-dark-6:hover {
   color: var(--color-dark-1) !important;
@@ -2734,7 +2780,8 @@ select,
 input[type="text"],
 input[type="search"],
 textarea,
-input[type="email"] {
+input[type="email"],
+input[type="date"] {
   border: 0;
 }
 
@@ -2753,7 +2800,9 @@ form.contact-form input[type="text"],
 form.contact-form input[type="password"],
 form.contact-form input[type="search"],
 form.contact-form textarea,
-form.contact-form input[type="email"] {
+form.contact-form input[type="email"],
+form.contact-form input[type="date"] {
+  /* Corrected by adding a comma here */
   border: 0;
   outline: none;
   width: 100%;
@@ -2766,12 +2815,19 @@ form.contact-form input[type="email"] {
   transition: all 0.15s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+form.contact-form input[type="date"] {
+  /* Specific styling for date input */
+  margin-left: 0px;
+  /* Adjust this value to fix the left margin */
+}
+
 form.contact-form select:focus,
 form.contact-form input[type="text"]:focus,
 form.contact-form input[type="password"]:focus,
 form.contact-form input[type="search"]:focus,
 form.contact-form textarea:focus,
-form.contact-form input[type="email"]:focus {
+form.contact-form input[type="email"]:focus,
+form.contact-form input[type="date"]:focus {
   outline: none;
 }
 
@@ -2780,6 +2836,7 @@ form.contact-form input[type="text"].-border-dark,
 form.contact-form input[type="password"].-border-dark,
 form.contact-form input[type="search"].-border-dark,
 form.contact-form textarea.-border-dark,
+form.contact-form input[type="date"].-border-dark,
 form.contact-form input[type="email"].-border-dark {
   border: 1px solid rgba(0, 0, 0, 0.15) !important;
 }
@@ -2805,6 +2862,7 @@ form.contact-form.-light select,
 form.contact-form.-light input[type="text"],
 form.contact-form.-light input[type="search"],
 form.contact-form.-light textarea,
+form.contact-form.-light input[type="date"],
 form.contact-form.-light input[type="email"] {
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.6);
@@ -3154,57 +3212,75 @@ h6 {
   .xl\:text-6 {
     font-size: var(--text-6) !important;
   }
+
   .xl\:text-9 {
     font-size: var(--text-9) !important;
   }
+
   .xl\:text-11 {
     font-size: var(--text-11) !important;
   }
+
   .xl\:text-13 {
     font-size: var(--text-13) !important;
   }
+
   .xl\:text-14 {
     font-size: var(--text-14) !important;
   }
+
   .xl\:text-15 {
     font-size: var(--text-15) !important;
   }
+
   .xl\:text-16 {
     font-size: var(--text-16) !important;
   }
+
   .xl\:text-17 {
     font-size: var(--text-17) !important;
   }
+
   .xl\:text-18 {
     font-size: var(--text-18) !important;
   }
+
   .xl\:text-20 {
     font-size: var(--text-20) !important;
   }
+
   .xl\:text-24 {
     font-size: var(--text-24) !important;
   }
+
   .xl\:text-30 {
     font-size: var(--text-30) !important;
   }
+
   .xl\:text-35 {
     font-size: var(--text-35) !important;
   }
+
   .xl\:text-40 {
     font-size: var(--text-40) !important;
   }
+
   .xl\:text-45 {
     font-size: var(--text-45) !important;
   }
+
   .xl\:text-50 {
     font-size: var(--text-50) !important;
   }
+
   .xl\:text-55 {
     font-size: var(--text-55) !important;
   }
+
   .xl\:text-60 {
     font-size: var(--text-60) !important;
   }
+
   .xl\:text-64 {
     font-size: var(--text-64) !important;
   }
@@ -3214,57 +3290,75 @@ h6 {
   .lg\:text-6 {
     font-size: var(--text-6) !important;
   }
+
   .lg\:text-9 {
     font-size: var(--text-9) !important;
   }
+
   .lg\:text-11 {
     font-size: var(--text-11) !important;
   }
+
   .lg\:text-13 {
     font-size: var(--text-13) !important;
   }
+
   .lg\:text-14 {
     font-size: var(--text-14) !important;
   }
+
   .lg\:text-15 {
     font-size: var(--text-15) !important;
   }
+
   .lg\:text-16 {
     font-size: var(--text-16) !important;
   }
+
   .lg\:text-17 {
     font-size: var(--text-17) !important;
   }
+
   .lg\:text-18 {
     font-size: var(--text-18) !important;
   }
+
   .lg\:text-20 {
     font-size: var(--text-20) !important;
   }
+
   .lg\:text-24 {
     font-size: var(--text-24) !important;
   }
+
   .lg\:text-30 {
     font-size: var(--text-30) !important;
   }
+
   .lg\:text-35 {
     font-size: var(--text-35) !important;
   }
+
   .lg\:text-40 {
     font-size: var(--text-40) !important;
   }
+
   .lg\:text-45 {
     font-size: var(--text-45) !important;
   }
+
   .lg\:text-50 {
     font-size: var(--text-50) !important;
   }
+
   .lg\:text-55 {
     font-size: var(--text-55) !important;
   }
+
   .lg\:text-60 {
     font-size: var(--text-60) !important;
   }
+
   .lg\:text-64 {
     font-size: var(--text-64) !important;
   }
@@ -3274,57 +3368,75 @@ h6 {
   .md\:text-6 {
     font-size: var(--text-6) !important;
   }
+
   .md\:text-9 {
     font-size: var(--text-9) !important;
   }
+
   .md\:text-11 {
     font-size: var(--text-11) !important;
   }
+
   .md\:text-13 {
     font-size: var(--text-13) !important;
   }
+
   .md\:text-14 {
     font-size: var(--text-14) !important;
   }
+
   .md\:text-15 {
     font-size: var(--text-15) !important;
   }
+
   .md\:text-16 {
     font-size: var(--text-16) !important;
   }
+
   .md\:text-17 {
     font-size: var(--text-17) !important;
   }
+
   .md\:text-18 {
     font-size: var(--text-18) !important;
   }
+
   .md\:text-20 {
     font-size: var(--text-20) !important;
   }
+
   .md\:text-24 {
     font-size: var(--text-24) !important;
   }
+
   .md\:text-30 {
     font-size: var(--text-30) !important;
   }
+
   .md\:text-35 {
     font-size: var(--text-35) !important;
   }
+
   .md\:text-40 {
     font-size: var(--text-40) !important;
   }
+
   .md\:text-45 {
     font-size: var(--text-45) !important;
   }
+
   .md\:text-50 {
     font-size: var(--text-50) !important;
   }
+
   .md\:text-55 {
     font-size: var(--text-55) !important;
   }
+
   .md\:text-60 {
     font-size: var(--text-60) !important;
   }
+
   .md\:text-64 {
     font-size: var(--text-64) !important;
   }
@@ -3334,57 +3446,75 @@ h6 {
   .sm\:text-6 {
     font-size: var(--text-6) !important;
   }
+
   .sm\:text-9 {
     font-size: var(--text-9) !important;
   }
+
   .sm\:text-11 {
     font-size: var(--text-11) !important;
   }
+
   .sm\:text-13 {
     font-size: var(--text-13) !important;
   }
+
   .sm\:text-14 {
     font-size: var(--text-14) !important;
   }
+
   .sm\:text-15 {
     font-size: var(--text-15) !important;
   }
+
   .sm\:text-16 {
     font-size: var(--text-16) !important;
   }
+
   .sm\:text-17 {
     font-size: var(--text-17) !important;
   }
+
   .sm\:text-18 {
     font-size: var(--text-18) !important;
   }
+
   .sm\:text-20 {
     font-size: var(--text-20) !important;
   }
+
   .sm\:text-24 {
     font-size: var(--text-24) !important;
   }
+
   .sm\:text-30 {
     font-size: var(--text-30) !important;
   }
+
   .sm\:text-35 {
     font-size: var(--text-35) !important;
   }
+
   .sm\:text-40 {
     font-size: var(--text-40) !important;
   }
+
   .sm\:text-45 {
     font-size: var(--text-45) !important;
   }
+
   .sm\:text-50 {
     font-size: var(--text-50) !important;
   }
+
   .sm\:text-55 {
     font-size: var(--text-55) !important;
   }
+
   .sm\:text-60 {
     font-size: var(--text-60) !important;
   }
+
   .sm\:text-64 {
     font-size: var(--text-64) !important;
   }
@@ -3394,57 +3524,75 @@ h6 {
   .xs\:text-6 {
     font-size: var(--text-6) !important;
   }
+
   .xs\:text-9 {
     font-size: var(--text-9) !important;
   }
+
   .xs\:text-11 {
     font-size: var(--text-11) !important;
   }
+
   .xs\:text-13 {
     font-size: var(--text-13) !important;
   }
+
   .xs\:text-14 {
     font-size: var(--text-14) !important;
   }
+
   .xs\:text-15 {
     font-size: var(--text-15) !important;
   }
+
   .xs\:text-16 {
     font-size: var(--text-16) !important;
   }
+
   .xs\:text-17 {
     font-size: var(--text-17) !important;
   }
+
   .xs\:text-18 {
     font-size: var(--text-18) !important;
   }
+
   .xs\:text-20 {
     font-size: var(--text-20) !important;
   }
+
   .xs\:text-24 {
     font-size: var(--text-24) !important;
   }
+
   .xs\:text-30 {
     font-size: var(--text-30) !important;
   }
+
   .xs\:text-35 {
     font-size: var(--text-35) !important;
   }
+
   .xs\:text-40 {
     font-size: var(--text-40) !important;
   }
+
   .xs\:text-45 {
     font-size: var(--text-45) !important;
   }
+
   .xs\:text-50 {
     font-size: var(--text-50) !important;
   }
+
   .xs\:text-55 {
     font-size: var(--text-55) !important;
   }
+
   .xs\:text-60 {
     font-size: var(--text-60) !important;
   }
+
   .xs\:text-64 {
     font-size: var(--text-64) !important;
   }
@@ -3725,6 +3873,7 @@ h6 {
   padding-top: 10px;
   border-top: 1px solid #ededed;
 }
+
 .-dark-mode .coursesCard.-type-1 .coursesCard-footer {
   display: flex;
   justify-content: space-between;
@@ -4287,24 +4436,30 @@ h6 {
     left: 0;
     z-index: 5;
   }
+
   .header .header-menu .header-menu__content {
     display: flex;
     align-items: center;
   }
+
   .header .header-menu-close {
     display: none;
   }
+
   .header .header-menu-bg {
     display: none;
   }
+
   .header .header-menu .menu {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
+
   .header .header-menu .menu__nav {
     display: flex;
   }
+
   .header .header-menu .menu__nav a {
     display: flex;
     align-items: center;
@@ -4325,6 +4480,7 @@ h6 {
     display: flex;
     align-items: center;
   }
+
   .header
     .header-menu
     .menu__nav
@@ -4333,13 +4489,16 @@ h6 {
     .icon-chevron-right {
     transform: rotate(90deg);
   }
+
   .header .header-menu .menu__nav > li {
     padding: 17px 0;
   }
+
   .header .header-menu .menu__nav > li:hover > a {
     color: var(--color-green-1);
     background-color: rgba(255, 255, 255, 0.15);
   }
+
   .header .header-menu .menu__nav > li > .subnav::before {
     content: "";
     position: absolute;
@@ -4350,14 +4509,17 @@ h6 {
     background-color: white;
     transform: rotate(45deg);
   }
+
   .header .header-menu .menu li.-has-mega-menu:hover > .mega {
     opacity: 1 !important;
     pointer-events: auto !important;
   }
+
   .header .header-menu .menu li:hover > .subnav {
     opacity: 1;
     pointer-events: auto;
   }
+
   .header .header-menu .menu .subnav {
     position: absolute;
     top: 100%;
@@ -4372,35 +4534,44 @@ h6 {
     pointer-events: none;
     transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+
   .header .header-menu .menu .subnav .subnav {
     top: 0;
     left: 97%;
   }
+
   .header .header-menu .menu .subnav > li {
     position: relative;
   }
+
   .header .header-menu .menu .subnav > li > a {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px 30px;
   }
+
   .header .header-menu .menu .subnav > li > a:hover {
     color: var(--color-purple-1);
   }
+
   .header .header-menu .menu .subnav .menu__backButton {
     display: none;
   }
+
   .header .header-menu .menu > .subnav {
     top: 100%;
     left: 0;
   }
+
   .header .header-menu .mobile-bg {
     display: none;
   }
+
   .header .header-menu .mobile-back-button {
     display: none;
   }
+
   .header .header-menu .mobile-footer {
     display: none;
   }
@@ -4420,6 +4591,7 @@ h6 {
     opacity: 0;
     pointer-events: none;
   }
+
   .header .header-menu .header-menu__content {
     display: flex;
     flex-direction: column;
@@ -4427,19 +4599,23 @@ h6 {
     transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
     transform: translateX(-20%);
   }
+
   .header .header-menu ul {
     overflow-y: hidden;
     overflow-x: hidden;
   }
+
   .header .header-menu.-is-el-visible {
     opacity: 1;
     pointer-events: auto;
   }
+
   .header .header-menu.-is-el-visible .-is-active {
     pointer-events: auto !important;
     overflow-y: scroll;
     overflow-x: hidden;
   }
+
   .header .header-menu.-is-el-visible .header-menu__content {
     transform: none;
   }
@@ -4484,6 +4660,7 @@ h6 {
     background-color: rgba(24, 24, 26, 0.7);
     z-index: -2;
   }
+
   .header .header-menu .menu {
     overflow-y: hidden;
     overflow-x: hidden;
@@ -4491,13 +4668,16 @@ h6 {
     padding: 20px;
     height: 100%;
   }
+
   .header .header-menu .menu ul {
     pointer-events: none;
   }
+
   .header .header-menu .menu__nav {
     display: flex;
     flex-direction: column;
   }
+
   .header .header-menu .menu__nav a {
     display: flex;
     justify-content: space-between;
@@ -4508,17 +4688,21 @@ h6 {
     color: var(--color-dark-1) !important;
     transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+
   .header .header-menu .menu__nav a:hover {
     color: var(--color-purple-1) !important;
     background-color: #f4f2ff;
   }
+
   .header .header-menu .menu__nav > li > a {
     font-weight: 500;
     font-size: 16px;
   }
+
   .header .header-menu .menu__nav li {
     overflow: hidden;
   }
+
   .header .header-menu .menu .subnav {
     position: absolute;
     top: 0;
@@ -4528,9 +4712,11 @@ h6 {
     width: 100%;
     height: 100%;
   }
+
   .header .header-menu .menu .subnav a {
     transform: translateY(100%);
   }
+
   .header .header-menu .menu .subnav > li > a {
     display: flex;
     align-items: center;
@@ -4540,9 +4726,11 @@ h6 {
     color: var(--color-dark-1) !important;
     transition: color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+
   .header .header-menu .menu .subnav > li > a:hover {
     color: var(--color-purple-1) !important;
   }
+
   .header .header-menu .menu .subnav .menu__backButton a {
     justify-content: flex-start !important;
     height: 60px !important;
@@ -4551,6 +4739,7 @@ h6 {
     font-size: 16px;
     background-color: var(--color-purple-3);
   }
+
   .header .header-menu .mobile-bg {
     position: fixed;
     top: 0;
@@ -4581,9 +4770,11 @@ h6 {
     display: flex;
     margin-left: -15px;
   }
+
   .header .header-menu .mobile-footer .mobile-socials a {
     transition: all 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+
   .header .header-menu .mobile-footer .mobile-socials a:hover {
     background-color: var(--color-light-4);
     color: var(--color-purple-1) !important;
@@ -4869,6 +5060,7 @@ h6 {
   .header.-base-sidebar .row {
     margin: 0;
   }
+
   .header.-base-sidebar .col-auto {
     padding: 0;
   }
@@ -5235,6 +5427,7 @@ h6 {
     font-size: 50px;
     line-height: 1.3;
   }
+
   .masthead.-type-1 .masthead__title br {
     display: none;
   }
@@ -5264,6 +5457,7 @@ h6 {
     font-size: 16px;
     line-height: 1.6;
   }
+
   .masthead.-type-1 .masthead__text br {
     display: none;
   }
@@ -5284,6 +5478,7 @@ h6 {
   .masthead.-type-1 .masthead__buttons {
     padding-top: 15px;
   }
+
   .masthead.-type-1 .masthead__buttons a {
     width: 100%;
   }
@@ -5456,6 +5651,7 @@ h6 {
     font-size: 50px;
     line-height: 1.3;
   }
+
   .masthead.-type-2 .masthead__title br {
     display: none;
   }
@@ -5659,6 +5855,7 @@ h6 {
     font-size: 50px;
     line-height: 1.3;
   }
+
   .masthead.-type-3 .masthead__title br {
     display: none;
   }
@@ -5668,6 +5865,7 @@ h6 {
   .masthead.-type-3 .masthead__title {
     font-size: 45px;
   }
+
   .masthead.-type-3 .masthead__title br {
     display: block;
   }
@@ -5677,6 +5875,7 @@ h6 {
   .masthead.-type-3 .masthead__title {
     font-size: 40px;
   }
+
   .masthead.-type-3 .masthead__title br {
     display: none;
   }
@@ -5746,15 +5945,18 @@ h6 {
     font-size: 54px;
     line-height: 1.3;
   }
+
   .masthead.-type-4 .masthead__title br {
     display: none;
   }
 }
+
 @media (max-width: 1399px) {
   .masthead.-type-4 .masthead__title {
     font-size: 45px;
     line-height: 1.3;
   }
+
   .masthead.-type-4 .masthead__title br {
     display: none;
   }
@@ -5764,6 +5966,7 @@ h6 {
   .masthead.-type-4 .masthead__title {
     font-size: 45px;
   }
+
   .masthead.-type-4 .masthead__title br {
     display: block;
   }
@@ -5773,6 +5976,7 @@ h6 {
   .masthead.-type-4 .masthead__title {
     font-size: 40px;
   }
+
   .masthead.-type-4 .masthead__title br {
     display: none;
   }
@@ -5856,6 +6060,7 @@ h6 {
     font-size: 50px;
     line-height: 1.3;
   }
+
   .masthead.-type-5 .masthead__title br {
     display: none;
   }
@@ -5865,6 +6070,7 @@ h6 {
   .masthead.-type-5 .masthead__title {
     font-size: 45px;
   }
+
   .masthead.-type-5 .masthead__title br {
     display: block;
   }
@@ -5874,6 +6080,7 @@ h6 {
   .masthead.-type-5 .masthead__title {
     font-size: 40px;
   }
+
   .masthead.-type-5 .masthead__title br {
     display: none;
   }
@@ -5935,6 +6142,7 @@ h6 {
   .masthead.-type-6 .masthead__title {
     font-size: 50px;
   }
+
   .masthead.-type-6 .masthead__title br {
     display: none;
   }
@@ -5944,6 +6152,7 @@ h6 {
   .masthead.-type-6 .masthead__title {
     font-size: 45px;
   }
+
   .masthead.-type-6 .masthead__title br {
     display: block;
   }
@@ -5953,6 +6162,7 @@ h6 {
   .masthead.-type-6 .masthead__title {
     font-size: 40px;
   }
+
   .masthead.-type-6 .masthead__title br {
     display: none;
   }
@@ -6033,6 +6243,7 @@ h6 {
   .masthead.-type-7 .masthead__title {
     font-size: 50px;
   }
+
   .masthead.-type-7 .masthead__title br {
     display: none;
   }
@@ -6042,6 +6253,7 @@ h6 {
   .masthead.-type-7 .masthead__title {
     font-size: 45px;
   }
+
   .masthead.-type-7 .masthead__title br {
     display: block;
   }
@@ -6051,6 +6263,7 @@ h6 {
   .masthead.-type-7 .masthead__title {
     font-size: 40px;
   }
+
   .masthead.-type-7 .masthead__title br {
     display: none;
   }
@@ -8022,6 +8235,10 @@ h6 {
   border-radius: 12px;
 }
 
+.-dark-mode .select__options::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
 .select__options__button {
   display: flex;
   align-items: center;
@@ -8128,6 +8345,7 @@ h6 {
     top: 36px;
     right: 0;
   }
+
   .shopCart-products .shopCart-products__item {
     padding-left: 0px;
   }
@@ -8391,6 +8609,7 @@ h6 {
     width: 100%;
     margin: -5px;
   }
+
   .shopSingle-preview__imageList > * {
     padding: 5px;
     width: 100%;
@@ -9155,6 +9374,7 @@ h6 {
 .bg-white {
   background-color: var(--color-white);
 }
+
 .bg-white-two {
   background-color: var(--white);
 }
@@ -11264,543 +11484,712 @@ h6 {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
+
   .xl\:px-0 {
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
+
   .xl\:pt-0 {
     padding-top: 0px !important;
   }
+
   .xl\:pb-0 {
     padding-bottom: 0px !important;
   }
+
   .xl\:pl-0 {
     padding-left: 0px !important;
   }
+
   .xl\:pr-0 {
     padding-right: 0px !important;
   }
+
   .xl\:mt-0 {
     margin-top: 0px !important;
   }
+
   .xl\:mb-0 {
     margin-bottom: 0px !important;
   }
+
   .xl\:ml-0 {
     margin-left: 0px !important;
   }
+
   .xl\:mr-0 {
     margin-right: 0px !important;
   }
+
   .xl\:py-3 {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
   }
+
   .xl\:px-3 {
     padding-left: 3px !important;
     padding-right: 3px !important;
   }
+
   .xl\:pt-3 {
     padding-top: 3px !important;
   }
+
   .xl\:pb-3 {
     padding-bottom: 3px !important;
   }
+
   .xl\:pl-3 {
     padding-left: 3px !important;
   }
+
   .xl\:pr-3 {
     padding-right: 3px !important;
   }
+
   .xl\:mt-3 {
     margin-top: 3px !important;
   }
+
   .xl\:mb-3 {
     margin-bottom: 3px !important;
   }
+
   .xl\:ml-3 {
     margin-left: 3px !important;
   }
+
   .xl\:mr-3 {
     margin-right: 3px !important;
   }
+
   .xl\:py-5 {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
+
   .xl\:px-5 {
     padding-left: 5px !important;
     padding-right: 5px !important;
   }
+
   .xl\:pt-5 {
     padding-top: 5px !important;
   }
+
   .xl\:pb-5 {
     padding-bottom: 5px !important;
   }
+
   .xl\:pl-5 {
     padding-left: 5px !important;
   }
+
   .xl\:pr-5 {
     padding-right: 5px !important;
   }
+
   .xl\:mt-5 {
     margin-top: 5px !important;
   }
+
   .xl\:mb-5 {
     margin-bottom: 5px !important;
   }
+
   .xl\:ml-5 {
     margin-left: 5px !important;
   }
+
   .xl\:mr-5 {
     margin-right: 5px !important;
   }
+
   .xl\:py-8 {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
   }
+
   .xl\:px-8 {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
+
   .xl\:pt-8 {
     padding-top: 8px !important;
   }
+
   .xl\:pb-8 {
     padding-bottom: 8px !important;
   }
+
   .xl\:pl-8 {
     padding-left: 8px !important;
   }
+
   .xl\:pr-8 {
     padding-right: 8px !important;
   }
+
   .xl\:mt-8 {
     margin-top: 8px !important;
   }
+
   .xl\:mb-8 {
     margin-bottom: 8px !important;
   }
+
   .xl\:ml-8 {
     margin-left: 8px !important;
   }
+
   .xl\:mr-8 {
     margin-right: 8px !important;
   }
+
   .xl\:py-10 {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
+
   .xl\:px-10 {
     padding-left: 10px !important;
     padding-right: 10px !important;
   }
+
   .xl\:pt-10 {
     padding-top: 10px !important;
   }
+
   .xl\:pb-10 {
     padding-bottom: 10px !important;
   }
+
   .xl\:pl-10 {
     padding-left: 10px !important;
   }
+
   .xl\:pr-10 {
     padding-right: 10px !important;
   }
+
   .xl\:mt-10 {
     margin-top: 10px !important;
   }
+
   .xl\:mb-10 {
     margin-bottom: 10px !important;
   }
+
   .xl\:ml-10 {
     margin-left: 10px !important;
   }
+
   .xl\:mr-10 {
     margin-right: 10px !important;
   }
+
   .xl\:py-12 {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
   }
+
   .xl\:px-12 {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+
   .xl\:pt-12 {
     padding-top: 12px !important;
   }
+
   .xl\:pb-12 {
     padding-bottom: 12px !important;
   }
+
   .xl\:pl-12 {
     padding-left: 12px !important;
   }
+
   .xl\:pr-12 {
     padding-right: 12px !important;
   }
+
   .xl\:mt-12 {
     margin-top: 12px !important;
   }
+
   .xl\:mb-12 {
     margin-bottom: 12px !important;
   }
+
   .xl\:ml-12 {
     margin-left: 12px !important;
   }
+
   .xl\:mr-12 {
     margin-right: 12px !important;
   }
+
   .xl\:py-15 {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
   }
+
   .xl\:px-15 {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+
   .xl\:pt-15 {
     padding-top: 15px !important;
   }
+
   .xl\:pb-15 {
     padding-bottom: 15px !important;
   }
+
   .xl\:pl-15 {
     padding-left: 15px !important;
   }
+
   .xl\:pr-15 {
     padding-right: 15px !important;
   }
+
   .xl\:mt-15 {
     margin-top: 15px !important;
   }
+
   .xl\:mb-15 {
     margin-bottom: 15px !important;
   }
+
   .xl\:ml-15 {
     margin-left: 15px !important;
   }
+
   .xl\:mr-15 {
     margin-right: 15px !important;
   }
+
   .xl\:py-20 {
     padding-top: 20px !important;
     padding-bottom: 20px !important;
   }
+
   .xl\:px-20 {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
+
   .xl\:pt-20 {
     padding-top: 20px !important;
   }
+
   .xl\:pb-20 {
     padding-bottom: 20px !important;
   }
+
   .xl\:pl-20 {
     padding-left: 20px !important;
   }
+
   .xl\:pr-20 {
     padding-right: 20px !important;
   }
+
   .xl\:mt-20 {
     margin-top: 20px !important;
   }
+
   .xl\:mb-20 {
     margin-bottom: 20px !important;
   }
+
   .xl\:ml-20 {
     margin-left: 20px !important;
   }
+
   .xl\:mr-20 {
     margin-right: 20px !important;
   }
+
   .xl\:py-25 {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
   }
+
   .xl\:px-25 {
     padding-left: 25px !important;
     padding-right: 25px !important;
   }
+
   .xl\:pt-25 {
     padding-top: 25px !important;
   }
+
   .xl\:pb-25 {
     padding-bottom: 25px !important;
   }
+
   .xl\:pl-25 {
     padding-left: 25px !important;
   }
+
   .xl\:pr-25 {
     padding-right: 25px !important;
   }
+
   .xl\:mt-25 {
     margin-top: 25px !important;
   }
+
   .xl\:mb-25 {
     margin-bottom: 25px !important;
   }
+
   .xl\:ml-25 {
     margin-left: 25px !important;
   }
+
   .xl\:mr-25 {
     margin-right: 25px !important;
   }
+
   .xl\:py-30 {
     padding-top: 30px !important;
     padding-bottom: 30px !important;
   }
+
   .xl\:px-30 {
     padding-left: 30px !important;
     padding-right: 30px !important;
   }
+
   .xl\:pt-30 {
     padding-top: 30px !important;
   }
+
   .xl\:pb-30 {
     padding-bottom: 30px !important;
   }
+
   .xl\:pl-30 {
     padding-left: 30px !important;
   }
+
   .xl\:pr-30 {
     padding-right: 30px !important;
   }
+
   .xl\:mt-30 {
     margin-top: 30px !important;
   }
+
   .xl\:mb-30 {
     margin-bottom: 30px !important;
   }
+
   .xl\:ml-30 {
     margin-left: 30px !important;
   }
+
   .xl\:mr-30 {
     margin-right: 30px !important;
   }
+
   .xl\:py-35 {
     padding-top: 35px !important;
     padding-bottom: 35px !important;
   }
+
   .xl\:px-35 {
     padding-left: 35px !important;
     padding-right: 35px !important;
   }
+
   .xl\:pt-35 {
     padding-top: 35px !important;
   }
+
   .xl\:pb-35 {
     padding-bottom: 35px !important;
   }
+
   .xl\:pl-35 {
     padding-left: 35px !important;
   }
+
   .xl\:pr-35 {
     padding-right: 35px !important;
   }
+
   .xl\:mt-35 {
     margin-top: 35px !important;
   }
+
   .xl\:mb-35 {
     margin-bottom: 35px !important;
   }
+
   .xl\:ml-35 {
     margin-left: 35px !important;
   }
+
   .xl\:mr-35 {
     margin-right: 35px !important;
   }
+
   .xl\:py-40 {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
   }
+
   .xl\:px-40 {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
+
   .xl\:pt-40 {
     padding-top: 40px !important;
   }
+
   .xl\:pb-40 {
     padding-bottom: 40px !important;
   }
+
   .xl\:pl-40 {
     padding-left: 40px !important;
   }
+
   .xl\:pr-40 {
     padding-right: 40px !important;
   }
+
   .xl\:mt-40 {
     margin-top: 40px !important;
   }
+
   .xl\:mb-40 {
     margin-bottom: 40px !important;
   }
+
   .xl\:ml-40 {
     margin-left: 40px !important;
   }
+
   .xl\:mr-40 {
     margin-right: 40px !important;
   }
+
   .xl\:py-45 {
     padding-top: 45px !important;
     padding-bottom: 45px !important;
   }
+
   .xl\:px-45 {
     padding-left: 45px !important;
     padding-right: 45px !important;
   }
+
   .xl\:pt-45 {
     padding-top: 45px !important;
   }
+
   .xl\:pb-45 {
     padding-bottom: 45px !important;
   }
+
   .xl\:pl-45 {
     padding-left: 45px !important;
   }
+
   .xl\:pr-45 {
     padding-right: 45px !important;
   }
+
   .xl\:mt-45 {
     margin-top: 45px !important;
   }
+
   .xl\:mb-45 {
     margin-bottom: 45px !important;
   }
+
   .xl\:ml-45 {
     margin-left: 45px !important;
   }
+
   .xl\:mr-45 {
     margin-right: 45px !important;
   }
+
   .xl\:py-50 {
     padding-top: 50px !important;
     padding-bottom: 50px !important;
   }
+
   .xl\:px-50 {
     padding-left: 50px !important;
     padding-right: 50px !important;
   }
+
   .xl\:pt-50 {
     padding-top: 50px !important;
   }
+
   .xl\:pb-50 {
     padding-bottom: 50px !important;
   }
+
   .xl\:pl-50 {
     padding-left: 50px !important;
   }
+
   .xl\:pr-50 {
     padding-right: 50px !important;
   }
+
   .xl\:mt-50 {
     margin-top: 50px !important;
   }
+
   .xl\:mb-50 {
     margin-bottom: 50px !important;
   }
+
   .xl\:ml-50 {
     margin-left: 50px !important;
   }
+
   .xl\:mr-50 {
     margin-right: 50px !important;
   }
+
   .xl\:py-60 {
     padding-top: 60px !important;
     padding-bottom: 60px !important;
   }
+
   .xl\:px-60 {
     padding-left: 60px !important;
     padding-right: 60px !important;
   }
+
   .xl\:pt-60 {
     padding-top: 60px !important;
   }
+
   .xl\:pb-60 {
     padding-bottom: 60px !important;
   }
+
   .xl\:pl-60 {
     padding-left: 60px !important;
   }
+
   .xl\:pr-60 {
     padding-right: 60px !important;
   }
+
   .xl\:mt-60 {
     margin-top: 60px !important;
   }
+
   .xl\:mb-60 {
     margin-bottom: 60px !important;
   }
+
   .xl\:ml-60 {
     margin-left: 60px !important;
   }
+
   .xl\:mr-60 {
     margin-right: 60px !important;
   }
+
   .xl\:py-80 {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
+
   .xl\:px-80 {
     padding-left: 80px !important;
     padding-right: 80px !important;
   }
+
   .xl\:pt-80 {
     padding-top: 80px !important;
   }
+
   .xl\:pb-80 {
     padding-bottom: 80px !important;
   }
+
   .xl\:pl-80 {
     padding-left: 80px !important;
   }
+
   .xl\:pr-80 {
     padding-right: 80px !important;
   }
+
   .xl\:mt-80 {
     margin-top: 80px !important;
   }
+
   .xl\:mb-80 {
     margin-bottom: 80px !important;
   }
+
   .xl\:ml-80 {
     margin-left: 80px !important;
   }
+
   .xl\:mr-80 {
     margin-right: 80px !important;
   }
+
   .xl\:py-90 {
     padding-top: 90px !important;
     padding-bottom: 90px !important;
   }
+
   .xl\:px-90 {
     padding-left: 90px !important;
     padding-right: 90px !important;
   }
+
   .xl\:pt-90 {
     padding-top: 90px !important;
   }
+
   .xl\:pb-90 {
     padding-bottom: 90px !important;
   }
+
   .xl\:pl-90 {
     padding-left: 90px !important;
   }
+
   .xl\:pr-90 {
     padding-right: 90px !important;
   }
+
   .xl\:mt-90 {
     margin-top: 90px !important;
   }
+
   .xl\:mb-90 {
     margin-bottom: 90px !important;
   }
+
   .xl\:ml-90 {
     margin-left: 90px !important;
   }
+
   .xl\:mr-90 {
     margin-right: 90px !important;
   }
@@ -11811,543 +12200,712 @@ h6 {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
+
   .lg\:px-0 {
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
+
   .lg\:pt-0 {
     padding-top: 0px !important;
   }
+
   .lg\:pb-0 {
     padding-bottom: 0px !important;
   }
+
   .lg\:pl-0 {
     padding-left: 0px !important;
   }
+
   .lg\:pr-0 {
     padding-right: 0px !important;
   }
+
   .lg\:mt-0 {
     margin-top: 0px !important;
   }
+
   .lg\:mb-0 {
     margin-bottom: 0px !important;
   }
+
   .lg\:ml-0 {
     margin-left: 0px !important;
   }
+
   .lg\:mr-0 {
     margin-right: 0px !important;
   }
+
   .lg\:py-3 {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
   }
+
   .lg\:px-3 {
     padding-left: 3px !important;
     padding-right: 3px !important;
   }
+
   .lg\:pt-3 {
     padding-top: 3px !important;
   }
+
   .lg\:pb-3 {
     padding-bottom: 3px !important;
   }
+
   .lg\:pl-3 {
     padding-left: 3px !important;
   }
+
   .lg\:pr-3 {
     padding-right: 3px !important;
   }
+
   .lg\:mt-3 {
     margin-top: 3px !important;
   }
+
   .lg\:mb-3 {
     margin-bottom: 3px !important;
   }
+
   .lg\:ml-3 {
     margin-left: 3px !important;
   }
+
   .lg\:mr-3 {
     margin-right: 3px !important;
   }
+
   .lg\:py-5 {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
+
   .lg\:px-5 {
     padding-left: 5px !important;
     padding-right: 5px !important;
   }
+
   .lg\:pt-5 {
     padding-top: 5px !important;
   }
+
   .lg\:pb-5 {
     padding-bottom: 5px !important;
   }
+
   .lg\:pl-5 {
     padding-left: 5px !important;
   }
+
   .lg\:pr-5 {
     padding-right: 5px !important;
   }
+
   .lg\:mt-5 {
     margin-top: 5px !important;
   }
+
   .lg\:mb-5 {
     margin-bottom: 5px !important;
   }
+
   .lg\:ml-5 {
     margin-left: 5px !important;
   }
+
   .lg\:mr-5 {
     margin-right: 5px !important;
   }
+
   .lg\:py-8 {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
   }
+
   .lg\:px-8 {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
+
   .lg\:pt-8 {
     padding-top: 8px !important;
   }
+
   .lg\:pb-8 {
     padding-bottom: 8px !important;
   }
+
   .lg\:pl-8 {
     padding-left: 8px !important;
   }
+
   .lg\:pr-8 {
     padding-right: 8px !important;
   }
+
   .lg\:mt-8 {
     margin-top: 8px !important;
   }
+
   .lg\:mb-8 {
     margin-bottom: 8px !important;
   }
+
   .lg\:ml-8 {
     margin-left: 8px !important;
   }
+
   .lg\:mr-8 {
     margin-right: 8px !important;
   }
+
   .lg\:py-10 {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
+
   .lg\:px-10 {
     padding-left: 10px !important;
     padding-right: 10px !important;
   }
+
   .lg\:pt-10 {
     padding-top: 10px !important;
   }
+
   .lg\:pb-10 {
     padding-bottom: 10px !important;
   }
+
   .lg\:pl-10 {
     padding-left: 10px !important;
   }
+
   .lg\:pr-10 {
     padding-right: 10px !important;
   }
+
   .lg\:mt-10 {
     margin-top: 10px !important;
   }
+
   .lg\:mb-10 {
     margin-bottom: 10px !important;
   }
+
   .lg\:ml-10 {
     margin-left: 10px !important;
   }
+
   .lg\:mr-10 {
     margin-right: 10px !important;
   }
+
   .lg\:py-12 {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
   }
+
   .lg\:px-12 {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+
   .lg\:pt-12 {
     padding-top: 12px !important;
   }
+
   .lg\:pb-12 {
     padding-bottom: 12px !important;
   }
+
   .lg\:pl-12 {
     padding-left: 12px !important;
   }
+
   .lg\:pr-12 {
     padding-right: 12px !important;
   }
+
   .lg\:mt-12 {
     margin-top: 12px !important;
   }
+
   .lg\:mb-12 {
     margin-bottom: 12px !important;
   }
+
   .lg\:ml-12 {
     margin-left: 12px !important;
   }
+
   .lg\:mr-12 {
     margin-right: 12px !important;
   }
+
   .lg\:py-15 {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
   }
+
   .lg\:px-15 {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+
   .lg\:pt-15 {
     padding-top: 15px !important;
   }
+
   .lg\:pb-15 {
     padding-bottom: 15px !important;
   }
+
   .lg\:pl-15 {
     padding-left: 15px !important;
   }
+
   .lg\:pr-15 {
     padding-right: 15px !important;
   }
+
   .lg\:mt-15 {
     margin-top: 15px !important;
   }
+
   .lg\:mb-15 {
     margin-bottom: 15px !important;
   }
+
   .lg\:ml-15 {
     margin-left: 15px !important;
   }
+
   .lg\:mr-15 {
     margin-right: 15px !important;
   }
+
   .lg\:py-20 {
     padding-top: 20px !important;
     padding-bottom: 20px !important;
   }
+
   .lg\:px-20 {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
+
   .lg\:pt-20 {
     padding-top: 20px !important;
   }
+
   .lg\:pb-20 {
     padding-bottom: 20px !important;
   }
+
   .lg\:pl-20 {
     padding-left: 20px !important;
   }
+
   .lg\:pr-20 {
     padding-right: 20px !important;
   }
+
   .lg\:mt-20 {
     margin-top: 20px !important;
   }
+
   .lg\:mb-20 {
     margin-bottom: 20px !important;
   }
+
   .lg\:ml-20 {
     margin-left: 20px !important;
   }
+
   .lg\:mr-20 {
     margin-right: 20px !important;
   }
+
   .lg\:py-25 {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
   }
+
   .lg\:px-25 {
     padding-left: 25px !important;
     padding-right: 25px !important;
   }
+
   .lg\:pt-25 {
     padding-top: 25px !important;
   }
+
   .lg\:pb-25 {
     padding-bottom: 25px !important;
   }
+
   .lg\:pl-25 {
     padding-left: 25px !important;
   }
+
   .lg\:pr-25 {
     padding-right: 25px !important;
   }
+
   .lg\:mt-25 {
     margin-top: 25px !important;
   }
+
   .lg\:mb-25 {
     margin-bottom: 25px !important;
   }
+
   .lg\:ml-25 {
     margin-left: 25px !important;
   }
+
   .lg\:mr-25 {
     margin-right: 25px !important;
   }
+
   .lg\:py-30 {
     padding-top: 30px !important;
     padding-bottom: 30px !important;
   }
+
   .lg\:px-30 {
     padding-left: 30px !important;
     padding-right: 30px !important;
   }
+
   .lg\:pt-30 {
     padding-top: 30px !important;
   }
+
   .lg\:pb-30 {
     padding-bottom: 30px !important;
   }
+
   .lg\:pl-30 {
     padding-left: 30px !important;
   }
+
   .lg\:pr-30 {
     padding-right: 30px !important;
   }
+
   .lg\:mt-30 {
     margin-top: 30px !important;
   }
+
   .lg\:mb-30 {
     margin-bottom: 30px !important;
   }
+
   .lg\:ml-30 {
     margin-left: 30px !important;
   }
+
   .lg\:mr-30 {
     margin-right: 30px !important;
   }
+
   .lg\:py-35 {
     padding-top: 35px !important;
     padding-bottom: 35px !important;
   }
+
   .lg\:px-35 {
     padding-left: 35px !important;
     padding-right: 35px !important;
   }
+
   .lg\:pt-35 {
     padding-top: 35px !important;
   }
+
   .lg\:pb-35 {
     padding-bottom: 35px !important;
   }
+
   .lg\:pl-35 {
     padding-left: 35px !important;
   }
+
   .lg\:pr-35 {
     padding-right: 35px !important;
   }
+
   .lg\:mt-35 {
     margin-top: 35px !important;
   }
+
   .lg\:mb-35 {
     margin-bottom: 35px !important;
   }
+
   .lg\:ml-35 {
     margin-left: 35px !important;
   }
+
   .lg\:mr-35 {
     margin-right: 35px !important;
   }
+
   .lg\:py-40 {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
   }
+
   .lg\:px-40 {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
+
   .lg\:pt-40 {
     padding-top: 40px !important;
   }
+
   .lg\:pb-40 {
     padding-bottom: 40px !important;
   }
+
   .lg\:pl-40 {
     padding-left: 40px !important;
   }
+
   .lg\:pr-40 {
     padding-right: 40px !important;
   }
+
   .lg\:mt-40 {
     margin-top: 40px !important;
   }
+
   .lg\:mb-40 {
     margin-bottom: 40px !important;
   }
+
   .lg\:ml-40 {
     margin-left: 40px !important;
   }
+
   .lg\:mr-40 {
     margin-right: 40px !important;
   }
+
   .lg\:py-45 {
     padding-top: 45px !important;
     padding-bottom: 45px !important;
   }
+
   .lg\:px-45 {
     padding-left: 45px !important;
     padding-right: 45px !important;
   }
+
   .lg\:pt-45 {
     padding-top: 45px !important;
   }
+
   .lg\:pb-45 {
     padding-bottom: 45px !important;
   }
+
   .lg\:pl-45 {
     padding-left: 45px !important;
   }
+
   .lg\:pr-45 {
     padding-right: 45px !important;
   }
+
   .lg\:mt-45 {
     margin-top: 45px !important;
   }
+
   .lg\:mb-45 {
     margin-bottom: 45px !important;
   }
+
   .lg\:ml-45 {
     margin-left: 45px !important;
   }
+
   .lg\:mr-45 {
     margin-right: 45px !important;
   }
+
   .lg\:py-50 {
     padding-top: 50px !important;
     padding-bottom: 50px !important;
   }
+
   .lg\:px-50 {
     padding-left: 50px !important;
     padding-right: 50px !important;
   }
+
   .lg\:pt-50 {
     padding-top: 50px !important;
   }
+
   .lg\:pb-50 {
     padding-bottom: 50px !important;
   }
+
   .lg\:pl-50 {
     padding-left: 50px !important;
   }
+
   .lg\:pr-50 {
     padding-right: 50px !important;
   }
+
   .lg\:mt-50 {
     margin-top: 50px !important;
   }
+
   .lg\:mb-50 {
     margin-bottom: 50px !important;
   }
+
   .lg\:ml-50 {
     margin-left: 50px !important;
   }
+
   .lg\:mr-50 {
     margin-right: 50px !important;
   }
+
   .lg\:py-60 {
     padding-top: 60px !important;
     padding-bottom: 60px !important;
   }
+
   .lg\:px-60 {
     padding-left: 60px !important;
     padding-right: 60px !important;
   }
+
   .lg\:pt-60 {
     padding-top: 60px !important;
   }
+
   .lg\:pb-60 {
     padding-bottom: 60px !important;
   }
+
   .lg\:pl-60 {
     padding-left: 60px !important;
   }
+
   .lg\:pr-60 {
     padding-right: 60px !important;
   }
+
   .lg\:mt-60 {
     margin-top: 60px !important;
   }
+
   .lg\:mb-60 {
     margin-bottom: 60px !important;
   }
+
   .lg\:ml-60 {
     margin-left: 60px !important;
   }
+
   .lg\:mr-60 {
     margin-right: 60px !important;
   }
+
   .lg\:py-80 {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
+
   .lg\:px-80 {
     padding-left: 80px !important;
     padding-right: 80px !important;
   }
+
   .lg\:pt-80 {
     padding-top: 80px !important;
   }
+
   .lg\:pb-80 {
     padding-bottom: 80px !important;
   }
+
   .lg\:pl-80 {
     padding-left: 80px !important;
   }
+
   .lg\:pr-80 {
     padding-right: 80px !important;
   }
+
   .lg\:mt-80 {
     margin-top: 80px !important;
   }
+
   .lg\:mb-80 {
     margin-bottom: 80px !important;
   }
+
   .lg\:ml-80 {
     margin-left: 80px !important;
   }
+
   .lg\:mr-80 {
     margin-right: 80px !important;
   }
+
   .lg\:py-90 {
     padding-top: 90px !important;
     padding-bottom: 90px !important;
   }
+
   .lg\:px-90 {
     padding-left: 90px !important;
     padding-right: 90px !important;
   }
+
   .lg\:pt-90 {
     padding-top: 90px !important;
   }
+
   .lg\:pb-90 {
     padding-bottom: 90px !important;
   }
+
   .lg\:pl-90 {
     padding-left: 90px !important;
   }
+
   .lg\:pr-90 {
     padding-right: 90px !important;
   }
+
   .lg\:mt-90 {
     margin-top: 90px !important;
   }
+
   .lg\:mb-90 {
     margin-bottom: 90px !important;
   }
+
   .lg\:ml-90 {
     margin-left: 90px !important;
   }
+
   .lg\:mr-90 {
     margin-right: 90px !important;
   }
@@ -12358,543 +12916,712 @@ h6 {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
+
   .md\:px-0 {
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
+
   .md\:pt-0 {
     padding-top: 0px !important;
   }
+
   .md\:pb-0 {
     padding-bottom: 0px !important;
   }
+
   .md\:pl-0 {
     padding-left: 0px !important;
   }
+
   .md\:pr-0 {
     padding-right: 0px !important;
   }
+
   .md\:mt-0 {
     margin-top: 0px !important;
   }
+
   .md\:mb-0 {
     margin-bottom: 0px !important;
   }
+
   .md\:ml-0 {
     margin-left: 0px !important;
   }
+
   .md\:mr-0 {
     margin-right: 0px !important;
   }
+
   .md\:py-3 {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
   }
+
   .md\:px-3 {
     padding-left: 3px !important;
     padding-right: 3px !important;
   }
+
   .md\:pt-3 {
     padding-top: 3px !important;
   }
+
   .md\:pb-3 {
     padding-bottom: 3px !important;
   }
+
   .md\:pl-3 {
     padding-left: 3px !important;
   }
+
   .md\:pr-3 {
     padding-right: 3px !important;
   }
+
   .md\:mt-3 {
     margin-top: 3px !important;
   }
+
   .md\:mb-3 {
     margin-bottom: 3px !important;
   }
+
   .md\:ml-3 {
     margin-left: 3px !important;
   }
+
   .md\:mr-3 {
     margin-right: 3px !important;
   }
+
   .md\:py-5 {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
+
   .md\:px-5 {
     padding-left: 5px !important;
     padding-right: 5px !important;
   }
+
   .md\:pt-5 {
     padding-top: 5px !important;
   }
+
   .md\:pb-5 {
     padding-bottom: 5px !important;
   }
+
   .md\:pl-5 {
     padding-left: 5px !important;
   }
+
   .md\:pr-5 {
     padding-right: 5px !important;
   }
+
   .md\:mt-5 {
     margin-top: 5px !important;
   }
+
   .md\:mb-5 {
     margin-bottom: 5px !important;
   }
+
   .md\:ml-5 {
     margin-left: 5px !important;
   }
+
   .md\:mr-5 {
     margin-right: 5px !important;
   }
+
   .md\:py-8 {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
   }
+
   .md\:px-8 {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
+
   .md\:pt-8 {
     padding-top: 8px !important;
   }
+
   .md\:pb-8 {
     padding-bottom: 8px !important;
   }
+
   .md\:pl-8 {
     padding-left: 8px !important;
   }
+
   .md\:pr-8 {
     padding-right: 8px !important;
   }
+
   .md\:mt-8 {
     margin-top: 8px !important;
   }
+
   .md\:mb-8 {
     margin-bottom: 8px !important;
   }
+
   .md\:ml-8 {
     margin-left: 8px !important;
   }
+
   .md\:mr-8 {
     margin-right: 8px !important;
   }
+
   .md\:py-10 {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
+
   .md\:px-10 {
     padding-left: 10px !important;
     padding-right: 10px !important;
   }
+
   .md\:pt-10 {
     padding-top: 10px !important;
   }
+
   .md\:pb-10 {
     padding-bottom: 10px !important;
   }
+
   .md\:pl-10 {
     padding-left: 10px !important;
   }
+
   .md\:pr-10 {
     padding-right: 10px !important;
   }
+
   .md\:mt-10 {
     margin-top: 10px !important;
   }
+
   .md\:mb-10 {
     margin-bottom: 10px !important;
   }
+
   .md\:ml-10 {
     margin-left: 10px !important;
   }
+
   .md\:mr-10 {
     margin-right: 10px !important;
   }
+
   .md\:py-12 {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
   }
+
   .md\:px-12 {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+
   .md\:pt-12 {
     padding-top: 12px !important;
   }
+
   .md\:pb-12 {
     padding-bottom: 12px !important;
   }
+
   .md\:pl-12 {
     padding-left: 12px !important;
   }
+
   .md\:pr-12 {
     padding-right: 12px !important;
   }
+
   .md\:mt-12 {
     margin-top: 12px !important;
   }
+
   .md\:mb-12 {
     margin-bottom: 12px !important;
   }
+
   .md\:ml-12 {
     margin-left: 12px !important;
   }
+
   .md\:mr-12 {
     margin-right: 12px !important;
   }
+
   .md\:py-15 {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
   }
+
   .md\:px-15 {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+
   .md\:pt-15 {
     padding-top: 15px !important;
   }
+
   .md\:pb-15 {
     padding-bottom: 15px !important;
   }
+
   .md\:pl-15 {
     padding-left: 15px !important;
   }
+
   .md\:pr-15 {
     padding-right: 15px !important;
   }
+
   .md\:mt-15 {
     margin-top: 15px !important;
   }
+
   .md\:mb-15 {
     margin-bottom: 15px !important;
   }
+
   .md\:ml-15 {
     margin-left: 15px !important;
   }
+
   .md\:mr-15 {
     margin-right: 15px !important;
   }
+
   .md\:py-20 {
     padding-top: 20px !important;
     padding-bottom: 20px !important;
   }
+
   .md\:px-20 {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
+
   .md\:pt-20 {
     padding-top: 20px !important;
   }
+
   .md\:pb-20 {
     padding-bottom: 20px !important;
   }
+
   .md\:pl-20 {
     padding-left: 20px !important;
   }
+
   .md\:pr-20 {
     padding-right: 20px !important;
   }
+
   .md\:mt-20 {
     margin-top: 20px !important;
   }
+
   .md\:mb-20 {
     margin-bottom: 20px !important;
   }
+
   .md\:ml-20 {
     margin-left: 20px !important;
   }
+
   .md\:mr-20 {
     margin-right: 20px !important;
   }
+
   .md\:py-25 {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
   }
+
   .md\:px-25 {
     padding-left: 25px !important;
     padding-right: 25px !important;
   }
+
   .md\:pt-25 {
     padding-top: 25px !important;
   }
+
   .md\:pb-25 {
     padding-bottom: 25px !important;
   }
+
   .md\:pl-25 {
     padding-left: 25px !important;
   }
+
   .md\:pr-25 {
     padding-right: 25px !important;
   }
+
   .md\:mt-25 {
     margin-top: 25px !important;
   }
+
   .md\:mb-25 {
     margin-bottom: 25px !important;
   }
+
   .md\:ml-25 {
     margin-left: 25px !important;
   }
+
   .md\:mr-25 {
     margin-right: 25px !important;
   }
+
   .md\:py-30 {
     padding-top: 30px !important;
     padding-bottom: 30px !important;
   }
+
   .md\:px-30 {
     padding-left: 30px !important;
     padding-right: 30px !important;
   }
+
   .md\:pt-30 {
     padding-top: 30px !important;
   }
+
   .md\:pb-30 {
     padding-bottom: 30px !important;
   }
+
   .md\:pl-30 {
     padding-left: 30px !important;
   }
+
   .md\:pr-30 {
     padding-right: 30px !important;
   }
+
   .md\:mt-30 {
     margin-top: 30px !important;
   }
+
   .md\:mb-30 {
     margin-bottom: 30px !important;
   }
+
   .md\:ml-30 {
     margin-left: 30px !important;
   }
+
   .md\:mr-30 {
     margin-right: 30px !important;
   }
+
   .md\:py-35 {
     padding-top: 35px !important;
     padding-bottom: 35px !important;
   }
+
   .md\:px-35 {
     padding-left: 35px !important;
     padding-right: 35px !important;
   }
+
   .md\:pt-35 {
     padding-top: 35px !important;
   }
+
   .md\:pb-35 {
     padding-bottom: 35px !important;
   }
+
   .md\:pl-35 {
     padding-left: 35px !important;
   }
+
   .md\:pr-35 {
     padding-right: 35px !important;
   }
+
   .md\:mt-35 {
     margin-top: 35px !important;
   }
+
   .md\:mb-35 {
     margin-bottom: 35px !important;
   }
+
   .md\:ml-35 {
     margin-left: 35px !important;
   }
+
   .md\:mr-35 {
     margin-right: 35px !important;
   }
+
   .md\:py-40 {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
   }
+
   .md\:px-40 {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
+
   .md\:pt-40 {
     padding-top: 40px !important;
   }
+
   .md\:pb-40 {
     padding-bottom: 40px !important;
   }
+
   .md\:pl-40 {
     padding-left: 40px !important;
   }
+
   .md\:pr-40 {
     padding-right: 40px !important;
   }
+
   .md\:mt-40 {
     margin-top: 40px !important;
   }
+
   .md\:mb-40 {
     margin-bottom: 40px !important;
   }
+
   .md\:ml-40 {
     margin-left: 40px !important;
   }
+
   .md\:mr-40 {
     margin-right: 40px !important;
   }
+
   .md\:py-45 {
     padding-top: 45px !important;
     padding-bottom: 45px !important;
   }
+
   .md\:px-45 {
     padding-left: 45px !important;
     padding-right: 45px !important;
   }
+
   .md\:pt-45 {
     padding-top: 45px !important;
   }
+
   .md\:pb-45 {
     padding-bottom: 45px !important;
   }
+
   .md\:pl-45 {
     padding-left: 45px !important;
   }
+
   .md\:pr-45 {
     padding-right: 45px !important;
   }
+
   .md\:mt-45 {
     margin-top: 45px !important;
   }
+
   .md\:mb-45 {
     margin-bottom: 45px !important;
   }
+
   .md\:ml-45 {
     margin-left: 45px !important;
   }
+
   .md\:mr-45 {
     margin-right: 45px !important;
   }
+
   .md\:py-50 {
     padding-top: 50px !important;
     padding-bottom: 50px !important;
   }
+
   .md\:px-50 {
     padding-left: 50px !important;
     padding-right: 50px !important;
   }
+
   .md\:pt-50 {
     padding-top: 50px !important;
   }
+
   .md\:pb-50 {
     padding-bottom: 50px !important;
   }
+
   .md\:pl-50 {
     padding-left: 50px !important;
   }
+
   .md\:pr-50 {
     padding-right: 50px !important;
   }
+
   .md\:mt-50 {
     margin-top: 50px !important;
   }
+
   .md\:mb-50 {
     margin-bottom: 50px !important;
   }
+
   .md\:ml-50 {
     margin-left: 50px !important;
   }
+
   .md\:mr-50 {
     margin-right: 50px !important;
   }
+
   .md\:py-60 {
     padding-top: 60px !important;
     padding-bottom: 60px !important;
   }
+
   .md\:px-60 {
     padding-left: 60px !important;
     padding-right: 60px !important;
   }
+
   .md\:pt-60 {
     padding-top: 60px !important;
   }
+
   .md\:pb-60 {
     padding-bottom: 60px !important;
   }
+
   .md\:pl-60 {
     padding-left: 60px !important;
   }
+
   .md\:pr-60 {
     padding-right: 60px !important;
   }
+
   .md\:mt-60 {
     margin-top: 60px !important;
   }
+
   .md\:mb-60 {
     margin-bottom: 60px !important;
   }
+
   .md\:ml-60 {
     margin-left: 60px !important;
   }
+
   .md\:mr-60 {
     margin-right: 60px !important;
   }
+
   .md\:py-80 {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
+
   .md\:px-80 {
     padding-left: 80px !important;
     padding-right: 80px !important;
   }
+
   .md\:pt-80 {
     padding-top: 80px !important;
   }
+
   .md\:pb-80 {
     padding-bottom: 80px !important;
   }
+
   .md\:pl-80 {
     padding-left: 80px !important;
   }
+
   .md\:pr-80 {
     padding-right: 80px !important;
   }
+
   .md\:mt-80 {
     margin-top: 80px !important;
   }
+
   .md\:mb-80 {
     margin-bottom: 80px !important;
   }
+
   .md\:ml-80 {
     margin-left: 80px !important;
   }
+
   .md\:mr-80 {
     margin-right: 80px !important;
   }
+
   .md\:py-90 {
     padding-top: 90px !important;
     padding-bottom: 90px !important;
   }
+
   .md\:px-90 {
     padding-left: 90px !important;
     padding-right: 90px !important;
   }
+
   .md\:pt-90 {
     padding-top: 90px !important;
   }
+
   .md\:pb-90 {
     padding-bottom: 90px !important;
   }
+
   .md\:pl-90 {
     padding-left: 90px !important;
   }
+
   .md\:pr-90 {
     padding-right: 90px !important;
   }
+
   .md\:mt-90 {
     margin-top: 90px !important;
   }
+
   .md\:mb-90 {
     margin-bottom: 90px !important;
   }
+
   .md\:ml-90 {
     margin-left: 90px !important;
   }
+
   .md\:mr-90 {
     margin-right: 90px !important;
   }
@@ -12905,543 +13632,712 @@ h6 {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
   }
+
   .sm\:px-0 {
     padding-left: 0px !important;
     padding-right: 0px !important;
   }
+
   .sm\:pt-0 {
     padding-top: 0px !important;
   }
+
   .sm\:pb-0 {
     padding-bottom: 0px !important;
   }
+
   .sm\:pl-0 {
     padding-left: 0px !important;
   }
+
   .sm\:pr-0 {
     padding-right: 0px !important;
   }
+
   .sm\:mt-0 {
     margin-top: 0px !important;
   }
+
   .sm\:mb-0 {
     margin-bottom: 0px !important;
   }
+
   .sm\:ml-0 {
     margin-left: 0px !important;
   }
+
   .sm\:mr-0 {
     margin-right: 0px !important;
   }
+
   .sm\:py-3 {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
   }
+
   .sm\:px-3 {
     padding-left: 3px !important;
     padding-right: 3px !important;
   }
+
   .sm\:pt-3 {
     padding-top: 3px !important;
   }
+
   .sm\:pb-3 {
     padding-bottom: 3px !important;
   }
+
   .sm\:pl-3 {
     padding-left: 3px !important;
   }
+
   .sm\:pr-3 {
     padding-right: 3px !important;
   }
+
   .sm\:mt-3 {
     margin-top: 3px !important;
   }
+
   .sm\:mb-3 {
     margin-bottom: 3px !important;
   }
+
   .sm\:ml-3 {
     margin-left: 3px !important;
   }
+
   .sm\:mr-3 {
     margin-right: 3px !important;
   }
+
   .sm\:py-5 {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
+
   .sm\:px-5 {
     padding-left: 5px !important;
     padding-right: 5px !important;
   }
+
   .sm\:pt-5 {
     padding-top: 5px !important;
   }
+
   .sm\:pb-5 {
     padding-bottom: 5px !important;
   }
+
   .sm\:pl-5 {
     padding-left: 5px !important;
   }
+
   .sm\:pr-5 {
     padding-right: 5px !important;
   }
+
   .sm\:mt-5 {
     margin-top: 5px !important;
   }
+
   .sm\:mb-5 {
     margin-bottom: 5px !important;
   }
+
   .sm\:ml-5 {
     margin-left: 5px !important;
   }
+
   .sm\:mr-5 {
     margin-right: 5px !important;
   }
+
   .sm\:py-8 {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
   }
+
   .sm\:px-8 {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
+
   .sm\:pt-8 {
     padding-top: 8px !important;
   }
+
   .sm\:pb-8 {
     padding-bottom: 8px !important;
   }
+
   .sm\:pl-8 {
     padding-left: 8px !important;
   }
+
   .sm\:pr-8 {
     padding-right: 8px !important;
   }
+
   .sm\:mt-8 {
     margin-top: 8px !important;
   }
+
   .sm\:mb-8 {
     margin-bottom: 8px !important;
   }
+
   .sm\:ml-8 {
     margin-left: 8px !important;
   }
+
   .sm\:mr-8 {
     margin-right: 8px !important;
   }
+
   .sm\:py-10 {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
+
   .sm\:px-10 {
     padding-left: 10px !important;
     padding-right: 10px !important;
   }
+
   .sm\:pt-10 {
     padding-top: 10px !important;
   }
+
   .sm\:pb-10 {
     padding-bottom: 10px !important;
   }
+
   .sm\:pl-10 {
     padding-left: 10px !important;
   }
+
   .sm\:pr-10 {
     padding-right: 10px !important;
   }
+
   .sm\:mt-10 {
     margin-top: 10px !important;
   }
+
   .sm\:mb-10 {
     margin-bottom: 10px !important;
   }
+
   .sm\:ml-10 {
     margin-left: 10px !important;
   }
+
   .sm\:mr-10 {
     margin-right: 10px !important;
   }
+
   .sm\:py-12 {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
   }
+
   .sm\:px-12 {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+
   .sm\:pt-12 {
     padding-top: 12px !important;
   }
+
   .sm\:pb-12 {
     padding-bottom: 12px !important;
   }
+
   .sm\:pl-12 {
     padding-left: 12px !important;
   }
+
   .sm\:pr-12 {
     padding-right: 12px !important;
   }
+
   .sm\:mt-12 {
     margin-top: 12px !important;
   }
+
   .sm\:mb-12 {
     margin-bottom: 12px !important;
   }
+
   .sm\:ml-12 {
     margin-left: 12px !important;
   }
+
   .sm\:mr-12 {
     margin-right: 12px !important;
   }
+
   .sm\:py-15 {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
   }
+
   .sm\:px-15 {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+
   .sm\:pt-15 {
     padding-top: 15px !important;
   }
+
   .sm\:pb-15 {
     padding-bottom: 15px !important;
   }
+
   .sm\:pl-15 {
     padding-left: 15px !important;
   }
+
   .sm\:pr-15 {
     padding-right: 15px !important;
   }
+
   .sm\:mt-15 {
     margin-top: 15px !important;
   }
+
   .sm\:mb-15 {
     margin-bottom: 15px !important;
   }
+
   .sm\:ml-15 {
     margin-left: 15px !important;
   }
+
   .sm\:mr-15 {
     margin-right: 15px !important;
   }
+
   .sm\:py-20 {
     padding-top: 20px !important;
     padding-bottom: 20px !important;
   }
+
   .sm\:px-20 {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
+
   .sm\:pt-20 {
     padding-top: 20px !important;
   }
+
   .sm\:pb-20 {
     padding-bottom: 20px !important;
   }
+
   .sm\:pl-20 {
     padding-left: 20px !important;
   }
+
   .sm\:pr-20 {
     padding-right: 20px !important;
   }
+
   .sm\:mt-20 {
     margin-top: 20px !important;
   }
+
   .sm\:mb-20 {
     margin-bottom: 20px !important;
   }
+
   .sm\:ml-20 {
     margin-left: 20px !important;
   }
+
   .sm\:mr-20 {
     margin-right: 20px !important;
   }
+
   .sm\:py-25 {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
   }
+
   .sm\:px-25 {
     padding-left: 25px !important;
     padding-right: 25px !important;
   }
+
   .sm\:pt-25 {
     padding-top: 25px !important;
   }
+
   .sm\:pb-25 {
     padding-bottom: 25px !important;
   }
+
   .sm\:pl-25 {
     padding-left: 25px !important;
   }
+
   .sm\:pr-25 {
     padding-right: 25px !important;
   }
+
   .sm\:mt-25 {
     margin-top: 25px !important;
   }
+
   .sm\:mb-25 {
     margin-bottom: 25px !important;
   }
+
   .sm\:ml-25 {
     margin-left: 25px !important;
   }
+
   .sm\:mr-25 {
     margin-right: 25px !important;
   }
+
   .sm\:py-30 {
     padding-top: 30px !important;
     padding-bottom: 30px !important;
   }
+
   .sm\:px-30 {
     padding-left: 30px !important;
     padding-right: 30px !important;
   }
+
   .sm\:pt-30 {
     padding-top: 30px !important;
   }
+
   .sm\:pb-30 {
     padding-bottom: 30px !important;
   }
+
   .sm\:pl-30 {
     padding-left: 30px !important;
   }
+
   .sm\:pr-30 {
     padding-right: 30px !important;
   }
+
   .sm\:mt-30 {
     margin-top: 30px !important;
   }
+
   .sm\:mb-30 {
     margin-bottom: 30px !important;
   }
+
   .sm\:ml-30 {
     margin-left: 30px !important;
   }
+
   .sm\:mr-30 {
     margin-right: 30px !important;
   }
+
   .sm\:py-35 {
     padding-top: 35px !important;
     padding-bottom: 35px !important;
   }
+
   .sm\:px-35 {
     padding-left: 35px !important;
     padding-right: 35px !important;
   }
+
   .sm\:pt-35 {
     padding-top: 35px !important;
   }
+
   .sm\:pb-35 {
     padding-bottom: 35px !important;
   }
+
   .sm\:pl-35 {
     padding-left: 35px !important;
   }
+
   .sm\:pr-35 {
     padding-right: 35px !important;
   }
+
   .sm\:mt-35 {
     margin-top: 35px !important;
   }
+
   .sm\:mb-35 {
     margin-bottom: 35px !important;
   }
+
   .sm\:ml-35 {
     margin-left: 35px !important;
   }
+
   .sm\:mr-35 {
     margin-right: 35px !important;
   }
+
   .sm\:py-40 {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
   }
+
   .sm\:px-40 {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
+
   .sm\:pt-40 {
     padding-top: 40px !important;
   }
+
   .sm\:pb-40 {
     padding-bottom: 40px !important;
   }
+
   .sm\:pl-40 {
     padding-left: 40px !important;
   }
+
   .sm\:pr-40 {
     padding-right: 40px !important;
   }
+
   .sm\:mt-40 {
     margin-top: 40px !important;
   }
+
   .sm\:mb-40 {
     margin-bottom: 40px !important;
   }
+
   .sm\:ml-40 {
     margin-left: 40px !important;
   }
+
   .sm\:mr-40 {
     margin-right: 40px !important;
   }
+
   .sm\:py-45 {
     padding-top: 45px !important;
     padding-bottom: 45px !important;
   }
+
   .sm\:px-45 {
     padding-left: 45px !important;
     padding-right: 45px !important;
   }
+
   .sm\:pt-45 {
     padding-top: 45px !important;
   }
+
   .sm\:pb-45 {
     padding-bottom: 45px !important;
   }
+
   .sm\:pl-45 {
     padding-left: 45px !important;
   }
+
   .sm\:pr-45 {
     padding-right: 45px !important;
   }
+
   .sm\:mt-45 {
     margin-top: 45px !important;
   }
+
   .sm\:mb-45 {
     margin-bottom: 45px !important;
   }
+
   .sm\:ml-45 {
     margin-left: 45px !important;
   }
+
   .sm\:mr-45 {
     margin-right: 45px !important;
   }
+
   .sm\:py-50 {
     padding-top: 50px !important;
     padding-bottom: 50px !important;
   }
+
   .sm\:px-50 {
     padding-left: 50px !important;
     padding-right: 50px !important;
   }
+
   .sm\:pt-50 {
     padding-top: 50px !important;
   }
+
   .sm\:pb-50 {
     padding-bottom: 50px !important;
   }
+
   .sm\:pl-50 {
     padding-left: 50px !important;
   }
+
   .sm\:pr-50 {
     padding-right: 50px !important;
   }
+
   .sm\:mt-50 {
     margin-top: 50px !important;
   }
+
   .sm\:mb-50 {
     margin-bottom: 50px !important;
   }
+
   .sm\:ml-50 {
     margin-left: 50px !important;
   }
+
   .sm\:mr-50 {
     margin-right: 50px !important;
   }
+
   .sm\:py-60 {
     padding-top: 60px !important;
     padding-bottom: 60px !important;
   }
+
   .sm\:px-60 {
     padding-left: 60px !important;
     padding-right: 60px !important;
   }
+
   .sm\:pt-60 {
     padding-top: 60px !important;
   }
+
   .sm\:pb-60 {
     padding-bottom: 60px !important;
   }
+
   .sm\:pl-60 {
     padding-left: 60px !important;
   }
+
   .sm\:pr-60 {
     padding-right: 60px !important;
   }
+
   .sm\:mt-60 {
     margin-top: 60px !important;
   }
+
   .sm\:mb-60 {
     margin-bottom: 60px !important;
   }
+
   .sm\:ml-60 {
     margin-left: 60px !important;
   }
+
   .sm\:mr-60 {
     margin-right: 60px !important;
   }
+
   .sm\:py-80 {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
+
   .sm\:px-80 {
     padding-left: 80px !important;
     padding-right: 80px !important;
   }
+
   .sm\:pt-80 {
     padding-top: 80px !important;
   }
+
   .sm\:pb-80 {
     padding-bottom: 80px !important;
   }
+
   .sm\:pl-80 {
     padding-left: 80px !important;
   }
+
   .sm\:pr-80 {
     padding-right: 80px !important;
   }
+
   .sm\:mt-80 {
     margin-top: 80px !important;
   }
+
   .sm\:mb-80 {
     margin-bottom: 80px !important;
   }
+
   .sm\:ml-80 {
     margin-left: 80px !important;
   }
+
   .sm\:mr-80 {
     margin-right: 80px !important;
   }
+
   .sm\:py-90 {
     padding-top: 90px !important;
     padding-bottom: 90px !important;
   }
+
   .sm\:px-90 {
     padding-left: 90px !important;
     padding-right: 90px !important;
   }
+
   .sm\:pt-90 {
     padding-top: 90px !important;
   }
+
   .sm\:pb-90 {
     padding-bottom: 90px !important;
   }
+
   .sm\:pl-90 {
     padding-left: 90px !important;
   }
+
   .sm\:pr-90 {
     padding-right: 90px !important;
   }
+
   .sm\:mt-90 {
     margin-top: 90px !important;
   }
+
   .sm\:mb-90 {
     margin-bottom: 90px !important;
   }
+
   .sm\:ml-90 {
     margin-left: 90px !important;
   }
+
   .sm\:mr-90 {
     margin-right: 90px !important;
   }
@@ -13637,126 +14533,157 @@ h6 {
     margin-left: -2.5px;
     margin-right: -2.5px;
   }
+
   .md\:x-gap-5 > * {
     padding-left: 2.5px;
     padding-right: 2.5px;
   }
+
   .md\:y-gap-5 {
     margin-top: -2.5px;
     margin-bottom: -2.5px;
   }
+
   .md\:y-gap-5 > * {
     padding-top: 2.5px;
     padding-bottom: 2.5px;
   }
+
   .md\:x-gap-10 {
     margin-left: -5px;
     margin-right: -5px;
   }
+
   .md\:x-gap-10 > * {
     padding-left: 5px;
     padding-right: 5px;
   }
+
   .md\:y-gap-10 {
     margin-top: -5px;
     margin-bottom: -5px;
   }
+
   .md\:y-gap-10 > * {
     padding-top: 5px;
     padding-bottom: 5px;
   }
+
   .md\:x-gap-15 {
     margin-left: -7.5px;
     margin-right: -7.5px;
   }
+
   .md\:x-gap-15 > * {
     padding-left: 7.5px;
     padding-right: 7.5px;
   }
+
   .md\:y-gap-15 {
     margin-top: -7.5px;
     margin-bottom: -7.5px;
   }
+
   .md\:y-gap-15 > * {
     padding-top: 7.5px;
     padding-bottom: 7.5px;
   }
+
   .md\:x-gap-20 {
     margin-left: -10px;
     margin-right: -10px;
   }
+
   .md\:x-gap-20 > * {
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .md\:y-gap-20 {
     margin-top: -10px;
     margin-bottom: -10px;
   }
+
   .md\:y-gap-20 > * {
     padding-top: 10px;
     padding-bottom: 10px;
   }
+
   .md\:x-gap-30 {
     margin-left: -15px;
     margin-right: -15px;
   }
+
   .md\:x-gap-30 > * {
     padding-left: 15px;
     padding-right: 15px;
   }
+
   .md\:y-gap-30 {
     margin-top: -15px;
     margin-bottom: -15px;
   }
+
   .md\:y-gap-30 > * {
     padding-top: 15px;
     padding-bottom: 15px;
   }
+
   .md\:x-gap-40 {
     margin-left: -20px;
     margin-right: -20px;
   }
+
   .md\:x-gap-40 > * {
     padding-left: 20px;
     padding-right: 20px;
   }
+
   .md\:y-gap-40 {
     margin-top: -20px;
     margin-bottom: -20px;
   }
+
   .md\:y-gap-40 > * {
     padding-top: 20px;
     padding-bottom: 20px;
   }
+
   .md\:x-gap-50 {
     margin-left: -25px;
     margin-right: -25px;
   }
+
   .md\:x-gap-50 > * {
     padding-left: 25px;
     padding-right: 25px;
   }
+
   .md\:y-gap-50 {
     margin-top: -25px;
     margin-bottom: -25px;
   }
+
   .md\:y-gap-50 > * {
     padding-top: 25px;
     padding-bottom: 25px;
   }
+
   .md\:x-gap-60 {
     margin-left: -30px;
     margin-right: -30px;
   }
+
   .md\:x-gap-60 > * {
     padding-left: 30px;
     padding-right: 30px;
   }
+
   .md\:y-gap-60 {
     margin-top: -30px;
     margin-bottom: -30px;
   }
+
   .md\:y-gap-60 > * {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -13768,126 +14695,157 @@ h6 {
     margin-left: -2.5px;
     margin-right: -2.5px;
   }
+
   .sm\:x-gap-5 > * {
     padding-left: 2.5px;
     padding-right: 2.5px;
   }
+
   .sm\:y-gap-5 {
     margin-top: -2.5px;
     margin-bottom: -2.5px;
   }
+
   .sm\:y-gap-5 > * {
     padding-top: 2.5px;
     padding-bottom: 2.5px;
   }
+
   .sm\:x-gap-10 {
     margin-left: -5px;
     margin-right: -5px;
   }
+
   .sm\:x-gap-10 > * {
     padding-left: 5px;
     padding-right: 5px;
   }
+
   .sm\:y-gap-10 {
     margin-top: -5px;
     margin-bottom: -5px;
   }
+
   .sm\:y-gap-10 > * {
     padding-top: 5px;
     padding-bottom: 5px;
   }
+
   .sm\:x-gap-15 {
     margin-left: -7.5px;
     margin-right: -7.5px;
   }
+
   .sm\:x-gap-15 > * {
     padding-left: 7.5px;
     padding-right: 7.5px;
   }
+
   .sm\:y-gap-15 {
     margin-top: -7.5px;
     margin-bottom: -7.5px;
   }
+
   .sm\:y-gap-15 > * {
     padding-top: 7.5px;
     padding-bottom: 7.5px;
   }
+
   .sm\:x-gap-20 {
     margin-left: -10px;
     margin-right: -10px;
   }
+
   .sm\:x-gap-20 > * {
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .sm\:y-gap-20 {
     margin-top: -10px;
     margin-bottom: -10px;
   }
+
   .sm\:y-gap-20 > * {
     padding-top: 10px;
     padding-bottom: 10px;
   }
+
   .sm\:x-gap-30 {
     margin-left: -15px;
     margin-right: -15px;
   }
+
   .sm\:x-gap-30 > * {
     padding-left: 15px;
     padding-right: 15px;
   }
+
   .sm\:y-gap-30 {
     margin-top: -15px;
     margin-bottom: -15px;
   }
+
   .sm\:y-gap-30 > * {
     padding-top: 15px;
     padding-bottom: 15px;
   }
+
   .sm\:x-gap-40 {
     margin-left: -20px;
     margin-right: -20px;
   }
+
   .sm\:x-gap-40 > * {
     padding-left: 20px;
     padding-right: 20px;
   }
+
   .sm\:y-gap-40 {
     margin-top: -20px;
     margin-bottom: -20px;
   }
+
   .sm\:y-gap-40 > * {
     padding-top: 20px;
     padding-bottom: 20px;
   }
+
   .sm\:x-gap-50 {
     margin-left: -25px;
     margin-right: -25px;
   }
+
   .sm\:x-gap-50 > * {
     padding-left: 25px;
     padding-right: 25px;
   }
+
   .sm\:y-gap-50 {
     margin-top: -25px;
     margin-bottom: -25px;
   }
+
   .sm\:y-gap-50 > * {
     padding-top: 25px;
     padding-bottom: 25px;
   }
+
   .sm\:x-gap-60 {
     margin-left: -30px;
     margin-right: -30px;
   }
+
   .sm\:x-gap-60 > * {
     padding-left: 30px;
     padding-right: 30px;
   }
+
   .sm\:y-gap-60 {
     margin-top: -30px;
     margin-bottom: -30px;
   }
+
   .sm\:y-gap-60 > * {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -13930,6 +14888,7 @@ h6 {
   .layout-pt-sm {
     padding-top: 30px;
   }
+
   .layout-pb-sm {
     padding-bottom: 30px;
   }
@@ -13939,6 +14898,7 @@ h6 {
   .layout-pt-md {
     padding-top: 60px;
   }
+
   .layout-pb-md {
     padding-bottom: 60px;
   }
@@ -13948,6 +14908,7 @@ h6 {
   .layout-pt-lg {
     padding-top: 100px;
   }
+
   .layout-pb-lg {
     padding-bottom: 100px;
   }
@@ -13957,6 +14918,7 @@ h6 {
   .layout-pt-xl {
     padding-top: 120px;
   }
+
   .layout-pb-xl {
     padding-bottom: 120px;
   }
@@ -13966,6 +14928,7 @@ h6 {
   .layout-pt-sm {
     padding-top: 30px;
   }
+
   .layout-pb-sm {
     padding-bottom: 30px;
   }
@@ -13975,6 +14938,7 @@ h6 {
   .layout-pt-md {
     padding-top: 50px;
   }
+
   .layout-pb-md {
     padding-bottom: 50px;
   }
@@ -13984,6 +14948,7 @@ h6 {
   .layout-pt-lg {
     padding-top: 80px;
   }
+
   .layout-pb-lg {
     padding-bottom: 80px;
   }
@@ -13993,6 +14958,7 @@ h6 {
   .layout-pt-xl {
     padding-top: 80px;
   }
+
   .layout-pb-xl {
     padding-bottom: 80px;
   }
@@ -14026,15 +14992,19 @@ h6 {
   .xl\:w-1\/5 {
     width: 20% !important;
   }
+
   .xl\:w-1\/4 {
     width: 25% !important;
   }
+
   .xl\:w-1\/3 {
     width: 33.333333% !important;
   }
+
   .xl\:w-1\/2 {
     width: 50% !important;
   }
+
   .xl\:w-1\/1 {
     width: 100% !important;
   }
@@ -14044,15 +15014,19 @@ h6 {
   .lg\:w-1\/5 {
     width: 20% !important;
   }
+
   .lg\:w-1\/4 {
     width: 25% !important;
   }
+
   .lg\:w-1\/3 {
     width: 33.333333% !important;
   }
+
   .lg\:w-1\/2 {
     width: 50% !important;
   }
+
   .lg\:w-1\/1 {
     width: 100% !important;
   }
@@ -14062,15 +15036,19 @@ h6 {
   .md\:w-1\/5 {
     width: 20% !important;
   }
+
   .md\:w-1\/4 {
     width: 25% !important;
   }
+
   .md\:w-1\/3 {
     width: 33.333333% !important;
   }
+
   .md\:w-1\/2 {
     width: 50% !important;
   }
+
   .md\:w-1\/1 {
     width: 100% !important;
   }
@@ -14080,15 +15058,19 @@ h6 {
   .sm\:w-1\/5 {
     width: 20% !important;
   }
+
   .sm\:w-1\/4 {
     width: 25% !important;
   }
+
   .sm\:w-1\/3 {
     width: 33.333333% !important;
   }
+
   .sm\:w-1\/2 {
     width: 50% !important;
   }
+
   .sm\:w-1\/1 {
     width: 100% !important;
   }
@@ -14138,9 +15120,11 @@ h6 {
   .xl\:text-center {
     text-align: center !important;
   }
+
   .xl\:text-right {
     text-align: right !important;
   }
+
   .xl\:text-left {
     text-align: left !important;
   }
@@ -14150,9 +15134,11 @@ h6 {
   .lg\:text-center {
     text-align: center !important;
   }
+
   .lg\:text-right {
     text-align: right !important;
   }
+
   .lg\:text-left {
     text-align: left !important;
   }
@@ -14162,9 +15148,11 @@ h6 {
   .md\:text-center {
     text-align: center !important;
   }
+
   .md\:text-right {
     text-align: right !important;
   }
+
   .md\:text-left {
     text-align: left !important;
   }
@@ -14174,9 +15162,11 @@ h6 {
   .sm\:text-center {
     text-align: center !important;
   }
+
   .sm\:text-right {
     text-align: right !important;
   }
+
   .sm\:text-left {
     text-align: left !important;
   }
@@ -14214,21 +15204,27 @@ h6 {
   .xl\:justify-start {
     justify-content: flex-start !important;
   }
+
   .xl\:justify-end {
     justify-content: flex-end !important;
   }
+
   .xl\:justify-center {
     justify-content: center !important;
   }
+
   .xl\:justify-between {
     justify-content: space-between !important;
   }
+
   .xl\:items-start {
     align-items: flex-start !important;
   }
+
   .xl\:items-end {
     align-items: flex-end !important;
   }
+
   .xl\:items-center {
     align-items: center !important;
   }
@@ -14238,21 +15234,27 @@ h6 {
   .lg\:justify-start {
     justify-content: flex-start !important;
   }
+
   .lg\:justify-end {
     justify-content: flex-end !important;
   }
+
   .lg\:justify-center {
     justify-content: center !important;
   }
+
   .lg\:justify-between {
     justify-content: space-between !important;
   }
+
   .lg\:items-start {
     align-items: flex-start !important;
   }
+
   .lg\:items-end {
     align-items: flex-end !important;
   }
+
   .lg\:items-center {
     align-items: center !important;
   }
@@ -14262,21 +15264,27 @@ h6 {
   .md\:justify-start {
     justify-content: flex-start !important;
   }
+
   .md\:justify-end {
     justify-content: flex-end !important;
   }
+
   .md\:justify-center {
     justify-content: center !important;
   }
+
   .md\:justify-between {
     justify-content: space-between !important;
   }
+
   .md\:items-start {
     align-items: flex-start !important;
   }
+
   .md\:items-end {
     align-items: flex-end !important;
   }
+
   .md\:items-center {
     align-items: center !important;
   }
@@ -14286,21 +15294,27 @@ h6 {
   .sm\:justify-start {
     justify-content: flex-start !important;
   }
+
   .sm\:justify-end {
     justify-content: flex-end !important;
   }
+
   .sm\:justify-center {
     justify-content: center !important;
   }
+
   .sm\:justify-between {
     justify-content: space-between !important;
   }
+
   .sm\:items-start {
     align-items: flex-start !important;
   }
+
   .sm\:items-end {
     align-items: flex-end !important;
   }
+
   .sm\:items-center {
     align-items: center !important;
   }
@@ -14326,12 +15340,15 @@ h6 {
   .xl\:d-none {
     display: none !important;
   }
+
   .xl\:d-inline-block {
     display: inline-block !important;
   }
+
   .xl\:d-block {
     display: block !important;
   }
+
   .xl\:d-flex {
     display: flex !important;
   }
@@ -14341,12 +15358,15 @@ h6 {
   .lg\:d-none {
     display: none !important;
   }
+
   .lg\:d-inline-block {
     display: inline-block !important;
   }
+
   .lg\:d-block {
     display: block !important;
   }
+
   .lg\:d-flex {
     display: flex !important;
   }
@@ -14356,12 +15376,15 @@ h6 {
   .md\:d-none {
     display: none !important;
   }
+
   .md\:d-inline-block {
     display: inline-block !important;
   }
+
   .md\:d-block {
     display: block !important;
   }
+
   .md\:d-flex {
     display: flex !important;
   }
@@ -14371,12 +15394,15 @@ h6 {
   .sm\:d-none {
     display: none !important;
   }
+
   .sm\:d-inline-block {
     display: inline-block !important;
   }
+
   .sm\:d-block {
     display: block !important;
   }
+
   .sm\:d-flex {
     display: flex !important;
   }
@@ -14410,18 +15436,23 @@ h6 {
   .xl\:order-1 {
     order: 1;
   }
+
   .xl\:order-2 {
     order: 2;
   }
+
   .xl\:order-3 {
     order: 3;
   }
+
   .xl\:order-4 {
     order: 4;
   }
+
   .xl\:order-5 {
     order: 5;
   }
+
   .xl\:order-6 {
     order: 6;
   }
@@ -14431,18 +15462,23 @@ h6 {
   .lg\:order-1 {
     order: 1;
   }
+
   .lg\:order-2 {
     order: 2;
   }
+
   .lg\:order-3 {
     order: 3;
   }
+
   .lg\:order-4 {
     order: 4;
   }
+
   .lg\:order-5 {
     order: 5;
   }
+
   .lg\:order-6 {
     order: 6;
   }
@@ -14452,18 +15488,23 @@ h6 {
   .md\:order-1 {
     order: 1;
   }
+
   .md\:order-2 {
     order: 2;
   }
+
   .md\:order-3 {
     order: 3;
   }
+
   .md\:order-4 {
     order: 4;
   }
+
   .md\:order-5 {
     order: 5;
   }
+
   .md\:order-6 {
     order: 6;
   }
@@ -14473,18 +15514,23 @@ h6 {
   .sm\:order-1 {
     order: 1;
   }
+
   .sm\:order-2 {
     order: 2;
   }
+
   .sm\:order-3 {
     order: 3;
   }
+
   .sm\:order-4 {
     order: 4;
   }
+
   .sm\:order-5 {
     order: 5;
   }
+
   .sm\:order-6 {
     order: 6;
   }
@@ -14547,6 +15593,7 @@ h6 {
   0% {
     transform: translate3d(-90px, 0, 0);
   }
+
   100% {
     transform: translate3d(85px, 0, 0);
   }
@@ -14556,6 +15603,7 @@ h6 {
   0% {
     transform: translate3d(-90px, 0, 0);
   }
+
   100% {
     transform: translate3d(85px, 0, 0);
   }
@@ -14735,6 +15783,11 @@ h6 {
 .scroll-bar-1::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
+}
+
+.-dark-mode .scroll-bar-1::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+  margin-top: 10px;
 }
 
 .-stepCard-hover {
@@ -15045,12 +16098,15 @@ h6 {
     width: 48px;
     height: 48px;
   }
+
   .section-slider-nav.-absolute i {
     font-size: 20px !important;
   }
+
   .section-slider-nav.-absolute.-prev {
     left: -10px;
   }
+
   .section-slider-nav.-absolute.-next {
     right: -10px;
   }
@@ -15075,6 +16131,7 @@ h6 {
   .section-slider-nav.-absolute-out.-prev {
     right: calc(100% + 10px);
   }
+
   .section-slider-nav.-absolute-out.-next {
     left: calc(100% + 10px);
   }
@@ -15424,6 +16481,7 @@ h6 {
     left: unset;
     margin-top: 30px;
   }
+
   .composition.-type-5 .-el-4 .-w-260 {
     width: 100%;
   }
@@ -15763,11 +16821,14 @@ table.table td {
 
 /* Your existing CSS file */
 .-dark-mode .tox-tinymce {
-  background-color: #333; /* Or any dark color */
+  background-color: #333;
+  /* Or any dark color */
 }
+
 .-dark-mode .tox-editor-container {
   color: #fff;
 }
+
 /* Add more styles to customize the editor's appearance in dark mode */
 
 /* Style for the custom checkbox */
@@ -15789,21 +16850,25 @@ table.table td {
 }
 
 .custom-label {
-  margin-left: 8px; /* Space between the checkbox and label */
+  margin-left: 8px;
+  /* Space between the checkbox and label */
   cursor: pointer;
   position: relative;
 }
 
 /* Add a checkmark symbol using Unicode when checkbox is checked */
 .custom-checkbox:checked + .custom-label::before {
-  content: "\2713"; /* Unicode character for checkmark */
+  content: "\2713";
+  /* Unicode character for checkmark */
   position: absolute;
   top: 33%;
-  left: -24.9px; /* Adjust according to the checkbox width and desired position */
+  left: -24.9px;
+  /* Adjust according to the checkbox width and desired position */
   transform: translateY(-50%);
   color: #fff;
   font-size: 18px;
 }
+
 .userAdditionContainer {
   display: flex;
   flex-direction: column;
@@ -15872,8 +16937,10 @@ table.table td {
 
 /* Button styles */
 .custom-button {
-  border-radius: 25px; /* Adjust as per your need for rounded design */
-  color: white; /* Text color */
+  border-radius: 25px;
+  /* Adjust as per your need for rounded design */
+  color: white;
+  /* Text color */
   padding: 10px 20px;
   font-weight: bold;
   margin: 10px;
@@ -15885,34 +16952,41 @@ table.table td {
 }
 
 .add-student {
-  background-color: #4caf50; /* Green */
+  background-color: #4caf50;
+  /* Green */
 }
 
 .add-teacher {
-  background-color: #008cba; /* Blue */
+  background-color: #008cba;
+  /* Blue */
 }
 
 .add-care-manager {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
+  /* Red */
 }
 
 .add-head-teacher {
-  background-color: #555555; /* Gray */
+  background-color: #555555;
+  /* Gray */
 }
 
 .add-admin {
   background-color: #e7e7e7;
-  color: black; /* Gray with black text */
+  color: black;
+  /* Gray with black text */
 }
 
 .create-user {
-  background-color: #ffd700; /* Gold */
+  background-color: #ffd700;
+  /* Gold */
 }
 
 .carrot-flip {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
 }
+
 .react-datepicker__day--selected,
 .react-datepicker__day:hover {
   background-color: rgb(117, 84, 253);
@@ -15937,10 +17011,352 @@ table.table td {
 .react-datepicker__navigation--next:before {
   border-left-color: rgb(117, 84, 253);
 }
+
 .hr-style {
   border: 0; /* Removes existing borders */
   height: 0.5px; /* Set the height you want */
   background-color: #e5e5e5; /* Choose a color */
   margin-top: 10px; /* Optional: Spacing above the line */
   margin-bottom: 10px; /* Optional: Spacing below the line */
+}
+
+.card-input::placeholder {
+  color: var(--color-purple-1) !important;
+}
+
+.card-input {
+  color: #6440fb !important;
+  /* border-color: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid; */
+}
+
+html.-dark-mode .card-input {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+html.-dark-mode::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.hamburger-line {
+  width: 20px;
+  border-bottom: 2px solid #6440fb;
+}
+
+.non-draggable-item:hover {
+  cursor: default !important;
+}
+
+@media (min-width: 576px) {
+  .user-invite-label {
+    width: 8rem !important;
+  }
+}
+
+/* CSS Media Query for Mobile Devices */
+@media (max-width: 576px) {
+  .user-invite-label {
+    font-size: 0.63rem;
+    /* Reducing font size */
+    padding: 3px 5px;
+    width: 5rem;
+    /* Adjust padding to make it proportional */
+  }
+
+  /* ... Add any other styles as necessary ... */
+}
+
+.btn-disabled {
+  cursor: not-allowed;
+  /* Any other base styles you want for disabled buttons */
+}
+
+.cursor-normal {
+  cursor: default !important;
+  /* Any other base styles you want for disabled buttons */
+}
+
+/* .btn-disabled:hover { */
+/* Override hover styles for disabled buttons */
+/* background-color: initial !important; */
+/* or whatever value you need */
+/* color: initial !important; */
+/* or whatever value you need */
+/* ... any other property resets */
+/* } */
+
+/* Default light mode styles */
+/* For light mode */
+/* Light Mode Styles */
+/* Base styles */
+
+/* Base styles */
+.new-input .MuiOutlinedInput-root {
+  transition: border-color 0.3s ease;
+  /* Smooth transition for borders */
+  border-radius: 12px;
+  /* Increased border-radius */
+}
+
+/* Light Mode */
+
+.new-input .MuiOutlinedInput-input {
+  color: black;
+}
+
+.new-input .MuiFormLabel-root.Mui-focused {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.new-input .MuiFormLabel-root {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.new-input .MuiOutlinedInput-input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+}
+
+/* Dark Mode */
+.-dark-mode .new-input .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.-dark-mode .new-input .MuiOutlinedInput-input {
+  color: white;
+}
+
+.-dark-mode .new-input .MuiFormLabel-root.Mui-focused {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.-dark-mode .new-input .MuiFormLabel-root {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.-dark-mode .new-input .MuiOutlinedInput-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+/* Custom focus styles */
+.new-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.6);
+}
+
+.-dark-mode
+  .new-input
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Remove the default ripple effect */
+.new-input
+  .MuiOutlinedInput-adornedStart.Mui-focused
+  .MuiOutlinedInput-notchedOutline,
+.new-input
+  .MuiOutlinedInput-adornedEnd.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: inherit;
+}
+
+/* Styles for dropdown in Light Mode */
+.new-input .MuiSelect-root {
+  color: black;
+}
+
+.new-input .MuiSelect-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Styles for dropdown in Dark Mode */
+.-dark-mode .new-input .MuiSelect-root {
+  color: white;
+}
+
+.-dark-mode .new-input .MuiSelect-icon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Custom focus styles for dropdown */
+.new-input .MuiSelect-root.Mui-focused {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.-dark-mode .new-input .MuiSelect-root.Mui-focused {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Light Mode Styles for Dropdown Items */
+.new-input .MuiSelect-root .MuiMenuItem-root {
+  background-color: var(--color-purple-4);
+}
+
+/* Dark Mode Styles for Dropdown Items (if you want a different color) */
+.-dark-mode .new-input .MuiSelect-root .MuiMenuItem-root {
+  background-color: var(--color-purple-4);
+  /* Adjust color if needed for dark mode */
+}
+
+.-dark-mode
+  .new-disabled-input
+  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled {
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.-dark-mode .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  background-color: #2b1c55;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.-dark-mode .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+  background-color: #140342;
+  color: white;
+}
+
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  border-radius: 3%;
+}
+
+/* Default style for light mode */
+.-dark-mode .css-6hp17o-MuiList-root-MuiMenu-list {
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 3%;
+}
+
+.overflowing .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  border-top-left-radius: 3%;
+  border-bottom-left-radius: 3%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+/* Default style for light mode */
+.overflowing .-dark-mode .css-6hp17o-MuiList-root-MuiMenu-list {
+  border-top-left-radius: 3%;
+  border-bottom-left-radius: 3%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.confirmModalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 33px;
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.15);
+  width: 98%;
+  /* Default to the xs size */
+  padding: 33px;
+}
+
+/* This is a general media query for small screens and up. 
+ Adjust the 600px breakpoint if needed to match your design's requirement */
+@media (min-width: 600px) {
+  .confirmModalBox {
+    width: 633px;
+    padding: 33px;
+  }
+}
+
+.-dark-mode .confirmModalBox {
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background-color: #2b1c55;
+  color: white;
+}
+
+.-dark-mode .btn-unsaveble {
+  background-color: #6440fb !important;
+}
+
+.-dark-mode .btn-saveble {
+  background-color: #140342;
+
+  border: 2px solid transparent;
+}
+
+.-dark-mode .btn-saveble:hover {
+  border-color: var(--color-purple-1);
+  background-color: transparent;
+}
+
+.btn-saveble {
+  background-color: var(--color-purple-1);
+  border: 2px solid var(--color-purple-1);
+}
+
+.btn-saveble:hover {
+  background-color: transparent !important;
+  color: var(--color-purple-1) !important;
+}
+
+.-dark-mode .close-x {
+  color: white;
+}
+
+.-dark-mode .close-x:hover {
+  background-color: #140342;
+}
+
+/* Remove autofill styles */
+
+/* Remove autofill styles and make the background transparent */
+
+/* Remove autofill styles and make the background transparent */
+
+/* Chrome, Safari and newer versions of Opera */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  box-shadow: 0 0 0 30px transparent inset !important;
+
+  /* Make autofill text white */
+  transition: background-color 5000s ease-in-out 0s;
+  /* Override the yellow fade */
+}
+
+.-dark-mode input:-webkit-autofill,
+.-dark-mode input:-webkit-autofill:hover,
+.-dark-mode input:-webkit-autofill:focus,
+.-dark-mode input:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  /* Make autofill text white */
+}
+
+/* Firefox */
+input:-moz-autofill,
+input:-moz-autofill:hover,
+input:-moz-autofill:focus,
+input:-moz-autofill:active {
+  box-shadow: 0 0 0 30px transparent inset !important;
+  /* Make autofill text white */
+}
+
+.-dark-mode input:-moz-autofill,
+.-dark-mode input:-moz-autofill:hover,
+.-dark-mode input:-moz-autofill:focus,
+.-dark-mode input:-moz-autofill:active {
+  color: white !important;
+  /* Make autofill text white */
+}
+
+/* For Microsoft Edge */
+.-dark-mode input:-ms-input-placeholder {
+  color: white !important;
+  /* Make autofill text white */
+}
+
+/* Add this to your global stylesheet or a CSS module connected to this component */
+.-dark-mode .btn-save {
+  transition: background-color 0.8s, color 0.3s;
+  /* Adjust time as needed */
 }

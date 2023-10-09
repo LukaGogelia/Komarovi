@@ -1,7 +1,7 @@
 import React from "react";
 import { tags } from "@/data/blog";
 import Image from "next/image";
-import { News } from "@/data/mongoDb/models";
+import { News } from "@/data/mongoDb/models/news";
 import mongoose from "mongoose";
 
 async function getData(id) {

@@ -1,4 +1,4 @@
-import dbConnect from "../../data/mongoDb/database";
+import dbConnect from "../../data/mongoDb/utils/database";
 import { User } from "../../data/mongoDb/models";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
