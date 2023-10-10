@@ -5,9 +5,9 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
 import React from "react";
 import { fetchClasses } from "../../dshb-grades-list/page";
-import { Student } from "@/data/mongoDb/models";
+import { Student } from "@/data/mongoDb/models/student";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
-import { CurrentClass } from "@/data/mongoDb/models";
+import { CurrentClass } from "@/data/mongoDb/models/currentClass";
 import { TimeTable } from "@/data/mongoDb/models";
 import { ObjectId } from "mongodb";
 

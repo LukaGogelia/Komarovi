@@ -5,5 +5,3 @@ module.exports = {
     domains: ["i.ibb.co", "example.com"],
   },
 };
-
-module.exports = nextConfig;

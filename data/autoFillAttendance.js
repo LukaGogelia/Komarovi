@@ -1,5 +1,5 @@
 import dbConnect from "@/data/mongoDb/database";
-import { Student } from "@/data/mongoDb/models";
+import { Student } from "@/data/mongoDb/models/student";
 import { Attendance } from "@/data/mongoDb/models";
 
 async function autoFillAttendanceForDate(date) {

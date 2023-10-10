@@ -7,17 +7,19 @@ import Link from "next/link";
 const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
-import { Quiz, Student, Teacher } from "@/data/mongoDb/models";
+import { Quiz } from "@/data/mongoDb/models/quiz";
+import { Student } from "@/data/mongoDb/models/student";
+import { Teacher } from "@/data/mongoDb/models/teacher";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
-import { GradeEntry } from "@/data/mongoDb/models";
-import { User } from "@/data/mongoDb/models";
-import { PointsCommissionDecision } from "@/data/mongoDb/models";
+import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
+import { User } from "@/data/mongoDb/models/user";
+import { PointsCommissionDecision } from "@/data/mongoDb/models/pointsCommissionDecision";
 import { connectDb } from "./ConnectToDb";
 import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
 import { fetchData } from "./Reviews";
-import { Attendance } from "@/data/mongoDb/models";
+import { Attendance } from "@/data/mongoDb/models/";
 
 export async function fetchGradesData() {
   try {
