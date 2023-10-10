@@ -10,13 +10,25 @@ import RegionDropdowns from "./editProfileComponents/RegionDropdowns";
 export default function EditProfile({ activeTab, editProfileProps: data }) {
   console.log(data);
 
-  const initialState = data.initialState;
+  const initialState = { ...data.initialState };
 
   const [state, setState] = useState(initialState);
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEmailFocused, setEmailFocused] = useState(false);
+
+  useEffect(() => {
+    // Validate email on initial load
+    if (state.email && !isValidEmail(state.email)) {
+      setEmailError("Invalid email format");
+    }
+
+    // Validate phone on initial load
+    if (state.phone && !isValidPhone(state.phone)) {
+      setPhoneError("Invalid phone format");
+    }
+  }, []);
 
   const handleEmailFocus = () => {
     setEmailFocused(true);

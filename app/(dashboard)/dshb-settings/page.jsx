@@ -15,7 +15,7 @@ export const metadata = {
 };
 export default async function page() {
   const session = await getServerSession(authOptions);
-  let editProfileProps;
+  let editProfileProps, socialProfilesProps;
   if (session) {
     const person = await getPersonById(session?.user.name);
 
@@ -44,6 +44,12 @@ export default async function page() {
         },
       },
     };
+    socialProfilesProps = {
+      facebook: person.socialProfiles.facebook,
+      instagram: person.socialProfiles.instagram,
+      x: person.socialProfiles.x,
+      linkedIn: person.socialProfiles.linkedIn,
+    };
   }
   return (
     <div className="barba-container" data-barba="container">
@@ -58,7 +64,10 @@ export default async function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <Settings editProfileProps={editProfileProps} />
+            <Settings
+              editProfileProps={editProfileProps}
+              socialProfilesProps={socialProfilesProps}
+            />
           </div>
         </div>
       </main>

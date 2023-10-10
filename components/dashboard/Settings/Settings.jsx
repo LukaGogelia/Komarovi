@@ -17,7 +17,7 @@ const buttons = [
   "Close Account",
 ];
 
-export default function Settings({ editProfileProps }) {
+export default function Settings({ editProfileProps, socialProfilesProps }) {
   const [activeTab, setActiveTab] = useState(1);
   // const { status, data: session } = useSession();
   // console.log(editProfileProps);
@@ -42,8 +42,9 @@ export default function Settings({ editProfileProps }) {
                     <button
                       key={i}
                       onClick={() => setActiveTab(i + 1)}
-                      className={`tabs__button text-light-1 js-tabs-button ${activeTab == i + 1 ? "is-active" : ""
-                        } `}
+                      className={`tabs__button text-light-1 js-tabs-button ${
+                        activeTab == i + 1 ? "is-active" : ""
+                      } `}
                       type="button"
                     >
                       {elm}
@@ -52,9 +53,15 @@ export default function Settings({ editProfileProps }) {
                 </div>
 
                 <div className="tabs__content py-30 px-30 js-tabs-content">
-                  <EditProfile activeTab={activeTab} editProfileProps={editProfileProps} />
+                  <EditProfile
+                    activeTab={activeTab}
+                    editProfileProps={editProfileProps}
+                  />
                   <Password activeTab={activeTab} />
-                  <SocialProfiles activeTab={activeTab} />
+                  <SocialProfiles
+                    activeTab={activeTab}
+                    socialProfilesProps={socialProfilesProps}
+                  />
                   <Notification activeTab={activeTab} />
                   <CloseAccount activeTab={activeTab} />
                 </div>
