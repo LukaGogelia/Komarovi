@@ -6,10 +6,10 @@ import HeaderSeven from "@/components/layout/headers/HeaderSeven";
 import React from "react";
 // import { teamMembers } from "@/data/instractors";
 import PaginationTwo from "@/components/common/PaginationTwo";
-import { Teacher } from "@/data/mongoDb/models";
+import { Teacher } from "@/data/mongoDb/models/teacher";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
-import { User } from "@/data/mongoDb/models";
-import { Subject } from "@/data/mongoDb/models";
+import { User } from "@/data/mongoDb/models/user";
+import { Subject } from "@/data/mongoDb/models/subject";
 
 export async function fetchTeachers() {
   await connectDb();

@@ -3,7 +3,7 @@ import React from "react";
 import Preloader from "@/components/common/Preloader";
 import Sidebar from "@/components/dashboard/Sidebar";
 import GradesList from "@/components/dashboard/GradesList";
-import { Teacher } from "@/data/mongoDb/models";
+import { Teacher } from "@/data/mongoDb/models/teacher";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
 
 export async function fetchClasses() {
