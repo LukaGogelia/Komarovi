@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
+import ConfirmModal from "./ConfirmModal";
 import isEqual from "lodash/isEqual";
 
 export default function SocialProfiles({
@@ -14,6 +15,8 @@ export default function SocialProfiles({
   const [profiles, setProfiles] = useState(initialProfileState);
   const [errors, setErrors] = useState({});
   const [hasChanges, setHasChanges] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     // Iterate over each profile and validate
@@ -29,11 +32,11 @@ export default function SocialProfiles({
   const isValidURL = (url) => {
     const pattern = new RegExp(
       "^(https?:\\/\\/)?" +
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
-        "((\\d{1,3}\\.){3}\\d{1,3}))" +
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
-        "(\\?[;&a-z\\d%_.~+=-]*)?" +
-        "(\\#[-a-z\\d_]*)?$",
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
+      "((\\d{1,3}\\.){3}\\d{1,3}))" +
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+      "(\\?[;&a-z\\d%_.~+=-]*)?" +
+      "(\\#[-a-z\\d_]*)?$",
       "i"
     );
     return !!pattern.test(url);
@@ -59,9 +62,11 @@ export default function SocialProfiles({
       return;
     }
 
-    // Save or process the profiles logic here
-    setHasChanges(false);
+    // Open the confirmation modal:
+    setIsModalOpen(true);
+
   };
+
 
   useEffect(() => {
     const hasChanged = !isEqual(initialProfileState, profiles);
@@ -74,6 +79,12 @@ export default function SocialProfiles({
     <div
       className={`tabs__pane -tab-item-3 ${activeTab == 3 ? "is-active" : ""}`}
     >
+      <ConfirmModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        profiles={profiles}
+        initialProfiles={initialProfileState}
+      />
       <form onSubmit={handleSubmit} className="new-input row y-gap-30">
         <div className="col-md-6">
           <TextField
@@ -149,11 +160,10 @@ export default function SocialProfiles({
         </div>
         <div className="col-12">
           <button
-            className={`button -md ${
-              hasChanges
-                ? "-purple-1 text-white"
-                : "-purple-3 text-purple-1 btn-disabled"
-            }`}
+            className={`button -md ${hasChanges
+              ? "-purple-1 text-white"
+              : "-purple-3 text-purple-1 btn-disabled"
+              }`}
             disabled={!hasChanges}
           >
             Save Social Profile

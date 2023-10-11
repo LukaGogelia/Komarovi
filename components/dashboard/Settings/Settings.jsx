@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import EditProfile from "./EditProfile";
+import EditProfile from "./editProfile/EditProfile";
 import Password from "./Password";
-import SocialProfiles from "./SocialProfiles";
+import SocialProfiles from "./socialProfiles/SocialProfiles";
 import CloseAccount from "./CloseAccount";
 import FooterNine from "@/components/layout/footers/FooterNine";
 import Notification from "./Notifications";
@@ -42,9 +42,8 @@ export default function Settings({ editProfileProps, socialProfilesProps }) {
                     <button
                       key={i}
                       onClick={() => setActiveTab(i + 1)}
-                      className={`tabs__button text-light-1 js-tabs-button ${
-                        activeTab == i + 1 ? "is-active" : ""
-                      } `}
+                      className={`tabs__button text-light-1 js-tabs-button ${activeTab == i + 1 ? "is-active" : ""
+                        } `}
                       type="button"
                     >
                       {elm}

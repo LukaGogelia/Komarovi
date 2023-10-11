@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ImageUpload from "./editProfileComponents/ImageUpload";
+import ImageUpload from "./ImageUpload";
 import TextField from "@mui/material/TextField";
-import ConfirmModal from "./editProfileComponents/ConfirmModal";
+import ConfirmModal from "./ConfirmModal";
 import Grid from "@mui/material/Grid";
-import RegionDropdowns from "./editProfileComponents/RegionDropdowns";
+import RegionDropdowns from "./RegionDropdowns";
 
 export default function EditProfile({ activeTab, editProfileProps: data }) {
   console.log(data);
@@ -341,11 +341,10 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             </Grid>
             <Grid item xs={12}>
               <button
-                className={`button -md ${
-                  hasStateChanged()
-                    ? "-purple-1 text-white"
-                    : "-purple-3 text-purple-1 btn-disabled"
-                }`}
+                className={`button -md ${hasStateChanged()
+                  ? "-purple-1 text-white"
+                  : "-purple-3 text-purple-1 btn-disabled"
+                  }`}
                 disabled={!hasStateChanged()}
               >
                 Update Profile
