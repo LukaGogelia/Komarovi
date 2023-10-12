@@ -3,9 +3,8 @@ const DashboardOne = dynamic(() =>
   import("@/components/dashboard/DashboardOne")
 );
 const Sidebar = dynamic(() => import("@/components/dashboard/Sidebar"));
-const HeaderDashboard = dynamic(() =>
-  import("@/components/layout/headers/HeaderDashboard")
-);
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
+
 import dynamic from "next/dynamic";
 import React from "react";
 
@@ -21,7 +20,7 @@ export default function page() {
     <div className="barba-container" data-barba="container">
       <main className="main-content">
         <Preloader />
-        <HeaderDashboard />
+        <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
             id="dashboardOpenClose"

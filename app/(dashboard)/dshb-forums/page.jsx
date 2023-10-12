@@ -2,7 +2,7 @@ import Preloader from "@/components/common/Preloader";
 import DashboardOne from "@/components/dashboard/DashboardOne";
 import Forums from "@/components/dashboard/Forums";
 import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import React from "react";
 
 export const metadata = {
@@ -17,7 +17,7 @@ export default function page() {
     <div className="barba-container" data-barba="container">
       <main className="main-content">
         <Preloader />
-        <HeaderDashboard />
+        <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
             id="dashboardOpenClose"

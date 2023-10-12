@@ -2,7 +2,7 @@ import Preloader from "@/components/common/Preloader";
 import DashboardOne from "@/components/dashboard/DashboardOne";
 import Grades from "@/components/dashboard/Grades";
 import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import React from "react";
 import { fetchClasses } from "../../dshb-grades-list/page";
 import { Student } from "@/data/mongoDb/models/student";
@@ -125,7 +125,7 @@ export default async function page({ params }) {
     <div className="barba-container" data-barba="container">
       <main className="main-content">
         <Preloader />
-        <HeaderDashboard />
+        <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
             id="dashboardOpenClose"

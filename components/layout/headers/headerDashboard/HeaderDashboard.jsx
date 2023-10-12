@@ -2,16 +2,16 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-const CartToggle = dynamic(() => import("../component/CartToggle"));
-import { sidebarItems } from "../../../data/homeSidebarItems";
+import CartToggle from "../../component/CartToggle";
+import { sidebarItems } from "../../../../data/homeSidebarItems";
 import { notifications } from "@/data/notifications";
-const Messages = dynamic(() => import("../component/Messages"));
-const MyCourses = dynamic(() => import("../component/MyCourses"));
+const Messages = dynamic(() => import("../../component/Messages"));
+const MyCourses = dynamic(() => import("../../component/MyCourses"));
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 
-export default function HeaderDashboard() {
+export default function HeaderDashboard({ profilePictureUrl }) {
   const [messageOpen, setMessageOpen] = useState(false);
 
   const { i18n } = useTranslation();
@@ -224,102 +224,103 @@ export default function HeaderDashboard() {
                     </button>
                   </div>
 
-                    <div className="relative">
-                      <button
-                        onClick={() => handleFullScreenToggle()}
-                        className="d-flex text-light-1 items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                      >
-                        <i className="text-24 icon icon-maximize"></i>
-                      </button>
-                    </div>
+                  <div className="relative">
+                    <button
+                      onClick={() => handleFullScreenToggle()}
+                      className="d-flex text-light-1 items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                    >
+                      <i className="text-24 icon icon-maximize"></i>
+                    </button>
+                  </div>
 
-                    <CartToggle
-                      parentClassess={"relative"}
-                      allClasses={
-                        "d-flex items-center text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
-                      }
-                    />
+                  <CartToggle
+                    parentClassess={"relative"}
+                    allClasses={
+                      "d-flex items-center text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                    }
+                  />
+
+                  <div
+                    className="relative"
+                    onClick={() => setMessageOpen(true)}
+                  >
+                    <a
+                      href="#"
+                      className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
+                      data-el-toggle=".js-msg-toggle"
+                    >
+                      <i className="text-24 icon icon-email"></i>
+                    </a>
+                  </div>
+
+                  <div
+                    className="relative"
+                    onClick={() => setIsOnNotification((pre) => !pre)}
+                  >
+                    <a
+                      href="#"
+                      className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
+                      data-el-toggle=".js-notif-toggle"
+                    >
+                      <i className="text-24 icon icon-notification"></i>
+                    </a>
 
                     <div
-                      className="relative"
-                      onClick={() => setMessageOpen(true)}
-                    >
-                      <a
-                        href="#"
-                        className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
-                        data-el-toggle=".js-msg-toggle"
-                      >
-                        <i className="text-24 icon icon-email"></i>
-                      </a>
-                    </div>
-
-                    <div
-                      className="relative"
-                      onClick={() => setIsOnNotification((pre) => !pre)}
-                    >
-                      <a
-                        href="#"
-                        className="d-flex items-center text-light-1 justify-center size-50 rounded-16 -hover-dshb-header-light"
-                        data-el-toggle=".js-notif-toggle"
-                      >
-                        <i className="text-24 icon icon-notification"></i>
-                      </a>
-
-                      <div
-                        className={`toggle-element js-notif-toggle  ${
-                          isOnNotification ? "-is-el-visible" : ""
+                      className={`toggle-element js-notif-toggle  ${isOnNotification ? "-is-el-visible" : ""
                         } -`}
-                      >
-                        <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
-                          <div className="py-30 px-30">
-                            <div className="y-gap-40">
-                              {notifications.map((elm, i) => (
-                                <div
-                                  key={i}
-                                  className={`d-flex items-center  ${
-                                    i !== 0
-                                      ? "border-top-light -dark-border-top-light-5"
-                                      : ""
+                    >
+                      <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
+                        <div className="py-30 px-30">
+                          <div className="y-gap-40">
+                            {notifications.map((elm, i) => (
+                              <div
+                                key={i}
+                                className={`d-flex items-center  ${i !== 0
+                                  ? "border-top-light -dark-border-top-light-5"
+                                  : ""
                                   } `}
-                                >
-                                  <div className="shrink-0">
-                                    <Image
-                                      width={40}
-                                      height={40}
-                                      src={elm.imageSrc}
-                                      alt="image"
-                                    />
-                                  </div>
-                                  <div className="ml-12">
-                                    <h4 className="text-15 lh-1 fw-500 -dark-text-dark-1">
-                                      {elm.heading}
-                                    </h4>
-                                    <div className="text-13 lh-1 mt-10">
-                                      {elm.time} Hours Ago
-                                    </div>
+                              >
+                                <div className="shrink-0">
+                                  <Image
+                                    width={40}
+                                    height={40}
+                                    src={elm.imageSrc}
+                                    alt="image"
+                                  />
+                                </div>
+                                <div className="ml-12">
+                                  <h4 className="text-15 lh-1 fw-500 -dark-text-dark-1">
+                                    {elm.heading}
+                                  </h4>
+                                  <div className="text-13 lh-1 mt-10">
+                                    {elm.time} Hours Ago
                                   </div>
                                 </div>
-                              ))}
-                            </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                
+                </div>
+
 
                 <div
                   className="relative d-flex items-center ml-10"
                   onClick={() => setIsOnProfile((pre) => !pre)}
                 >
                   <a href="#" data-el-toggle=".js-profile-toggle">
+
                     <Image
                       width={50}
                       height={50}
                       className="size-50"
-                      src="/assets/img/misc/user-profile.png"
+                      src={profilePictureUrl}
                       alt="image"
+                      style={{ objectFit: "cover", overflow: "hidden", borderRadius: "10px" }}
                     />
+
                   </a>
 
                   <div

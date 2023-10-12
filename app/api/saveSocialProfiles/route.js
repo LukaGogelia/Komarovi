@@ -73,5 +73,6 @@ export async function PUT(request) {
     } catch (error) {
         console.error("Unhandled Error:", error);
         return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+
     }
 }

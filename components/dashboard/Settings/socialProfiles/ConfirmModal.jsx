@@ -34,9 +34,7 @@ export default function ConfirmModal({
             const responseData = await response.json();
 
             if (response.ok) {
-                console.log("Social profiles updated successfully", responseData);
-                router.refresh();
-                onClose();
+                window.location.reload();
             } else {
                 if (responseData.error && responseData.error.includes("password")) {
                     setPasswordError(responseData.error);

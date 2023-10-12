@@ -46,7 +46,15 @@ const AddressSchema = z
     }
   );
 
+const isCloudinaryUrl = (url) => {
+  const cloudinaryRegex = /^https:\/\/res\.cloudinary\.com\/[a-zA-Z0-9]*\/image\/upload\/.*$/;
+  return cloudinaryRegex.test(url);
+};
+
 const EditProfileSchema = z.object({
+  profilePictureUrl: z.string().refine(isCloudinaryUrl, {
+    message: "Profile picture URL must be a valid Cloudinary URL",
+  }),
   email: z.string().email().or(z.literal("")),
   phone: z
     .string()
@@ -106,7 +114,9 @@ export async function PUT(request) {
       phone: body.phone,
       actualAddress: body.actualAddress,
       registrationAddress: body.registrationAddress,
+      profilePictureUrl: body.profilePictureUrl,  // Assuming the image URL is passed in the body
     };
+
 
     const updatedPerson = await Person.findOneAndUpdate(
       { _id: userId },

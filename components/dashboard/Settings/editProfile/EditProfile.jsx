@@ -134,27 +134,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
     );
   };
 
-  const uploadToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "xdfggik7"); // replace 'your_upload_preset' with your actual preset
 
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dhwthoh1u/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.secure_url) {
-      return data.secure_url;
-    } else {
-      throw new Error("Failed to upload to Cloudinary");
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -217,6 +197,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
         selectedFile={state.selectedFile}
         open={isModalOpen}
         onClose={() => handleCloseModal()}
+        setState={setState}
         state={JSON.stringify(state)}
         initialState={JSON.stringify(initialState)}
       />

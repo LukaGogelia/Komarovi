@@ -2,7 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Preloader from "@/components/common/Preloader";
 import Settings from "@/components/dashboard/Settings/Settings";
 import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import getPersonById from "@/data/mongoDb/getPersonById";
 import extractDate from "@/utils/extractDate";
 import { getServerSession } from "next-auth";
@@ -55,7 +55,7 @@ export default async function page() {
     <div className="barba-container" data-barba="container">
       <main className="main-content">
         <Preloader />
-        <HeaderDashboard />
+        <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
             id="dashboardOpenClose"

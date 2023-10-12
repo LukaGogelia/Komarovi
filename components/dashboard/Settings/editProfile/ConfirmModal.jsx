@@ -16,26 +16,57 @@ export default function ConfirmModal({
   open,
   onClose,
   state,
+  setState,
   initialState,
 }) {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "xdfggik7"); // replace 'your_upload_preset' with your actual preset
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dhwthoh1u/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.secure_url) {
+      return data.secure_url;
+    } else {
+      throw new Error("Failed to upload to Cloudinary");
+    }
+  };
+
+
+
   const handleSaveChanges = async () => {
+    console.log("we are here");
     try {
+      // setSubmitting(true);
+      const uploadedImageUrl = await uploadToCloudinary(selectedFile);
+
       console.log("Sending data:", {
+        profilePictureUrl: uploadedImageUrl,
         email: parsedState.email,
         phone: parsedState.phone,
         actualAddress: {
-          region: parsedState.selectedRegions.actual,
-          adminUnit: parsedState.selectedUnits.actual,
-          addressLine: parsedState.addresses.actual,
+          region: parsedState.selectedRegions?.actual,
+          adminUnit: parsedState.selectedUnits?.actual,
+          addressLine: parsedState.addresses?.actual,
         },
         registrationAddress: {
-          region: parsedState.selectedRegions.registration,
-          adminUnit: parsedState.selectedUnits.registration,
-          addressLine: parsedState.addresses.registration,
+          region: parsedState.selectedRegions?.registration,
+          adminUnit: parsedState.selectedUnits?.registration,
+          addressLine: parsedState.addresses?.registration,
         },
         password: password,
       });
@@ -46,7 +77,7 @@ export default function ConfirmModal({
         },
 
         body: JSON.stringify({
-          // Assuming you store nationalId in session
+          profilePictureUrl: uploadedImageUrl,
           email: parsedState.email,
           phone: parsedState.phone,
           actualAddress: {
@@ -66,10 +97,8 @@ export default function ConfirmModal({
       const responseData = await response.json();
 
       if (response.ok) {
-        // Handle success
-        console.log("Profile updated successfully", responseData);
-        router.refresh();
-        onClose();
+        window.location.reload();
+
       } else {
         if (response.status !== 200) {
           if (responseData.error && responseData.error.includes("password")) {
@@ -223,12 +252,12 @@ export default function ConfirmModal({
             Cancel
           </button>
           <button
-            className={`button -sm ${
-              password.length
-                ? "btn-save btn-saveble text-white"
-                : "btn-save -purple-3 btn-unsaveble text-purple-1 cursor-normal"
-            }`}
+            className={`button -sm ${!submitting || password.length
+              ? "btn-save btn-saveble text-white"
+              : "btn-save -purple-3 btn-unsaveble text-purple-1 cursor-normal"
+              }`}
             onClick={handleSaveChanges}
+            disabled={submitting || !password.length}
           >
             Save Changes
           </button>
