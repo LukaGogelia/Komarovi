@@ -3,12 +3,10 @@ import { tags } from "@/data/blog";
 import Image from "next/image";
 import { News } from "@/data/mongoDb/models/news";
 import mongoose from "mongoose";
+import dbConnect from "@/data/mongoDb/utils/database";
 
 async function getData(id) {
-  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await dbConnect();
 
   const query = {};
   query._id = id;
@@ -16,7 +14,7 @@ async function getData(id) {
   const newsItems = await News.findOne(
     query,
     "_id title imageSmall datePosted category"
-  ).populate("category", "name");
+  )
 
   return newsItems;
 }
@@ -32,7 +30,7 @@ export default async function BlogDetails({ id }) {
               <div className="col-auto">
                 <div>
                   <div className="text-14 text-purple-1 uppercase fw-500 mb-8">
-                    {data.category.name.toUpperCase()}
+                    {/* {data.category.name.toUpperCase()} */}
                   </div>
 
                   <h1 className="page-header__title lh-14">

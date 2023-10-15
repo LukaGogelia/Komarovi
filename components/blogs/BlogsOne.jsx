@@ -6,12 +6,10 @@ import Link from "next/link";
 
 import { News } from "@/data/mongoDb/models/news";
 import { Category } from "@/data/mongoDb/models/category";
+import dbConnect from "@/data/mongoDb/utils/database";
 
 async function getData(props) {
-  await mongoose.connect("mongodb://127.0.0.1:27017/komarovi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await dbConnect();
 
   const categories = await Category.find({});
 
@@ -89,19 +87,18 @@ export default async function BlogsOne({ searchParams }) {
                     href={
                       elm.slug !== ""
                         ? {
-                            pathname: "/news",
-                            query: { category: elm.slug },
-                          }
+                          pathname: "/news",
+                          query: { category: elm.slug },
+                        }
                         : { pathname: "/news" }
                     }
                   >
                     <button
                       className={`tabs__button px-15 py-8 rounded-8 js-tabs-button
-                        ${
-                          searchParams.category === elm.slug ||
+                        ${searchParams.category === elm.slug ||
                           (!searchParams.category && elm.slug === "")
-                            ? "is-active"
-                            : ""
+                          ? "is-active"
+                          : ""
                         } `}
                       data-tab-target=".-tab-item-1"
                       type="button"
@@ -135,7 +132,7 @@ export default async function BlogsOne({ searchParams }) {
                         </div>
                         <div className="blogCard__content mt-20">
                           <div className="blogCard__category">
-                            {elm.category.name}
+                            {elm.category?.name}
                           </div>
                           <h4 className="blogCard__title text-20 lh-15 fw-500 mt-5">
                             <Link
