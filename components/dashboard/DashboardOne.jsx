@@ -17,7 +17,7 @@ import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
 import { User } from "@/data/mongoDb/models/user";
 import { PointsCommissionDecision } from "@/data/mongoDb/models/pointsCommissionDecision";
 import { connectDb } from "./ConnectToDb";
-import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
+import { fetchTeachers } from "@/app/[locale]/(aboutCourses)/instructors-list-2/page";
 import { fetchData } from "./Reviews";
 import { Attendance } from "@/data/mongoDb/models/";
 

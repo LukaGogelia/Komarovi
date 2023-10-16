@@ -8,7 +8,9 @@ const MobileMenu = dynamic(() => import("../component/MobileMenu"));
 const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
+import { Select, MenuItem } from "@mui/material";
 import dynamic from "next/dynamic";
+import Socials from "@/components/common/Socials";
 export default function HeaderSeven() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -102,12 +104,14 @@ export default function HeaderSeven() {
                 <Link href="/login" className="button -underline text-purple-1">
                   Log in
                 </Link>
-                <Link
-                  href="/signup"
-                  className="button h-50 px-30 -purple-3 -rounded text-purple-1 ml-15"
-                >
-                  Sign up
-                </Link>
+                <Select className="new-input">
+                  <MenuItem>
+                    <Link>england</Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link>deutschland</Link>
+                  </MenuItem>
+                </Select>
               </div>
             </div>
           </div>

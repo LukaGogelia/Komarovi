@@ -4,7 +4,7 @@ import Grades from "@/components/dashboard/Grades";
 import Sidebar from "@/components/dashboard/Sidebar";
 import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import React from "react";
-import { fetchClasses } from "../../dshb-grades-list/page";
+import { fetchClasses } from "../../../dshb-grades-list/page";
 import { Student } from "@/data/mongoDb/models/student";
 import { connectDb } from "@/components/dashboard/ConnectToDb";
 import { CurrentClass } from "@/data/mongoDb/models/currentClass";
