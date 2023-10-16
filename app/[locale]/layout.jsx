@@ -6,6 +6,8 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-calendar/dist/Calendar.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { useLocale } from 'next-intl';
+import { notFound } from 'next/navigation';
 config.autoAddCss = false;
 
 import AOS from "aos";
@@ -14,7 +16,11 @@ import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Context from "@/context/Context";
 
-export default function RootLayout({ children }) {
+const locales = ['en', 'ge'];
+
+export default function RootLayout({ children, params: { locale } }) {
+  const isValidLocale = locales.some((cur) => cur === locale);
+  if (!isValidLocale) notFound();
   useEffect(() => {
     AOS.init({
       duration: 700,
@@ -24,7 +30,7 @@ export default function RootLayout({ children }) {
     });
   }, []);
   return (
-    <html lang="en" className="">
+    <html lang={locale} className="">
       <head></head>
       <body>
         <Context>

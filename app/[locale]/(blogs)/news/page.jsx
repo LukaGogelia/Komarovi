@@ -1,7 +1,7 @@
 import BlogsOne from "@/components/blogs/BlogsOne";
 import PageLinks from "@/components/common/PageLinks";
 import Preloader from "@/components/common/Preloader";
-
+import { useTranslations } from 'next-intl';
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header from "@/components/layout/headers/Header";
 import React from "react";
@@ -14,6 +14,7 @@ export const metadata = {
 };
 
 export default function page({ searchParams }) {
+  const t = useTranslations('Index');
   return (
     <div className="main-content  ">
       <Preloader />
@@ -22,7 +23,7 @@ export default function page({ searchParams }) {
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks />
 
-        <BlogsOne searchParams={searchParams} />
+        <BlogsOne searchParams={searchParams} t={t} />
 
         <FooterOne />
       </div>

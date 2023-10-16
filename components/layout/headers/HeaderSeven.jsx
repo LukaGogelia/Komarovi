@@ -8,6 +8,7 @@ const MobileMenu = dynamic(() => import("../component/MobileMenu"));
 const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
+import I18nLink from "next-intl/link"
 import { Select, MenuItem } from "@mui/material";
 import dynamic from "next/dynamic";
 import Socials from "@/components/common/Socials";
@@ -40,9 +41,8 @@ export default function HeaderSeven() {
   }, []);
   return (
     <header
-      className={`header -type-4 js-header ${
-        scrollPosition > 40 ? "bg-white" : ""
-      }`}
+      className={`header -type-4 js-header ${scrollPosition > 40 ? "bg-white" : ""
+        }`}
     >
       <div className="header__container py-10">
         <div className="row justify-between items-center">
@@ -106,10 +106,10 @@ export default function HeaderSeven() {
                 </Link>
                 <Select className="new-input">
                   <MenuItem>
-                    <Link>england</Link>
+                    <I18nLink href="/" locale="en">England</I18nLink>
                   </MenuItem>
                   <MenuItem>
-                    <Link>deutschland</Link>
+                    <I18nLink href="/" locale="ge">Georgia</I18nLink>
                   </MenuItem>
                 </Select>
               </div>

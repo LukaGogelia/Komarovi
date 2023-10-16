@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import mongoose from "mongoose";
-
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 import { News } from "@/data/mongoDb/models/news";
@@ -39,7 +39,9 @@ async function getData(props) {
   return { categories, newsItems };
 }
 
-export default async function BlogsOne({ searchParams }) {
+export default async function BlogsOne({ searchParams, t }) {
+
+
   const { categories, newsItems } = await getData(
     searchParams && searchParams.category
       ? { selectedCategory: searchParams.category }
@@ -56,12 +58,12 @@ export default async function BlogsOne({ searchParams }) {
               <div className="col-auto">
                 <div>
                   <h1 className="page-header__title">
-                    Latest
+                    {t('title1')}
                     {searchParams.category &&
                       ` ${searchParams.category[0].toUpperCase()}${searchParams.category.slice(
                         1
                       )}`}{" "}
-                    News
+                    {t('title2')}
                   </h1>
                 </div>
 
