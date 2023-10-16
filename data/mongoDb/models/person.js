@@ -22,98 +22,109 @@ const addressSchema = new mongoose.Schema(
   }
 );
 
-const personSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-
-  actualAddress: addressSchema,
-
-  registrationAddress: addressSchema,
-
-  nationalId: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-  },
-  profilePictureUrl: {
-    type: String,
-    trim: true,
-  },
-  birthDate: {
-    type: Date,
-    required: true,
-  },
-  phone: {
-    type: String,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  socialProfiles: {
-    facebook: {
+const personSchema = new mongoose.Schema(
+  {
+    firstName: {
       type: String,
+      required: true,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
       trim: true,
     },
 
-    instagram: {
-      type: String,
-      trim: true,
-    },
-    x: {
-      // formerly Twitter
-      type: String,
-      trim: true,
-    },
-    linkedIn: {
-      type: String,
-      trim: true,
-    },
-  },
+    actualAddress: addressSchema,
 
-  user: {
-    password: {
-      type: String,
-      trim: true, // Only trim; make it required if you want.
-    },
-    registrationDate: {
-      type: Date, // Capture the date and time
-      default: null, // By default, set it to null if they haven't registered
-    },
-  },
+    registrationAddress: addressSchema,
 
-  registered: {
-    type: Boolean,
-    default: false,
-  },
-  roles: [
-    {
-      roleType: {
+    nationalId: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    profilePictureUrl: {
+      type: String,
+      trim: true,
+    },
+    birthDate: {
+      type: Date,
+      required: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    socialProfiles: {
+      facebook: {
         type: String,
-        enum: Object.values(ROLES),
-        required: true,
+        trim: true,
       },
-      refId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        refPath: "roles.roleType",
+
+      instagram: {
+        type: String,
+        trim: true,
+      },
+      x: {
+        // formerly Twitter
+        type: String,
+        trim: true,
+      },
+      linkedIn: {
+        type: String,
+        trim: true,
       },
     },
-  ],
-});
 
-export const Person =
-  mongoose.models.Person || mongoose.model("Person", personSchema);
+    user: {
+      password: {
+        type: String,
+        trim: true, // Only trim; make it required if you want.
+      },
+      registrationDate: {
+        type: Date, // Capture the date and time
+        default: null, // By default, set it to null if they haven't registered
+      },
+    },
+
+    registered: {
+      type: Boolean,
+      default: false,
+    },
+    roles: [
+      {
+        roleType: {
+          type: String,
+          enum: Object.values(ROLES),
+          required: true,
+        },
+        refId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: "roles.roleType",
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+let Person;
+if (mongoose.models.Person) {
+  Person = mongoose.model("Person");
+} else {
+  Person = mongoose.model("Person", personSchema);
+}
+
+module.exports = Person;

@@ -1,4 +1,4 @@
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import React from "react";
 import Preloader from "@/components/common/Preloader";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -74,7 +74,7 @@ export default async function page() {
       <div className="barba-container" data-barba="container">
         <main className="main-content">
           <Preloader />
-          <HeaderDashboard />
+          <ServerHeaderDashboard />
 
           <div className="content-wrapper js-content-wrapper overflow-hidden">
             <div

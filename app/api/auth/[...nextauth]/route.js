@@ -12,16 +12,22 @@ export const authOptions = {
 
       async authorize(credentials) {
         const { email, password } = credentials;
-
+        console.log(email, password);
         try {
           await dbConnect();
-          const user = await Person.findOne({ email });
+          const user = await Person.findOne({
+            $or: [{ nationalId: email }, { phone: email }, { email: email }],
+          });
+
           console.log(user);
           if (!user) {
             return null;
           }
 
-          const passwordsMatch = await bcrypt.compare(password, user.user.password);
+          const passwordsMatch = await bcrypt.compare(
+            password,
+            user.user.password
+          );
 
           if (!passwordsMatch) {
             return null;
@@ -107,7 +113,6 @@ export { handler as GET, handler as POST };
 //       return token;
 //     },
 
-
 //     async session(session, token) {
 //       if (token?._id) {
 //         session.user = { _id: token._id };
@@ -116,8 +121,6 @@ export { handler as GET, handler as POST };
 //     }
 
 //   },
-
-
 
 //   secret: process.env.NEXTAUTH_SECRET,
 

@@ -14,10 +14,12 @@ import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
+
 import { User } from "@/data/mongoDb/models";
 import PointsCommissionDecision from "@/data/mongoDb/models/pointsCommissionDecision";
-// import { connectDb } from "./ConnectToDb";
-import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
+
+import { fetchTeachers } from "@/app/[locale]/(aboutCourses)/instructors-list-2/page";
+
 import { fetchData } from "./Reviews";
 import Attendance from "@/data/mongoDb/models/attendance";
 import dbConnect from "@/data/mongoDb/utils/database";

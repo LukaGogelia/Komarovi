@@ -3,7 +3,7 @@ import { coursesData } from "@/data/courses";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
+import { fetchTeachers } from "@/app/[locale]/(aboutCourses)/instructors-list-2/page";
 export default async function InstractorSingle({ id }) {
   const activeTab = 1;
   const { teamMembers } = await fetchTeachers();

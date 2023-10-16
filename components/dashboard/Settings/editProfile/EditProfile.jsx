@@ -1,22 +1,34 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ImageUpload from "./editProfileComponents/ImageUpload";
+import ImageUpload from "./ImageUpload";
 import TextField from "@mui/material/TextField";
-import ConfirmModal from "./editProfileComponents/ConfirmModal";
+import ConfirmModal from "./ConfirmModal";
 import Grid from "@mui/material/Grid";
-import RegionDropdowns from "./editProfileComponents/RegionDropdowns";
+import RegionDropdowns from "./RegionDropdowns";
 
 export default function EditProfile({ activeTab, editProfileProps: data }) {
   console.log(data);
 
-  const initialState = data.initialState;
+  const initialState = { ...data.initialState };
 
   const [state, setState] = useState(initialState);
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEmailFocused, setEmailFocused] = useState(false);
+
+  useEffect(() => {
+    // Validate email on initial load
+    if (state.email && !isValidEmail(state.email)) {
+      setEmailError("Invalid email format");
+    }
+
+    // Validate phone on initial load
+    if (state.phone && !isValidPhone(state.phone)) {
+      setPhoneError("Invalid phone format");
+    }
+  }, []);
 
   const handleEmailFocus = () => {
     setEmailFocused(true);
@@ -122,27 +134,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
     );
   };
 
-  const uploadToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "xdfggik7"); // replace 'your_upload_preset' with your actual preset
 
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dhwthoh1u/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.secure_url) {
-      return data.secure_url;
-    } else {
-      throw new Error("Failed to upload to Cloudinary");
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -205,6 +197,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
         selectedFile={state.selectedFile}
         open={isModalOpen}
         onClose={() => handleCloseModal()}
+        setState={setState}
         state={JSON.stringify(state)}
         initialState={JSON.stringify(initialState)}
       />
@@ -329,11 +322,10 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             </Grid>
             <Grid item xs={12}>
               <button
-                className={`button -md ${
-                  hasStateChanged()
-                    ? "-purple-1 text-white"
-                    : "-purple-3 text-purple-1 btn-disabled"
-                }`}
+                className={`button -md ${hasStateChanged()
+                  ? "-purple-1 text-white"
+                  : "-purple-3 text-purple-1 btn-disabled"
+                  }`}
                 disabled={!hasStateChanged()}
               >
                 Update Profile

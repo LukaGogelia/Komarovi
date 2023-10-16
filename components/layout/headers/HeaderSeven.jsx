@@ -8,7 +8,10 @@ const MobileMenu = dynamic(() => import("../component/MobileMenu"));
 const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
+import I18nLink from "next-intl/link"
+import { Select, MenuItem } from "@mui/material";
 import dynamic from "next/dynamic";
+import Socials from "@/components/common/Socials";
 export default function HeaderSeven() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -38,9 +41,8 @@ export default function HeaderSeven() {
   }, []);
   return (
     <header
-      className={`header -type-4 js-header ${
-        scrollPosition > 40 ? "bg-white" : ""
-      }`}
+      className={`header -type-4 js-header ${scrollPosition > 40 ? "bg-white" : ""
+        }`}
     >
       <div className="header__container py-10">
         <div className="row justify-between items-center">
@@ -102,12 +104,14 @@ export default function HeaderSeven() {
                 <Link href="/login" className="button -underline text-purple-1">
                   Log in
                 </Link>
-                <Link
-                  href="/signup"
-                  className="button h-50 px-30 -purple-3 -rounded text-purple-1 ml-15"
-                >
-                  Sign up
-                </Link>
+                <Select className="new-input">
+                  <MenuItem>
+                    <I18nLink href="/" locale="en">England</I18nLink>
+                  </MenuItem>
+                  <MenuItem>
+                    <I18nLink href="/" locale="ge">Georgia</I18nLink>
+                  </MenuItem>
+                </Select>
               </div>
             </div>
           </div>

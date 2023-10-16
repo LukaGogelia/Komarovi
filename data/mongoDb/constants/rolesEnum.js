@@ -4,6 +4,7 @@ const ROLES = {
     ADMIN: 'Admin',
     CARE_MANAGER: 'CareManager',
     PARENT: 'Parent',
+    USER: 'User'
 };
 
 module.exports = ROLES;

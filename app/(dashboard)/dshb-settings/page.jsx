@@ -2,7 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Preloader from "@/components/common/Preloader";
 import Settings from "@/components/dashboard/Settings/Settings";
 import Sidebar from "@/components/dashboard/Sidebar";
-import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
+import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import getPersonById from "@/data/mongoDb/getPersonById";
 import extractDate from "@/utils/extractDate";
 import { getServerSession } from "next-auth";
@@ -15,7 +15,7 @@ export const metadata = {
 };
 export default async function page() {
   const session = await getServerSession(authOptions);
-  let editProfileProps;
+  let editProfileProps, socialProfilesProps;
   if (session) {
     const person = await getPersonById(session?.user.name);
 
@@ -44,12 +44,18 @@ export default async function page() {
         },
       },
     };
+    socialProfilesProps = {
+      facebook: person.socialProfiles.facebook,
+      instagram: person.socialProfiles.instagram,
+      x: person.socialProfiles.x,
+      linkedIn: person.socialProfiles.linkedIn,
+    };
   }
   return (
     <div className="barba-container" data-barba="container">
       <main className="main-content">
         <Preloader />
-        <HeaderDashboard />
+        <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
             id="dashboardOpenClose"
@@ -58,7 +64,10 @@ export default async function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <Settings editProfileProps={editProfileProps} />
+            <Settings
+              editProfileProps={editProfileProps}
+              socialProfilesProps={socialProfilesProps}
+            />
           </div>
         </div>
       </main>
