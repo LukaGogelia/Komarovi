@@ -3,14 +3,20 @@ import mongoose from "mongoose";
 import { PointsCommissionDecision } from "../../data/mongoDb/models/pointsCommissionDecision";
 import Star from "../common/Star";
 import Image from "next/image";
-import { connectDb } from "./ConnectToDb.jsx";
-import { Student } from "../../data/mongoDb/models/student";
+// import { connectDb } from "./ConnectToDb.jsx";
+import Student from "../../data/mongoDb/models/student";
+import dbConnect from "@/data/mongoDb/utils/database";
 
 // require("./../../data/mongoDb/database.js");
 
 export const fetchData = async () => {
-  await connectDb();
+  await dbConnect();
   const studentId = "64e52ffb1436edfda9379761";
+
+  // Check if mongoose is connected
+  if (mongoose.connection.readyState !== 1) {
+    throw new Error("Database not connected.");
+  }
 
   // Fetch the student by ID with their decisions
   const student = await Student.findOne({ _id: studentId }).populate(
@@ -24,9 +30,9 @@ export const fetchData = async () => {
       if (decision && Object.keys(decision).length > 0) {
         console.log(
           `Decision ${index + 1}:`,
-          JSON.stringify(decision, null, 2) // Nicely formatted JSON
+          JSON.stringify(decision, null, 2)
         );
-        decisionsList.push(decision); // Push decision to decisionsList array
+        decisionsList.push(decision);
       } else {
         console.log(`Decision ${index + 1} is empty.`);
       }
@@ -38,7 +44,6 @@ export const fetchData = async () => {
   // Get the last five decisions
   const lastFiveDecisionsList = decisionsList.slice(0, 5);
 
-  mongoose.connection.close();
   return { decisionsList, lastFiveDecisionsList };
 };
 

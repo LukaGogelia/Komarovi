@@ -1,7 +1,7 @@
-import dbConnect from "@/data/mongoDb/database";
-import { Teacher } from "@/data/mongoDb/models";
-import { Student } from "@/data/mongoDb/models";
-import { GradeEntry } from "@/data/mongoDb/models";
+import dbConnect from "@/data/mongoDb/utils/database";
+import Teacher from "@/data/mongoDb/models/teacher";
+import Student from "@/data/mongoDb/models/student";
+import GradeEntry from "@/data/mongoDb/models/gradeEntry";
 
 export default async function deleteHandler(req, res) {
   const { method } = req;

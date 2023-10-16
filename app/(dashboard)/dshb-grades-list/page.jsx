@@ -3,11 +3,11 @@ import React from "react";
 import Preloader from "@/components/common/Preloader";
 import Sidebar from "@/components/dashboard/Sidebar";
 import GradesList from "@/components/dashboard/GradesList";
-import { Teacher } from "@/data/mongoDb/models/teacher";
-import { connectDb } from "@/components/dashboard/ConnectToDb";
-
+// import Teacher from "@/data/mongoDb/models/teacher";
+import dbConnect from "@/data/mongoDb/utils/database";
+import Teacher from "@/data/mongoDb/models/teacher";
 export async function fetchClasses() {
-  await connectDb();
+  await dbConnect();
 
   const teacherId = "64e8d8e05ab36dd9eb96add1";
 
@@ -27,17 +27,26 @@ export async function fetchClasses() {
   // If no classData found, return an empty array
   if (!classData) return [];
 
+  console.log("entry", classData.classTaught);
+
   // Map over the classTaught array to get the desired format
-  const classInfoArray = classData.classTaught.map((entry) => {
-    return {
-      _id: entry.classId._id,
-      parallelNumber: entry.classId.parallelNumber,
-      gradeLevel: entry.classId.gradeLevel,
-      academicYear: entry.classId.academicYear,
-      subject: entry.subject.subject, // Accessing the populated 'subject' property from the Subject schema for the name
-      subjectId: entry.subject._id, // Accessing the populated '_id' property from the Subject schema
-    };
-  });
+  const classInfoArray = classData.classTaught
+    .map((entry) => {
+      if (!entry.classId) {
+        console.error("entry.classId is null or undefined:", entry);
+        return null;
+      }
+
+      return {
+        _id: entry.classId._id,
+        parallelNumber: entry.classId.parallelNumber,
+        gradeLevel: entry.classId.gradeLevel,
+        academicYear: entry.classId.academicYear,
+        subjectName: entry.subject.subject, // add this line
+        subjectId: entry.subject._id, // add this line if you need the id
+      };
+    })
+    .filter(Boolean);
 
   const updatedArray = classInfoArray.map((classInfo, index) => {
     return {

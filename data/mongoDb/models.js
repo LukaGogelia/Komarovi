@@ -522,76 +522,76 @@ StudentSchema.methods.getStudentPoints = async function () {
 const Student =
   mongoose.models.Student || mongoose.model("Student", StudentSchema);
 
-const attendanceSchema = new Schema({
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
-  key: {
-    type: String,
-    enum: ["yes", "no"],
-    required: true,
-    default: "yes",
-  },
-  subject: {
-    type: Schema.Types.ObjectId,
-    ref: "Subject", // This assumes that your Subject schema is named 'Subject'
-    required: true,
-  },
-});
+// const attendanceSchema = new Schema({
+//   date: {
+//     type: Date,
+//     required: true,
+//     default: Date.now,
+//   },
+//   key: {
+//     type: String,
+//     enum: ["yes", "no"],
+//     required: true,
+//     default: "yes",
+//   },
+//   subject: {
+//     type: Schema.Types.ObjectId,
+//     ref: "Subject", // This assumes that your Subject schema is named 'Subject'
+//     required: true,
+//   },
+// });
 
-const Attendance =
-  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
+// const Attendance =
+//   mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
-const TimeTableSchema = new mongoose.Schema({
-  day: {
-    type: String,
-    required: true,
-    enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-  },
-  lessons: [
-    {
-      subject: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subject",
-        required: true,
-      },
-      timeSlotId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "TimeSlot",
-        required: true,
-      },
-    },
-  ],
-});
+// const TimeTableSchema = new mongoose.Schema({
+//   day: {
+//     type: String,
+//     required: true,
+//     enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+//   },
+//   lessons: [
+//     {
+//       subject: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Subject",
+//         required: true,
+//       },
+//       timeSlotId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "TimeSlot",
+//         required: true,
+//       },
+//     },
+//   ],
+// });
 
-const TimeTable =
-  mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
+// const TimeTable =
+//   mongoose.models.TimeTable || mongoose.model("TimeTable", TimeTableSchema);
 
-const timeSlotSchema = new mongoose.Schema({
-  number: {
-    type: Number,
-    required: true,
-    unique: true, // Assuming each time slot has a unique number
-  },
-  time: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function (v) {
-        // This regex will validate a string of format "HH:MM - HH:MM"
-        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(
-          v
-        );
-      },
-      message: (props) => `${props.value} is not a valid time slot format!`,
-    },
-  },
-});
+// const timeSlotSchema = new mongoose.Schema({
+//   number: {
+//     type: Number,
+//     required: true,
+//     unique: true, // Assuming each time slot has a unique number
+//   },
+//   time: {
+//     type: String,
+//     required: true,
+//     validate: {
+//       validator: function (v) {
+//         // This regex will validate a string of format "HH:MM - HH:MM"
+//         return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(
+//           v
+//         );
+//       },
+//       message: (props) => `${props.value} is not a valid time slot format!`,
+//     },
+//   },
+// });
 
-const TimeSlot =
-  mongoose.models.TimeSlot || mongoose.model("TimeSlot", timeSlotSchema);
+// const TimeSlot =
+//   mongoose.models.TimeSlot || mongoose.model("TimeSlot", timeSlotSchema);
 
 const dayOffSchema = new mongoose.Schema({
   date: {
@@ -627,9 +627,7 @@ module.exports = {
   HouseLeader,
   Admin,
   Teacher,
-  Attendance,
   Subject,
-  TimeTable,
-  TimeSlot,
+
   DayOff,
 };
