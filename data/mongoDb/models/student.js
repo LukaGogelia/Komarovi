@@ -84,6 +84,12 @@ const StudentSchema = new Schema({
       },
     },
   ],
+  attendanceIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Attendance", // Reference to the Attendance collection
+    },
+  ],
 });
 
 StudentSchema.methods.getStudentPoints = async function () {
@@ -107,3 +113,4 @@ StudentSchema.methods.getStudentPoints = async function () {
 
 export const Student =
   mongoose.models.Student || mongoose.model("Student", StudentSchema);
+export default Student;

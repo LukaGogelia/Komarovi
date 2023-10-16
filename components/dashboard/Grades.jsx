@@ -601,10 +601,16 @@ export default function Grades({ studentInfoArray }) {
     );
     setAttendanceData((prevData) => {
       const updatedData = { ...prevData };
-      const studentAttendance = updatedData[studentId].filter(
-        (entry) => entry._id !== id
-      );
-      updatedData[studentId] = studentAttendance;
+      if (updatedData[studentId] && Array.isArray(updatedData[studentId])) {
+        const studentAttendance = updatedData[studentId].filter(
+          (entry) => entry._id !== id
+        );
+        updatedData[studentId] = studentAttendance;
+      } else {
+        console.warn(
+          `No data found for studentId: ${studentId} or it's not an array.`
+        );
+      }
       return updatedData;
     });
   };

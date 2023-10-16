@@ -11,3 +11,4 @@ const GradeEntrySchema = new Schema({
 
 export const GradeEntry =
   mongoose.models.GradeEntry || mongoose.model("GradeEntry", GradeEntrySchema);
+module.exports = GradeEntry;
