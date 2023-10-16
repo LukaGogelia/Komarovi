@@ -1,14 +1,16 @@
 const mongoose = require("mongoose");
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+// Module-level caching
+let cached = { conn: null, promise: null };
 
 async function dbConnect() {
   if (cached.conn) {
     return cached.conn;
+  }
+
+  if (mongoose.connection.readyState !== 0) {
+    // If we're in any state other than 'disconnected', return the existing connection
+    return mongoose.connection;
   }
 
   if (!cached.promise) {
@@ -19,9 +21,9 @@ async function dbConnect() {
 
     cached.promise = mongoose
       .connect(process.env.DATABASE_URI, opts)
-      .then((mongoose) => {
+      .then((mongooseInstance) => {
         console.log("Successfully connected to MongoDB");
-        return mongoose;
+        return mongooseInstance;
       })
       .catch((err) => {
         console.error("Error connecting to MongoDB:", err);

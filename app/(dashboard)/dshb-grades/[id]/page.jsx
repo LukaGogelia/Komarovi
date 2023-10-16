@@ -5,11 +5,11 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import HeaderDashboard from "@/components/layout/headers/HeaderDashboard";
 import React from "react";
 import { fetchClasses } from "../../dshb-grades-list/page";
-import { Student } from "@/data/mongoDb/models/student";
-import { connectDb } from "@/components/dashboard/ConnectToDb";
-import { CurrentClass } from "@/data/mongoDb/models/currentClass";
-import { TimeTable } from "@/data/mongoDb/models";
-import { ObjectId } from "mongodb";
+import Student from "@/data/mongoDb/models/student";
+import CurrentClass from "@/data/mongoDb/models/currentClass";
+import TimeTable from "@/data/mongoDb/models/timeTable";
+import { Person } from "@/data/mongoDb/models/person";
+import TimeSlot from "@/data/mongoDb/models/timeSlot";
 
 // Utility functions:
 
@@ -22,8 +22,10 @@ function countLessonsUpToDate(timeTable, subject, targetDate) {
   }).length;
 }
 const fetchStudentInfo = async (classId, subjectName, subjectId) => {
+  // await dbConnect();
   // 1. Fetch the associated timetable IDs for the class
   const currentClass = await CurrentClass.findById(classId).lean();
+
   const timetableIds = currentClass.timeTableIds;
 
   if (!timetableIds || timetableIds.length === 0) {
@@ -44,9 +46,6 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
     })
     .lean();
 
-  // Debugging output
-  console.log("Fetched timeTables:", timeTables);
-
   for (const timeTable of timeTables) {
     for (const lesson of timeTable.lessons) {
       if (!lesson.subject) {
@@ -55,14 +54,29 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
     }
   }
 
-  const studentsInClass = await Student.find({ classIds: classId }).populate(
-    "userId"
-  );
+  // Fetch all students associated with the classId
+  const students = await Student.find({ classIds: classId });
+  // Extract student _id's to fetch corresponding persons
+  const studentIds = students.map((student) => student._id);
+  // let people = await Person.find({});
+
+  // console.log("people", people);
+
+  // Fetch persons with role type 'Student' and whose refId matches any of the studentIds
+  const studentsInClass = await Person.find({
+    roles: {
+      $elemMatch: {
+        roleType: "Student",
+        refId: { $in: studentIds },
+      },
+    },
+  });
+
+  // console.log("students in class", studentsInClass);
+
   const today = new Date();
 
   const studentInfoArray = studentsInClass.map((student) => {
-    if (!student.userId) return null;
-
     const studentTimeTables = timeTables.map((timeTableInfo) => ({
       day: timeTableInfo.day,
       lessons: timeTableInfo.lessons.map((lesson) => ({
@@ -71,11 +85,15 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
       })),
       lessonsUntilToday: countLessonsUpToDate(timeTableInfo, subjectId, today),
     }));
+    const studentRole = student.roles.find(
+      (role) => role.roleType === "Student"
+    );
+    const studentRefId = studentRole ? studentRole.refId : undefined;
 
     return {
-      studentId: student._id,
-      fullName: `${student.userId.firstName} ${student.userId.lastName}`,
-      email: student.userId.email,
+      studentId: studentRefId,
+      fullName: `${student.firstName} ${student.lastName}`,
+      email: student.email,
       subjectName: subjectName,
       subjectId: subjectId,
       timeTables: studentTimeTables,
@@ -115,11 +133,7 @@ export default async function page({ params }) {
     classObj.subjectId
   );
 
-  // if (studentInfoArray && studentInfoArray.length > 0) {
-  //   console.log(studentInfoArray[0].timeTables[0]);
-  // }
-
-  // return <></>;
+  // console.log("student info array", studentInfoArray);
 
   return (
     <div className="barba-container" data-barba="container">

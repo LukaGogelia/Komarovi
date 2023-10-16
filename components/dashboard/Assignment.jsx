@@ -11,7 +11,7 @@ import UsersTable from "./AssignmentComponents/UsersTable";
 
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import axios from "axios";
-import "font-awesome/css/font-awesome.min.css";
+// import "font-awesome/css/font-awesome.min.css";
 
 export default function Assignment({ currentClasses }) {
   const [codesSaved, setCodesSaved] = useState(false);

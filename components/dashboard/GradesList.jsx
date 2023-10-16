@@ -16,6 +16,8 @@ export default function GradesList({ updatedArray, options }) {
     setSubject(String(subject));
   };
 
+  console.log("updated array", updatedArray);
+
   return (
     <>
       <style jsx>{`
@@ -102,7 +104,7 @@ export default function GradesList({ updatedArray, options }) {
                           className="coursesCard__text text-14 mt-10"
                           style={{ color: "white" }}
                         >
-                          Subject: {elm.subject}
+                          Subject: {elm.subjectName}
                         </p>
                       </div>
                     </div>

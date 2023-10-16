@@ -8,22 +8,22 @@ const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
 import { Quiz } from "@/data/mongoDb/models/quiz";
-import { Student } from "@/data/mongoDb/models/student";
+import Student from "@/data/mongoDb/models/student";
 import { Teacher } from "@/data/mongoDb/models/teacher";
 import { QuizEntry } from "@/data/mongoDb/models";
 import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
-import { User } from "@/data/mongoDb/models/user";
-import { PointsCommissionDecision } from "@/data/mongoDb/models/pointsCommissionDecision";
-import { connectDb } from "./ConnectToDb";
+import { User } from "@/data/mongoDb/models";
+import PointsCommissionDecision from "@/data/mongoDb/models/pointsCommissionDecision";
+// import { connectDb } from "./ConnectToDb";
 import { fetchTeachers } from "@/app/(aboutCourses)/instructors-list-2/page";
 import { fetchData } from "./Reviews";
-import { Attendance } from "@/data/mongoDb/models/";
-
+import Attendance from "@/data/mongoDb/models/attendance";
+import dbConnect from "@/data/mongoDb/utils/database";
 export async function fetchGradesData() {
   try {
-    await connectDb();
+    await dbConnect();
 
     const studentId = "64e52ffb1436edfda9379761";
 
@@ -81,7 +81,11 @@ export async function fetchGradesData() {
 
       // Deduplicate subjects by name
       const uniqueSubjectNames = [
-        ...new Set(gradeEntries.map((entry) => entry.subject.subject)),
+        ...new Set(
+          gradeEntries
+            .filter((entry) => entry && entry.subject) // Ensure both entry and entry.subject are defined
+            .map((entry) => entry.subject.subject)
+        ),
       ];
       const subjectList = uniqueSubjectNames.map((subjectName) => ({
         label: subjectName,
@@ -126,36 +130,38 @@ export async function fetchGradesData() {
 }
 
 export async function useFetchQuizData() {
-  await connectDb();
+  await dbConnect();
 
-  // const mathId = await Quiz.find({ subject: "math" }, "_id");
-  // const physicsId = await Quiz.find({ subject: "physics" }, "_id");
-  // const extractIds = (arr) => arr.map((item) => item._id);
-  // const mathArray = extractIds(mathId);
-  // const physicsArray = extractIds(physicsId);
   const studentId = "64e52ffb1436edfda9379761";
 
-  const mathList = await Student.findOne({ _id: studentId })
-    .populate({
-      path: "quizEntries",
-      select: "openQuestionPoints closedQuestionPoints",
-      populate: {
-        path: "quizId", // Assuming quizId is the reference to the quiz collection
-        select: "quizNumber academicYear", // Selecting only the quizNumber field
-      },
-    })
-    .exec();
+  let mathList, physicsList;
+  try {
+    mathList = await Student.findOne({ _id: studentId })
+      .populate({
+        path: "quizEntries",
+        select: "openQuestionPoints closedQuestionPoints",
+        populate: {
+          path: "quizId",
+          select: "quizNumber academicYear",
+        },
+      })
+      .exec();
 
-  const physicsList = await Student.findOne({ _id: studentId })
-    .populate({
-      path: "quizEntries",
-      select: "openQuestionPoints closedQuestionPoints",
-      populate: {
-        path: "quizId", // Assuming quizId is the reference to the quiz collection
-        select: "quizNumber academicYear", // Selecting only the quizNumber field
-      },
-    })
-    .exec();
+    console.log("mathList", mathList);
+
+    physicsList = await Student.findOne({ _id: studentId })
+      .populate({
+        path: "quizEntries",
+        select: "openQuestionPoints closedQuestionPoints",
+        populate: {
+          path: "quizId",
+          select: "quizNumber academicYear",
+        },
+      })
+      .exec();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 
   const arr = [];
   const names = [
@@ -169,43 +175,48 @@ export async function useFetchQuizData() {
     "Quiz 8",
     "Quiz 9",
     "Quiz 10",
-  ]; // Replace with the appropriate names
+  ];
 
   for (let i = 1; i < 11; i++) {
     let obj = { name: names[i - 1] };
 
-    let mathQuiz = mathList.quizEntries.find(
-      (em) => em.quizId.quizNumber === i
-    );
-    let physicsQuiz = physicsList.quizEntries.find(
-      (em) => em.quizId.quizNumber === i
-    );
+    let mathQuiz, physicsQuiz;
+
+    if (mathList && mathList.quizEntries) {
+      mathQuiz = mathList.quizEntries.find((em) => em.quizId.quizNumber === i);
+    }
+
+    if (physicsList && physicsList.quizEntries) {
+      physicsQuiz = physicsList.quizEntries.find(
+        (em) => em.quizId.quizNumber === i
+      );
+    }
 
     if (mathQuiz) {
       obj.math =
         ((mathQuiz.openQuestionPoints + mathQuiz.closedQuestionPoints) / 100) *
-        100; // Assuming total points are 100
-      obj.mathYear = mathQuiz.quizId.academicYear; // Access academicYear here
+        100;
+      obj.mathYear = mathQuiz.quizId.academicYear;
     }
 
     if (physicsQuiz) {
       obj.physics =
         ((physicsQuiz.openQuestionPoints + physicsQuiz.closedQuestionPoints) /
           100) *
-        100; // Assuming total points are 100
-      obj.physicsYear = physicsQuiz.quizId.academicYear; // Access academicYear here
+        100;
+      obj.physicsYear = physicsQuiz.quizId.academicYear;
     }
+
     if (Object.keys(obj).length > 1) {
       arr.push(obj);
     }
   }
 
-  // Return the array
   return arr;
 }
 
 export async function fetchAttendance() {
-  await connectDb();
+  await dbConnect();
 
   const studentId = "64e52ffb1436edfda9379761";
 

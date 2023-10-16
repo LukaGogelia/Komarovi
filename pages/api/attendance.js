@@ -1,8 +1,8 @@
-import dbConnect from "@/data/mongoDb/database";
-import { Student } from "@/data/mongoDb/models";
-import { Attendance } from "@/data/mongoDb/models";
+import dbConnect from "@/data/mongoDb/utils/database";
+import Attendance from "@/data/mongoDb/models/attendance";
+import mongoose from "mongoose";
+import Student from "@/data/mongoDb/models/student";
 import autoFillAttendanceForDate from "@/data/autoFillAttendance";
-
 export default async function handler(req, res) {
   const { method } = req;
 
@@ -52,10 +52,9 @@ export default async function handler(req, res) {
           data: attendanceData,
         });
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error trace:", error.stack);
         return res.status(500).json({ success: false, error: error.message });
       }
-
     case "POST":
       try {
         const {
@@ -64,6 +63,8 @@ export default async function handler(req, res) {
           date = new Date(),
           subjectId,
         } = req.body;
+
+        console.log("Request body:", req.body); // Logging the request body for debugging
 
         if (!studentId) {
           return res.status(400).json({
@@ -75,44 +76,40 @@ export default async function handler(req, res) {
         if (!subjectId) {
           return res.status(400).json({
             success: false,
-            error: "subjectId missing in the request body.",
+            error: "subjectId missing or undefined in the request body.",
           });
         }
 
         const student = await Student.findById(studentId, "classIds");
         if (!student) {
-          return res.status(404).json({
-            success: false,
-            error: "Student not found.",
-          });
+          return res
+            .status(404)
+            .json({ success: false, error: "Student not found." });
         }
 
-        // Check if attendance data already exists for the given date
         const existingAttendance = await Attendance.findOne({
           student: studentId,
-          date: new Date(date.toISOString().split("T")[0]),
+          date: new Date(date).toISOString().split("T")[0],
         });
 
         if (existingAttendance) {
           return res.status(400).json({
             success: false,
-            error: "Attendance data already exists for the given date.",
+            error:
+              "Attendance record already exists for the given student and date.",
           });
         }
 
-        // Before creating a new attendance record for today, ensure that any missing attendance records for the previous day are created
         const yesterday = new Date(date);
         yesterday.setDate(yesterday.getDate() - 1);
         await autoFillAttendanceForDate(yesterday);
 
-        // If the attendance key is not provided, default it to "yes"
         const attendanceKey = key !== undefined ? key : "yes";
 
         const newAttendance = await Attendance.create({
           key: attendanceKey,
           date: date,
           subject: subjectId,
-          student: studentId,
         });
 
         const updatedStudent = await Student.findByIdAndUpdate(

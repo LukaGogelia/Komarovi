@@ -6,27 +6,31 @@ import HeaderSeven from "@/components/layout/headers/HeaderSeven";
 import React from "react";
 // import { teamMembers } from "@/data/instractors";
 import PaginationTwo from "@/components/common/PaginationTwo";
-import { Teacher } from "@/data/mongoDb/models/teacher";
-import { connectDb } from "@/components/dashboard/ConnectToDb";
-import { User } from "@/data/mongoDb/models/user";
-import { Subject } from "@/data/mongoDb/models/subject";
+import Teacher from "@/data/mongoDb/models/teacher";
+import { Person } from "@/data/mongoDb/models/person";
+import Subject from "@/data/mongoDb/models/subject";
+import dbConnect from "@/data/mongoDb/utils/database";
 
 export async function fetchTeachers() {
-  await connectDb();
+  await dbConnect();
 
   const teachers = await Teacher.find().lean();
   const teacherIds = teachers.map((teacher) => teacher._id);
   const subjects = await Subject.find().lean();
 
-  const userNames = await User.find({
-    roles: "teacher",
-    _id: { $in: teacherIds },
+  const persons = await Person.find().lean();
+  console.log("persons", persons);
+
+  const personNames = await Person.find({
+    "roles.refId": { $in: teacherIds },
   })
     .select("firstName lastName")
     .lean();
+  console.log("personNames", personNames);
 
-  const nameMap = userNames.reduce((acc, user) => {
-    acc[user._id.toString()] = `${user.firstName} ${user.lastName}`;
+  const nameMap = personNames.reduce((acc, person) => {
+    // Changed variable from user to person
+    acc[person._id.toString()] = `${person.firstName} ${person.lastName}`; // Changed variable from user to person
     return acc;
   }, {});
 
@@ -39,6 +43,7 @@ export async function fetchTeachers() {
       teacherName = `Teacher ID: ${teacher._id}`;
     }
 
+    // console.log("teacherName", teacherName);
     // Extract subject names
     const uniqueSubjects = new Set(
       teacher.classTaught.map((classObj) => classObj.subjectName)
@@ -63,13 +68,11 @@ export async function fetchTeachers() {
       category: uniqueSubjects.size,
       students: teacher.classTaught.length,
       courses: teacher.quiz.length,
-      socialProfile: teacher.socialProfile.map((profile) => ({
-        icon: profile.icon,
-        url: profile.url,
-      })),
+      socialProfile: teacher.socialProfiles, // Adjusted to use the structure of personSchema
       subjectId: finalSubjectIds,
     };
   });
+
   const lastFiveTeamMembers = teamMembers.slice(-5);
 
   return { teamMembers, subjects, lastFiveTeamMembers };

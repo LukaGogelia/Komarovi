@@ -26,8 +26,15 @@ const CurrentClassSchema = new Schema({
       message: (props) => `${props.value} is not a valid academic year format!`,
     },
   },
+  timeTableIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TimeTable",
+      required: true,
+    },
+  ],
 });
-
-export const CurrentClass =
+const CurrentClass =
   mongoose.models.CurrentClass ||
   mongoose.model("CurrentClass", CurrentClassSchema);
+module.exports = CurrentClass;

@@ -1,7 +1,7 @@
-import dbConnect from "@/data/mongoDb/database";
-import { Teacher } from "@/data/mongoDb/models";
-import { Student } from "@/data/mongoDb/models";
-import { GradeEntry } from "@/data/mongoDb/models";
+import dbConnect from "@/data/mongoDb/utils/database";
+import Teacher from "@/data/mongoDb/models/teacher";
+import Student from "@/data/mongoDb/models/student";
+import GradeEntry from "@/data/mongoDb/models/gradeEntry";
 
 const HARDCODED_TEACHER_ID = "64e8d8e05ab36dd9eb96add1";
 
@@ -49,6 +49,8 @@ export default async function handler(req, res) {
 
     case "POST":
       try {
+        console.log(req.body);
+
         // Destructure and validate request data with default date as current date
         const {
           studentId,

@@ -32,3 +32,4 @@ const PointsCommissionDecisionSchema = new Schema({
 export const PointsCommissionDecision =
   mongoose.models.PointsCommissionDecision ||
   mongoose.model("PointsCommissionDecision", PointsCommissionDecisionSchema);
+module.exports = PointsCommissionDecision;
