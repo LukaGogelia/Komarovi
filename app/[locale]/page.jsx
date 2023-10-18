@@ -1,5 +1,6 @@
 import ServerHomeHero from "@/components/homes/heros/ServerHomeHero";
 import dynamic from "next/dynamic";
+import ServerMenu from "@/components/layout/component/ServerMenu";
 
 const Statictis = dynamic(() =>
   import("@/components/homes/Statistics/Statictis")
@@ -33,7 +34,7 @@ export const metadata = {
 };
 
 
-export default function page() {
+export default function page({ params: { locale } }) {
   const t = useTranslations("/");
   const heroText = {
     Explore: t("Explore"),
@@ -130,12 +131,11 @@ export default function page() {
     Projects: t("Projects"),
   };
 
-export default function page({ params: { locale } }) {
 
   return (
     <div className="main-content">
       <Preloader />
-      <HeaderSeven locale={locale} />
+      <HeaderSeven locale={locale} ><ServerMenu allClasses={"menu__nav -is-active"} /></HeaderSeven>
       <div className="content-wrapper  js-content-wrapper overflow-hidden">
         <HeroSeven heroText={heroText} />
         <TestimonialsSix testimonialsText={testimonialsText} />
@@ -146,7 +146,7 @@ export default function page({ params: { locale } }) {
 
         <EventsSeven eventsText={eventsText} />
         <Pricing pricingText={pricingText} />
-        <HomeHero homeHeroText={homeHeroText} />
+        <ServerHomeHero homeHeroText={homeHeroText} />
 
         <div
           style={{ backgroundColor: "white", height: "4rem", width: "100%" }}

@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useState } from "react";
 import MobileMenu from "../component/MobileMenu";
 
-export default function Header() {
+export default function Header({ children }) {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
 
   return (
@@ -41,7 +41,7 @@ export default function Header() {
               </div>
             </div>
 
-            <Menu allClasses={"menu__nav text-white -is-active"} />
+            {children}
             <MobileMenu
               setActiveMobileMenu={setActiveMobileMenu}
               activeMobileMenu={activeMobileMenu}

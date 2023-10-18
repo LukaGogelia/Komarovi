@@ -1,8 +1,10 @@
 import BlogsOne from "@/components/blogs/BlogsOne";
+import ServerMenu from "@/components/layout/component/ServerMenu";
 import PageLinks from "@/components/common/PageLinks";
 import Preloader from "@/components/common/Preloader";
 import { useTranslations } from 'next-intl';
-import FooterOne from "@/components/layout/footers/FooterOne";
+
+import FooterThree from "@/components/layout/footers/FooterThree";
 import Header from "@/components/layout/headers/Header";
 import React from "react";
 
@@ -14,18 +16,46 @@ export const metadata = {
 };
 
 export default function page({ searchParams }) {
-  const t = useTranslations('news');
+  const t = useTranslations("/");
+  const t1 = useTranslations('news');
+  const foooterText = {
+    CallUs: t("CallUs"),
+    Address: t("Address"),
+    About: t("About"),
+    AboutUs: t("AboutUs"),
+    ContactUs: t("ContactUs"),
+    Categories: t("Categories"),
+    Subject1: t("Subject1"),
+    Subject2: t("Subject2"),
+    Subject3: t("Subject3"),
+    Subject4: t("Subject4"),
+    Subject5: t("Subject5"),
+    Subject7: t("Subject7"),
+    Subject8: t("Subject8"),
+    Subject9: t("Subject9"),
+    Subject10: t("Subject10"),
+    Subject11: t("Subject11"),
+    Subject12: t("Subject12"),
+    Subject13: t("Subject13"),
+    Subject14: t("Subject14"),
+    Subject15: t("Subject15"),
+    Subject16: t("Subject16"),
+    Weekend: t("Weekend"),
+    Stem: t("Stem"),
+    Evening: t("Evening"),
+    Projects: t("Projects"),
+  };
   return (
     <div className="main-content  ">
       <Preloader />
 
-      <Header />
+      <Header><ServerMenu allClasses={"menu__nav text-white -is-active"} /></Header>
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks />
 
-        <BlogsOne searchParams={searchParams} t={t} />
+        <BlogsOne searchParams={searchParams} t={t1} />
 
-        <FooterOne />
+        <FooterThree foooterText={foooterText} />
       </div>
     </div>
   );

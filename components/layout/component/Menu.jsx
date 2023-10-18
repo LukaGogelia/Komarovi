@@ -7,7 +7,7 @@ import { menuList } from "@/data/menu";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 
-export default function Menu({ allClasses, headerPosition }) {
+export default function Menu({ allClasses, headerPosition, words }) {
   const [menuItem, setMenuItem] = useState("");
   const [submenu, setSubmenu] = useState("");
   const pathname = usePathname();
@@ -30,11 +30,11 @@ export default function Menu({ allClasses, headerPosition }) {
     });
   }, []);
 
+  const w = JSON.parse(words)
   return (
     <div
-      className={`header-menu js-mobile-menu-toggle ${
-        headerPosition ? headerPosition : ""
-      }`}
+      className={`header-menu js-mobile-menu-toggle ${headerPosition ? headerPosition : ""
+        }`}
       style={{ color: "#6440FB" }}
     >
       <div className="header-menu__content">
@@ -57,10 +57,11 @@ export default function Menu({ allClasses, headerPosition }) {
                 href="#"
                 className={menuItem == "Home" ? "activeMenu" : ""}
               >
-                Home <i className="icon-chevron-right text-13 ml-10"></i>
+                {w.home}
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
 
-              <ul className="subnav">
+              {/* <ul className="subnav">
                 <li className="menu__backButton js-nav-list-back">
                   <Link href="#">
                     <i className="icon-chevron-left text-13 mr-10"></i> Home
@@ -79,7 +80,7 @@ export default function Menu({ allClasses, headerPosition }) {
                     <Link href={elm.href}>{elm.label}</Link>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </li>
 
             <li className="menu-item-has-children -has-mega-menu">
@@ -88,10 +89,11 @@ export default function Menu({ allClasses, headerPosition }) {
                 href="#"
                 className={menuItem == "Courses" ? "activeMenu" : ""}
               >
-                Courses <i className="icon-chevron-right text-13 ml-10"></i>
+                {w.clubs}
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
 
-              <div className="mega xl:d-none">
+              {/* <div className="mega xl:d-none">
                 <div className="mega__menu">
                   <div className="row x-gap-40" style={{ color: "black" }}>
                     <div className={`col`}>
@@ -225,7 +227,7 @@ export default function Menu({ allClasses, headerPosition }) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </li>
 
             <li className="menu-item-has-children">
@@ -234,9 +236,10 @@ export default function Menu({ allClasses, headerPosition }) {
                 href="#"
                 className={menuItem == "Events" ? "activeMenu" : ""}
               >
-                Events <i className="icon-chevron-right text-13 ml-10"></i>
+                {w.events}
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
-              <ul className="subnav">
+              {/* <ul className="subnav">
                 <li
                   className="menu__backButton js-nav-list-back"
                   style={{ color: "black" }}
@@ -260,7 +263,7 @@ export default function Menu({ allClasses, headerPosition }) {
                     </Link>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </li>
 
             <li>
@@ -269,7 +272,7 @@ export default function Menu({ allClasses, headerPosition }) {
                 href="/news"
                 className={menuItem == "Blogs" ? "activeMenu" : ""}
               >
-                News
+                {w.news}
                 {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
               {/* <ul className="subnav">
@@ -302,16 +305,18 @@ export default function Menu({ allClasses, headerPosition }) {
                 href="#"
                 className={menuItem == "Pages" ? "activeMenu" : ""}
               >
-                Pages <i className="icon-chevron-right text-13 ml-10"></i>
+                {w.projects}
+                {/* <i className="icon-chevron-right text-13 ml-10"></i> */}
               </Link>
 
-              <ul className="subnav">
+              {/* <ul className="subnav">
                 <li className="menu__backButton js-nav-list-back">
                   <Link href="#">
-                    <i className="icon-chevron-left text-13 mr-10"></i> Pages
+                    {/* <i className="icon-chevron-left text-13 mr-10"></i>  
+                    Pages
                   </Link>
                 </li>
-                <li className="menu-item-has-children">
+                 <li className="menu-item-has-children">
                   <Link
                     href="#"
                     className={
@@ -344,7 +349,7 @@ export default function Menu({ allClasses, headerPosition }) {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> 
 
                 <li className="menu-item-has-children">
                   <Link
@@ -429,7 +434,7 @@ export default function Menu({ allClasses, headerPosition }) {
                       </Link>
                     </li>
                   ))}
-              </ul>
+              </ul> */}
             </li>
 
             <li>
@@ -440,7 +445,7 @@ export default function Menu({ allClasses, headerPosition }) {
                   pathname == "/contact-1" ? "activeMenu" : "inActiveMenuTwo"
                 }
               >
-                Contact
+                {w.contact}
               </Link>
             </li>
           </ul>
@@ -449,7 +454,7 @@ export default function Menu({ allClasses, headerPosition }) {
         {/* mobile footer start */}
         <MobileFooter />
         {/* mobile footer end */}
-      </div>
+      </div >
 
       <div
         className="header-menu-close"
@@ -461,6 +466,6 @@ export default function Menu({ allClasses, headerPosition }) {
       </div>
 
       <div className="header-menu-bg"></div>
-    </div>
+    </div >
   );
 }

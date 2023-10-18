@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
-import Menu from "../component/Menu";
+import ServerMenu from "../component/ServerMenu";
 import MobileMenu from "../component/MobileMenu";
 import Link from "next/link";
 
-export default function HeaderAuth() {
+export default function HeaderAuth({ children }) {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   return (
     <header className="header -base js-header">
@@ -18,7 +18,7 @@ export default function HeaderAuth() {
                   <Image
                     width={140}
                     height={50}
-                    src="/assets/img/general/logo.svg"
+                    src="/assets/img/general/logo-white.png"
                     alt="logo"
                   />
                 </Link>
@@ -28,7 +28,7 @@ export default function HeaderAuth() {
 
           <div className="col-auto">
             <div className="header-right d-flex items-center">
-              <Menu allClasses={"menu__nav text-dark-1 -is-active"} />
+              {children}
               <MobileMenu
                 activeMobileMenu={activeMobileMenu}
                 setActiveMobileMenu={setActiveMobileMenu}
@@ -51,7 +51,7 @@ export default function HeaderAuth() {
                   href="signup"
                   className="button -sm -rounded -dark-1 text-white"
                 >
-                  Sign Up
+                  რეგისტრაცია
                 </a>
               </div>
             </div>

@@ -2,7 +2,7 @@ export function getFooterLinks(foooterText) {
   return {
     footerLinks: [
       {
-        title: foooterText.About,
+        title: foooterText?.About,
         links: [
           { href: "/about-1", label: foooterText.AboutUs },
           { href: "/blog-list-1", label: "Learner Stories" },

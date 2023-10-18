@@ -2,7 +2,7 @@ import React from 'react'
 import HomeHero from './HomeHero'
 import { useTranslations } from 'next-intl'
 
-const ServerHomeHero = () => {
+const ServerHomeHero = ({ homeHeroText }) => {
 
   const t = useTranslations("/");
   const clubKeys = [
@@ -20,7 +20,7 @@ const ServerHomeHero = () => {
   });
 
   return (
-    <HomeHero clubWords={JSON.stringify(clubWords)} />
+    <HomeHero clubWords={JSON.stringify(clubWords)} homeHeroText={homeHeroText} />
   )
 }
 

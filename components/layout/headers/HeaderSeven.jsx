@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 const CartToggle = dynamic(() => import("../component/CartToggle"));
 import { HeaderExplore } from "../component/header-explore";
-const Menu = dynamic(() => import("../component/Menu"));
+const ServerMenu = dynamic(() => import("../component/ServerMenu"));
 const MobileMenu = dynamic(() => import("../component/MobileMenu"));
 // import FormControl from "@mui/material";
 
@@ -14,7 +14,7 @@ import I18nLink from "next-intl/link"
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import dynamic from "next/dynamic";
 import Socials from "@/components/common/Socials";
-export default function HeaderSeven({ locale }) {
+export default function HeaderSeven({ locale, children }) {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [newLocale, setNewLocale] = useState(locale);
@@ -72,7 +72,7 @@ export default function HeaderSeven({ locale }) {
           </div>
 
           <div className="col-auto">
-            <Menu allClasses={"menu__nav -is-active"} />
+            {children}
             <MobileMenu
               activeMobileMenu={activeMobileMenu}
               setActiveMobileMenu={setActiveMobileMenu}

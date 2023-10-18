@@ -1,3 +1,8 @@
+
+// import { useTranslations } from "next-intl";
+
+// const t = useTranslations("menu");
+
 export const menuList = [
   {
     title: "Home",

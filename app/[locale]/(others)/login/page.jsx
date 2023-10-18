@@ -1,6 +1,6 @@
 import PageLinks from "@/components/common/PageLinks";
 import Preloader from "@/components/common/Preloader";
-
+import ServerMenu from "@/components/layout/component/ServerMenu";
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header from "@/components/layout/headers/Header";
 import HeaderAuth from "@/components/layout/headers/HeaderAuth";
@@ -27,7 +27,7 @@ export default async function page() {
     <div className="main-content  ">
       <Preloader />
 
-      <HeaderAuth />
+      <HeaderAuth><ServerMenu allClasses={"menu__nav text-dark-1 -is-active"} /></HeaderAuth >
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <section className="form-page js-mouse-move-container">
           <AuthImageMove />

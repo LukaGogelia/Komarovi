@@ -1,13 +1,8 @@
 {
-  
-    
-  },
   "news": {
     "title1": "Latest",
     "title2": "News"
   },
-
-
   "/": {
     "drama-club": "Drama Club",
     "debate-club": "Debate Club",
@@ -28,7 +23,7 @@
     "young-roots": "Young Roots",
     "kombosto": "Eco Club 'Kombosto'",
     "physics-programming": "Physics & Programming",
-    "civic-education": "Civic Education Club"
+    "civic-education": "Civic Education Club",
     "Explore": "Explore",
     "Home": "Home",
     "Courses": "Pages",
@@ -79,7 +74,7 @@
     "School4": "Deepened Fundamental Knowledge",
     "School5": "Boosts Critical Thinking",
     "Clubs": "Clubs",
-    "ClubsUnder": "There are 35 different clubs",
+    "ClubsUnder": "There are 20 different clubs",
     "CallUs": "Call Us",
     "Address": "Tbilisi, Vazha-Pshavela N49",
     "About": "About",
@@ -164,7 +159,7 @@
     "Quiz": "Quiz",
     "LogOut": "Log Out",
     "CreateCourse": "Write a post"
-
+  },
   "login": {
     "login": "Login",
     "identifier": "Email, Phone, or Id number.",
@@ -237,6 +232,13 @@
     "invalidEmailFormat": "Invalid email format",
     "invalidPhoneFormat": "Invalid phone format",
     "invalidURL": "Invalid URL"
-
+  },
+  "menu": {
+    "home": "Home",
+    "clubs": "Clubs",
+    "events": "Events",
+    "news": "News",
+    "projects": "Projects",
+    "contact": "Contact"
   }
 }
