@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { counters } from "@/data/count";
-export default function Statictis() {
+import { getTranslatedCounters } from "@/data/count";
+export default function Statictis({ statisticsText }) {
   const [darkMode, setDarkMode] = useState(true);
+
+  const { counters } = getTranslatedCounters(statisticsText);
+
   return (
     <section
       className={`layout-pt-lg layout-pb-lg bg-light-7  ${
@@ -13,13 +16,9 @@ export default function Statictis() {
         <div className="row justify-center text-center">
           <div className="col-xl-6 col-lg-8 col-md-10">
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">We are Proud</h2>
+              <h2 className="sectionTitle__title ">{statisticsText.Proud}</h2>
 
-              <p className="sectionTitle__text ">
-                Certificate courses are instructed by highly educated and
-                qualified instructors who hold doctoral and master’s level
-                degrees.
-              </p>
+              <p className="sectionTitle__text ">{statisticsText.ProudUnder}</p>
             </div>
           </div>
         </div>

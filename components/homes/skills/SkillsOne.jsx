@@ -11,7 +11,7 @@ import { skillsOne } from "../../../data/skills";
 import dynamic from "next/dynamic";
 const Image = dynamic(() => import("next/image"));
 
-export default function SkillsOne() {
+export default function SkillsOne({ homeHeroText }) {
   const [showSlider, setShowSlider] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
 
@@ -24,11 +24,11 @@ export default function SkillsOne() {
         <div className="row y-gap-20 justify-center text-center">
           <div className="col-auto">
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">What will you learn</h2>
+              <h2 className="sectionTitle__title text-white">
+                {homeHeroText.Clubs}
+              </h2>
 
-              <p className="sectionTitle__text ">
-                10,000+ unique online course list designs
-              </p>
+              <p className="sectionTitle__text ">{homeHeroText.ClubsUnder}</p>
             </div>
           </div>
         </div>

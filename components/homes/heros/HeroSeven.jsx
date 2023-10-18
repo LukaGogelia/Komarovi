@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ModalVideo from "@/components/common/ModalVideo";
 import Link from "next/link";
-export default function HeroSeven() {
+export default function HeroSeven({ heroText }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -49,17 +49,15 @@ export default function HeroSeven() {
           <div className="row y-gap-50 items-center">
             <div className="col-lg-5" data-aos="fade-up" data-aos-delay="500">
               <div className="masthead__content">
-                <div className="text-17 lh-15 text-purple-1 fw-500 mb-10">
-                  Start learning for free
-                </div>
                 <h1 className="masthead__title">
-                  Build data skills
-                  <br /> <span className="text-purple-1">online</span>
+                  {heroText.BuildDataSkills}
+                  <br />{" "}
+                  <span className="text-purple-1">{heroText.Online}</span>
                 </h1>
                 <p className="mt-5">
-                  Data drives everything. Get the skills you need
+                  {heroText.DataDrivesEverything}
                   <br className="lg:d-none" />
-                  for the future of work.
+                  {heroText.forTheFuture}
                 </p>
                 <div className="row items-center x-gap-20 y-gap-20 pt-20">
                   <div className="col-auto">
@@ -67,7 +65,7 @@ export default function HeroSeven() {
                       href="/signup"
                       className="button -md -gradient-1 -rounded text-white"
                     >
-                      Join For Free
+                      {heroText.JoinForFree}
                     </Link>
                   </div>
                   <div className="col-auto">
@@ -75,7 +73,7 @@ export default function HeroSeven() {
                       href="/courses-list-1"
                       className="button -md -outline-light-5 -rounded text-dark-1"
                     >
-                      Find Courses
+                      {heroText.FindCourses}
                     </Link>
                   </div>
                 </div>

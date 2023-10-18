@@ -1,16 +1,15 @@
-
-import Preloader from '@/components/common/Preloader'
-import MyCourses from '@/components/dashboard/MyCourses'
-import Sidebar from '@/components/dashboard/Sidebar'
+import Preloader from "@/components/common/Preloader";
+import MyCourses from "@/components/dashboard/MyCourses";
+import Sidebar from "@/components/dashboard/Sidebar";
 import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
-import React from 'react'
+import React from "react";
 
 export const metadata = {
-  title: 'Dashboard-courses || Educrat - Professional LMS Online Education Course NextJS Template',
+  title:
+    "Dashboard-courses || Educrat - Professional LMS Online Education Course NextJS Template",
   description:
-    'Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.',
-
-}
+    "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
+};
 
 export default function page() {
   return (
@@ -19,15 +18,17 @@ export default function page() {
         <Preloader />
         <ServerHeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
-          <div id='dashboardOpenClose' className="dashboard -home-9 js-dashboard-home-9">
+          <div
+            id="dashboardOpenClose"
+            className="dashboard -home-9 js-dashboard-home-9"
+          >
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
-
             </div>
             <MyCourses />
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

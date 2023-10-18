@@ -5,7 +5,7 @@ const FooterLinks = dynamic(() => import("../component/FooterLinks"));
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
-export default function FooterThree() {
+export default function FooterThree({ foooterText }) {
   return (
     <footer
       className="footer -type-5 pt-60"
@@ -25,18 +25,18 @@ export default function FooterThree() {
 
             <div className="mt-30">
               <div className="text-17" style={{ color: "black" }}>
-                Call Us
+                {foooterText.CallUs}
               </div>
               <div className="text-17 lh-1 fw-500 text-purple-1 mt-5">
-                800 388 80 90
+                (+995) 0322391562
               </div>
             </div>
 
             <div className="mt-30 pr-20">
-              <div className="lh-17">
-                329 Queensberry Street, North Melbourne VIC 3051, Australia.
-                hi@educrat.com
-              </div>
+              <div className="lh-17">{foooterText.Address}</div>
+            </div>
+            <div className="mt-30 pr-20">
+              <div className="lh-17"> tbilisi199@mes.gov.ge </div>
             </div>
 
             <div className="footer-header-socials mt-30">
@@ -50,7 +50,10 @@ export default function FooterThree() {
             </div>
           </div>
 
-          <FooterLinks allClasses={"text-17 fw-500 uppercase mb-25"} />
+          <FooterLinks
+            allClasses={"text-17 fw-500 uppercase mb-25"}
+            foooterText={foooterText}
+          />
         </div>
 
         <div className="py-30 border-top-light">

@@ -2,27 +2,25 @@ import React from "react";
 import { events } from "@/data/events";
 import Image from "next/image";
 import Link from "next/link";
-export default function EventsSeven() {
+export default function EventsSeven({ eventsText }) {
   return (
     <section className="layout-pt-lg layout-pb-lg bg-light-6">
       <div className="container">
         <div className="row y-gap-20 justify-between items-center">
           <div className="col-lg-6">
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">Upcoming Events</h2>
-
-              <p className="sectionTitle__text">
-                10,000+ unique online course list designs
-              </p>
+              <h2 className="sectionTitle__title ">
+                {eventsText.UpcomingEvents}
+              </h2>
             </div>
           </div>
 
           <div className="col-auto">
             <Link
               href="/event-list-2"
-              className="button -icon -purple-3 -rounded text-purple-1"
+              className="button -icon -purple-3 -rounded text-purple-1 -dark-bg-dark-2"
             >
-              Browse Events
+              {eventsText.BrowseEvents}
               <i className="icon-arrow-top-right text-13 ml-10"></i>
             </Link>
           </div>

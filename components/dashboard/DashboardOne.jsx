@@ -1,5 +1,3 @@
-import { teamMembers } from "@/data/instractors";
-import { notifications } from "@/data/notifications";
 import React from "react";
 const FooterNine = dynamic(() => import("../layout/footers/FooterNine"));
 import Image from "next/image";
@@ -7,130 +5,15 @@ import Link from "next/link";
 const ApplyGauge = dynamic(() => import("../ApplyGauge"));
 const GradeIndicator = dynamic(() => import("../GradeIndicator"));
 const QuizPerformance = dynamic(() => import("./QuizPerformance"));
-import { Quiz } from "@/data/mongoDb/models/quiz";
 import Student from "@/data/mongoDb/models/student";
-import { Teacher } from "@/data/mongoDb/models/teacher";
-import { QuizEntry } from "@/data/mongoDb/models";
-import mongoose from "mongoose";
 import dynamic from "next/dynamic";
-import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
-
-import { User } from "@/data/mongoDb/models";
-import PointsCommissionDecision from "@/data/mongoDb/models/pointsCommissionDecision";
-
 import { fetchTeachers } from "@/app/[locale]/(aboutCourses)/instructors-list-2/page";
-
+import { fetchGradesData } from "@/data/fetchGradesData";
 import { fetchData } from "./Reviews";
 import Attendance from "@/data/mongoDb/models/attendance";
 import dbConnect from "@/data/mongoDb/utils/database";
-export async function fetchGradesData() {
-  try {
-    await dbConnect();
-
-    const studentId = "64e52ffb1436edfda9379761";
-
-    // Populate both the receivedGrade and the subject inside it
-    const student = await Student.findOne({ _id: studentId })
-      .populate({
-        path: "receivedGrade",
-        populate: {
-          path: "subject",
-        },
-      })
-      .exec();
-
-    const pointsDecisions = await PointsCommissionDecision.find({
-      _id: { $in: student.pointsCommissionDecision },
-    });
-
-    let personalPoints = 0;
-    let obtainedPointsForHouse = 0;
-
-    pointsDecisions.forEach((decision) => {
-      personalPoints += Math.round(decision.pointsAwarded * 0.15);
-      obtainedPointsForHouse += Math.round(decision.pointsAwarded * 0.85);
-    });
-
-    const gradeCounts = new Array(10).fill(0);
-    const gradeNames = [
-      "one",
-      "two",
-      "three",
-      "four",
-      "five",
-      "six",
-      "seven",
-      "eight",
-      "nine",
-      "ten",
-    ];
-
-    const gradeEntries = student.receivedGrade;
-
-    if (gradeEntries && Array.isArray(gradeEntries)) {
-      gradeEntries.forEach((entry) => {
-        const grade = entry.grade;
-
-        if (grade >= 1 && grade <= 10) {
-          gradeCounts[10 - grade]++;
-        }
-      });
-
-      const gradeList = gradeCounts.map((count, index) => ({
-        name: gradeNames[9 - index],
-        value: count,
-      }));
-
-      // Deduplicate subjects by name
-      const uniqueSubjectNames = [
-        ...new Set(
-          gradeEntries
-            .filter((entry) => entry && entry.subject) // Ensure both entry and entry.subject are defined
-            .map((entry) => entry.subject.subject)
-        ),
-      ];
-      const subjectList = uniqueSubjectNames.map((subjectName) => ({
-        label: subjectName,
-      }));
-
-      return {
-        subjectList,
-        gradeList,
-        gradeEntries,
-        states: [
-          {
-            id: 1,
-            title: "Obtained house points",
-            value: obtainedPointsForHouse,
-            iconClass: "icon-coupon",
-          },
-          {
-            id: 2,
-            title: "personal points",
-            value: personalPoints,
-            iconClass: "icon-play-button",
-          },
-          {
-            id: 3,
-            title: "Total Students",
-            value: 129786,
-            iconClass: "icon-graduate-cap",
-          },
-          {
-            id: 4,
-            title: "Total Instructors",
-            value: 22786,
-            iconClass: "icon-online-learning",
-          },
-        ],
-      };
-    }
-  } catch (error) {
-    console.error("Error fetching grades data:", error);
-    throw error;
-  }
-}
-
+import { GradeEntry } from "@/data/mongoDb/models/gradeEntry";
+import { getTranslatedNotifications } from "@/data/notifications";
 export async function useFetchQuizData() {
   await dbConnect();
 
@@ -261,7 +144,7 @@ const getCurrentSemester = (date) => {
   }
 };
 
-export default async function DashboardOne() {
+export default async function DashboardOne({ dashboardText }) {
   const { lastFiveDecisionsList } = await fetchData();
   const arr = await useFetchQuizData();
   const { lastFiveTeamMembers } = await fetchTeachers();
@@ -269,7 +152,7 @@ export default async function DashboardOne() {
   const uniqueSubjectSet = new Set(
     attendancesResult.map((item) => item.subject.subject)
   );
-
+  const { notifications } = getTranslatedNotifications(dashboardText);
   // Transforming the unique subject set into the desired attendance format
   const attendances = [...uniqueSubjectSet].map((subjectName) => {
     const subjectAttendances = attendancesResult.filter(
@@ -294,7 +177,7 @@ export default async function DashboardOne() {
   });
 
   const { subjectList, gradeList, gradeEntries, states } =
-    await fetchGradesData();
+    await fetchGradesData(dashboardText);
 
   const academicYearsSet = new Set();
   arr.forEach((item) => {
@@ -379,15 +262,20 @@ export default async function DashboardOne() {
             ))}
           </div>
 
-          <ApplyGauge attendances={attendances} />
+          <ApplyGauge attendances={attendances} dashboardText={dashboardText} />
         </div>
         <div className="row y-gap-30 pt-30">
-          <QuizPerformance options={options} arr={arr} />
+          <QuizPerformance
+            options={options}
+            arr={arr}
+            dashboardText={dashboardText}
+          />
           <div className="col-xl-4 col-md-6">
             <GradeIndicator
               subjectList={JSON.stringify(subjectList)}
               gradeList={JSON.stringify(gradeList)}
               gradeEntries={JSON.stringify(gradeEntries)}
+              dashboardText={dashboardText}
             />
 
             {/* <p> {JSON.stringify(gradeEntries)} </p>
@@ -400,12 +288,15 @@ export default async function DashboardOne() {
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 fw-500">Popular Instructor</h2>
+                <h2 className="fw-500" style={{ fontSize: "0.9rem" }}>
+                  {dashboardText.Instructors}
+                </h2>
                 <Link
                   href="/instructors-list-2"
-                  className="text-14 text-purple-1 underline"
+                  className="text-purple-1 underline"
+                  style={{ fontSize: "0.8rem" }}
                 >
-                  View All
+                  {dashboardText.ViewAll}
                 </Link>
               </div>
               <div className="py-30 px-30">
@@ -456,12 +347,15 @@ export default async function DashboardOne() {
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Recent house points</h2>
+                <h2 className=" lh-1 fw-500" style={{ fontSize: "0.9rem" }}>
+                  {dashboardText.RecentPoints}
+                </h2>
                 <Link
                   href="/dshb-reviews"
-                  className="text-14 text-purple-1 underline"
+                  className="text-purple-1 underline"
+                  style={{ fontSize: "0.8rem" }}
                 >
-                  View All
+                  {dashboardText.ViewAll}
                 </Link>
               </div>
               <div className="py-30 px-30">
@@ -494,10 +388,10 @@ export default async function DashboardOne() {
                             {new Date(decision.date).toLocaleDateString()}{" "}
                           </div>
                           <div className="text-14 lh-1">
-                            Points: {decision.pointsAwarded}
+                            {dashboardText.Points}: {decision.pointsAwarded}
                           </div>
                           <div className="text-14 lh-1">
-                            Status: {decision.status}
+                            {dashboardText.Status}: {decision.status}
                           </div>
                         </div>
                       </div>
@@ -511,7 +405,9 @@ export default async function DashboardOne() {
           <div className="col-xl-4 col-md-6">
             <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100 ">
               <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
-                <h2 className="text-17 lh-1 fw-500">Notifications</h2>
+                <h2 className="text-17 lh-1 fw-500">
+                  {dashboardText.Notification}
+                </h2>
               </div>
               <div className="py-30 px-30">
                 <div className="y-gap-40">
@@ -533,7 +429,7 @@ export default async function DashboardOne() {
                       <div className="ml-12">
                         <h4 className="text-15 lh-1 fw-500">{elm.heading}</h4>
                         <div className="text-13 lh-1 mt-10">
-                          {elm.time} Hours Ago
+                          {elm.time} {dashboardText.Hours}
                         </div>
                       </div>
                     </div>

@@ -5,10 +5,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChakraProvider } from "@chakra-ui/react";
-
-export default function Sidebar() {
+import { useTranslations } from "next-intl";
+import { getTranslatedSideBarItems } from "@/data/translatedSidebar";
+export default function Sidebar({ dashboardText }) {
   const pathname = usePathname();
-
+  const { sidebarItems } = getTranslatedSideBarItems(dashboardText);
   return (
     <ChakraProvider>
       <div className="sidebar -dashboard">

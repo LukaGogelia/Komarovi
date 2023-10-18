@@ -11,8 +11,7 @@ import CurrentClass from "@/data/mongoDb/models/currentClass";
 import TimeTable from "@/data/mongoDb/models/timeTable";
 import { Person } from "@/data/mongoDb/models/person";
 import TimeSlot from "@/data/mongoDb/models/timeSlot";
->>>>>>> main
-
+import { useTranslations } from "next-intl";
 // Utility functions:
 
 function countLessonsUpToDate(timeTable, subject, targetDate) {
@@ -135,6 +134,57 @@ export default async function page({ params }) {
     classObj.subjectId
   );
 
+  const t = useTranslations("Dashboard");
+  const dashboardText = {
+    ClassesList: t("ClassesList"),
+    ObtainedPoints: t("ObtainedPoints"),
+    PersonalPoints: t("PersonalPoints"),
+    TotalStudents: t("TotalStudents"),
+    TotalInstructors: t("TotalInstructors"),
+    Attendance: t("Attendance"),
+    ThisWeek: t("ThisWeek"),
+    QuizPerformance: t("QuizPerformance"),
+    Grades: t("Grades"),
+    Grade: t("Grade"),
+    AverageGrade: t("AverageGrade"),
+    ten: t("ten"),
+    nine: t("nine"),
+    eight: t("eight"),
+    seven: t("seven"),
+    six: t("six"),
+    five: t("five"),
+    four: t("four"),
+    three: t("three"),
+    two: t("two"),
+    one: t("one"),
+    Count: t("Count"),
+    Subject: t("Subject"),
+    Classes: t("Classes"),
+    Instructors: t("Instructors"),
+    RecentPoints: t("RecentPoints"),
+    ViewAll: t("ViewAll"),
+    Points: t("Points"),
+    Status: t("Status"),
+    Notification: t("Notification"),
+    Notification1: t("Notification1"),
+    Notification2: t("Notification2"),
+    Notification3: t("Notification3"),
+    Hours: t("Hours"),
+    Dashboard: t("Dashboard"),
+    MyCourses: t("MyCourses"),
+    Bookmarks: t("Bookmarks"),
+    Messages: t("Messages"),
+    Reviews: t("Reviews"),
+    Settings: t("Settings"),
+    Administration: t("Administration"),
+    Assignment: t("Assignment"),
+    Calendar: t("Calendar"),
+    Dictionary: t("Dictionary"),
+    Quiz: t("Quiz"),
+    LogOut: t("LogOut"),
+    CreateCourse: t("CreateCourse"),
+  };
+
   // console.log("student info array", studentInfoArray);
 
   return (
@@ -148,7 +198,7 @@ export default async function page({ params }) {
             className="dashboard -home-9 js-dashboard-home-9"
           >
             <div className="dashboard__sidebar scroll-bar-1">
-              <Sidebar />
+              <Sidebar dashboardText={dashboardText} />
             </div>
             <Grades studentInfoArray={studentInfoArray} />
           </div>

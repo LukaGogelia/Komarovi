@@ -1,6 +1,6 @@
 import React from "react";
 import mongoose from "mongoose";
-import { PointsCommissionDecision } from "../../data/mongoDb/models/pointsCommissionDecision";
+import PointsCommissionDecision from "../../data/mongoDb/models/pointsCommissionDecision";
 import Star from "../common/Star";
 import Image from "next/image";
 // import { connectDb } from "./ConnectToDb.jsx";

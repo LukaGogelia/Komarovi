@@ -2,10 +2,9 @@
 import React, { useState, useMemo } from "react";
 import SubjectDropdown from "./SubjectDropdown";
 import PieChartsComponent from "./dashboard/PieChartsComponent";
-// import PieChartsComponent from "./dashboard/PieChartsComponent";
 
-const numberToWord = (number) => {
-  const words = [
+const numberToWord = (number, translations) => {
+  const defaultWords = [
     "zero",
     "one",
     "two",
@@ -18,13 +17,15 @@ const numberToWord = (number) => {
     "nine",
     "ten",
   ];
-  return words[number];
+  const word = defaultWords[number];
+  return translations[word] || word;
 };
 
 export default function GradeIndicator({
   subjectList: S,
   gradeList: G,
   gradeEntries: GR,
+  dashboardText,
 }) {
   const subjectList = JSON.parse(S);
   const gradeList = JSON.parse(G);
@@ -40,8 +41,6 @@ export default function GradeIndicator({
       : gradeEntries;
   }, [selectedSubject, gradeEntries]);
 
-  console.log("grades", filteredGradeEntries);
-
   const computedGradeList = useMemo(() => {
     const gradeCounts = new Array(10).fill(0);
     filteredGradeEntries.forEach((entry) => {
@@ -53,11 +52,11 @@ export default function GradeIndicator({
 
     return gradeCounts
       .map((count, index) => ({
-        name: numberToWord(10 - index),
+        name: numberToWord(10 - index, dashboardText),
         value: count,
       }))
       .filter((grade) => grade.value > 0);
-  }, [filteredGradeEntries]);
+  }, [filteredGradeEntries, dashboardText]);
 
   const averageGrade = useMemo(() => {
     const totalGrades = filteredGradeEntries.reduce(
@@ -65,7 +64,6 @@ export default function GradeIndicator({
       0
     );
     const numberOfGrades = filteredGradeEntries.length;
-
     return numberOfGrades > 0 ? totalGrades / numberOfGrades : null;
   }, [filteredGradeEntries]);
 
@@ -77,10 +75,9 @@ export default function GradeIndicator({
             className="text-16 lh-1 fw-500 text-dark-1 mb-10"
             style={{ textAlign: "center" }}
           >
-            Grades
+            {dashboardText["Grades"] || "Grades"}
           </h3>
         </div>
-
         <SubjectDropdown
           options={subjectList}
           onSubjectChange={setSelectedSubject}
