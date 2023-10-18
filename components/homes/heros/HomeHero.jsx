@@ -56,7 +56,9 @@ const hero_content = {
 };
 const { title, text_underline, info_hero, starts } = hero_content;
 
-const HomeHero = ({ clubWords }) => {
+
+const HomeHero = ({ clubWords, homeHeroText }) => {
+
   useEffect(() => {
     const parallaxIt = () => {
       const target = document.querySelectorAll(".js-mouse-move-container");
@@ -99,7 +101,8 @@ const HomeHero = ({ clubWords }) => {
         </div>
         <div className="container">
           <div className="row y-gap-30 justify-between items-end">
-            <SkillsOne clubWords={clubWords} />
+
+            <SkillsOne clubWords={clubWords} homeHeroText={homeHeroText} />
 
             <div
               className="col-xl-6 col-lg-6"

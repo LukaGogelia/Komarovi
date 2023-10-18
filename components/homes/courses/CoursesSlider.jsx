@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
-export default function CoursesSlider() {
+export default function CoursesSlider({ coursesSliderText }) {
   const [showSlider, setShowSlider] = useState(false);
   useEffect(() => {
     setShowSlider(true);
@@ -27,11 +27,13 @@ export default function CoursesSlider() {
         <div className="row y-gap-15 justify-between items-center">
           <div className="col-lg-6">
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">Top courses</h2>
+              <h2 className="sectionTitle__title ">
+                {coursesSliderText.TopCourses}
+              </h2>
 
-              <p className="sectionTitle__text ">
+              {/* <p className="sectionTitle__text ">
                 10,000+ unique online course list designs
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -39,9 +41,9 @@ export default function CoursesSlider() {
             <div className="d-inline-block">
               <Link
                 href="/courses-list-1"
-                className="button -icon -light-11 -purple-3 text-purple-1 "
+                className="button -icon -purple-3 -rounded text-purple-1 -dark-bg-dark-2"
               >
-                All Courses
+                {coursesSliderText.AllCourses}
                 <i className="icon-arrow-top-right text-13 ml-10"></i>
               </Link>
             </div>

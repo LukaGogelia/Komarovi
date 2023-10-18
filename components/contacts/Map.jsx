@@ -11,7 +11,7 @@ export default function MapComponent() {
 
     const map = L.map(target, {
       scrollWheelZoom: false, // Disable scrolling
-    }).setView([51.505, -0.09], 13);
+    }).setView([41.72618552376832, 44.73880034258427], 17);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:

@@ -9,6 +9,7 @@ const QuizPerformanceDropdown = ({
   selectedValue,
   onFilter,
   arr,
+  dashboardText,
 }) => {
   const [ddOpen, setDdOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
@@ -29,7 +30,7 @@ const QuizPerformanceDropdown = ({
           className="text-16 lh-1 fw-500 text-dark-1 mb-10"
           style={{ textAlign: "center" }}
         >
-          Quiz performances
+          {dashboardText.QuizPerformance}
         </h3>
       </div>
 

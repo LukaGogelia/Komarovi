@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
-const Gauge = ({ value = 50 }) => {
+const Gauge = ({ value = 50, dashboardText }) => {
   const [arrowValue, setArrowValue] = useState(0);
   const [isFirstRun, setIsFirstRun] = useState(true);
 
@@ -96,7 +96,7 @@ const Gauge = ({ value = 50 }) => {
           fontWeight="bold"
           fill={attendanceTextColor}
         >
-          {`Attendance Rate: ${value}%`}
+          {`${dashboardText.Attendance}: ${value}%`}
         </text>
         <text
           x={cx}

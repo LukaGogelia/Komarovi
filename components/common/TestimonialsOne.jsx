@@ -5,12 +5,13 @@ import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 // import 'swiper/swiper.min.css';
-import { testimonials } from "../../data/tesimonials";
+import { getTranslatedTestimonials } from "@/data/tesimonials";
 import { counters } from "../../data/count";
 // SwiperCore.use([Pagination]);
 
-export default function TestimonialsOne() {
+export default function TestimonialsOne({ testimonialsText }) {
   const [showSlider, setShowSlider] = useState(false);
+  const { testimonials } = getTranslatedTestimonials(testimonialsText);
   useEffect(() => {
     setShowSlider(true);
   }, []);
@@ -112,7 +113,7 @@ export default function TestimonialsOne() {
           </div>
         </div>
 
-        <div className="row y-gap-30  counter__row">
+        {/* <div className="row y-gap-30  counter__row">
           {counters.map((elm, i) => (
             <div
               key={i}
@@ -126,7 +127,7 @@ export default function TestimonialsOne() {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

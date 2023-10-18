@@ -4,14 +4,19 @@ import React, { useState, useEffect } from "react";
 import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper";
-import { statictis } from "../../../data/features";
+import { getTranslatedFeatures } from "../../../data/features";
 import { testimonials } from "../../../data/tesimonials";
+import { getTranslatedTestimonials } from "../../../data/tesimonials";
 import "swiper/css/effect-cards";
-export default function TestimonialsSix() {
+
+export default function TestimonialsSix({ testimonialsText }) {
   const [showSlider, setShowSlider] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [roteteSwiper, setRoteteSwiper] = useState(4);
   const [darkMode, setDarkMode] = useState(true);
+
+  const { statictis } = getTranslatedFeatures(testimonialsText);
+  const { testimonials } = getTranslatedTestimonials(testimonialsText);
 
   useEffect(() => {
     setShowSlider(true);
@@ -20,6 +25,7 @@ export default function TestimonialsSix() {
   const handleSlideChange = (slide) => {
     setRoteteSwiper((1 - slide.activeIndex / 1) * 4);
   };
+
   return (
     <section
       className={`layout-pt-lg bg-dark-2  ${
@@ -31,11 +37,9 @@ export default function TestimonialsSix() {
         <div className="row y-gap-30 items-center">
           <div className="col-lg-6 col-md-10">
             <h2 className="text-30 lh-15 text-white">
-              People Love To Learn With Educrat
+              {testimonialsText.PeopleLoveToLearnWithEducrat}
             </h2>
-            <p className="text-white mt-10">
-              Lorem ipsum dolor sit amet, consectetur.
-            </p>
+            <p className="text-white mt-10">{testimonialsText.Lorem1}</p>
             <div className="row x-gap-50 y-gap-30 pt-60 lg:pt-40 pr-40 md:pr-0">
               {statictis.slice(0, 2).map((elm, i) => (
                 <div key={i} className="col-sm-6 text-white">
@@ -45,13 +49,11 @@ export default function TestimonialsSix() {
               ))}
             </div>
           </div>
-
           <div className="col-lg-4 offset-lg-1">
             <div className="testimonials-slider-2 js-testimonials-slider-2">
               {showSlider && (
                 <Swiper
                   className="overflow-visible w-[100%] custom-transition"
-                  // {...setting}
                   effect={"cards"}
                   grabCursor={true}
                   modules={[Navigation, Pagination, EffectCards]}
@@ -79,7 +81,6 @@ export default function TestimonialsSix() {
                       style={{
                         width: "100%",
                         transform: "rotate(90deg)",
-                        transform: `scale(1)`,
                       }}
                     >
                       <div
@@ -97,7 +98,6 @@ export default function TestimonialsSix() {
                             >
                               “{elm.description}”
                             </p>
-
                             <div className="testimonials-footer">
                               <div className="testimonials-footer__image">
                                 <Image
@@ -107,7 +107,6 @@ export default function TestimonialsSix() {
                                   alt="image"
                                 />
                               </div>
-
                               <div className="testimonials-footer__content">
                                 <div className="testimonials-footer__title">
                                   {elm.name}
@@ -124,7 +123,6 @@ export default function TestimonialsSix() {
                   ))}
                 </Swiper>
               )}
-
               <div className="d-flex x-gap-15 items-center justify-center pt-30">
                 <div className="col-auto">
                   <button className="d-flex items-center text-24 arrow-left-hover text-white js-prev icon-arrow-left-6">

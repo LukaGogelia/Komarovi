@@ -3,7 +3,7 @@ import { blogs } from "@/data/blog";
 import Image from "next/image";
 import { events } from "../../../data/events";
 import Link from "next/link";
-export default function BlogsFive() {
+export default function BlogsFive({ coursesSliderText }) {
   return (
     <section className="layout-pt-md layout-pb-lg">
       <div className="container">
@@ -14,11 +14,9 @@ export default function BlogsFive() {
             data-aos-duration={800}
           >
             <div className="sectionTitle ">
-              <h2 className="sectionTitle__title ">News & Events</h2>
-
-              <p className="sectionTitle__text ">
-                Lorem ipsum dolor sit amet, consectetur.
-              </p>
+              <h2 className="sectionTitle__title ">
+                {coursesSliderText.TopCourses}
+              </h2>
             </div>
           </div>
 
@@ -31,7 +29,7 @@ export default function BlogsFive() {
               href="/blog-list-3"
               className="button -icon -purple-3 text-purple-1"
             >
-              Browse Blog
+              {coursesSliderText.AllCourses}
               <i className="icon-arrow-top-right text-13 ml-10"></i>
             </Link>
           </div>

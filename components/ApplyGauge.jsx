@@ -4,7 +4,7 @@ import { useState } from "react";
 import SelectSubject from "./SelectSubject";
 import Gauge from "./Gauge";
 
-const ApplyGauge = ({ attendances }) => {
+const ApplyGauge = ({ attendances, dashboardText }) => {
   const [value, setValue] = useState(50); // default value
 
   const handleRateChange = (selectedSubject) => {
@@ -35,6 +35,7 @@ const ApplyGauge = ({ attendances }) => {
           <SelectSubject
             onRateChange={handleRateChange}
             attendances={attendances}
+            dashboardText={dashboardText}
           />
           <div
             style={{
@@ -45,7 +46,7 @@ const ApplyGauge = ({ attendances }) => {
             }}
           >
             <div style={{ alignItems: "center" }}>
-              <Gauge value={value} />
+              <Gauge value={value} dashboardText={dashboardText} />
             </div>
           </div>
         </div>

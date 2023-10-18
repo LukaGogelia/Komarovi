@@ -3,9 +3,9 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 
-const SelectSubject = ({ onRateChange, attendances }) => {
+const SelectSubject = ({ onRateChange, attendances, dashboardText }) => {
   const [ddOpen, setDdOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("This Week");
+  const [selectedValue, setSelectedValue] = useState(dashboardText.ThisWeek);
   const [darkMode, setDarkMode] = useState(true);
 
   const handleSelectChange = (value) => {
@@ -20,10 +20,10 @@ const SelectSubject = ({ onRateChange, attendances }) => {
     <div className="d-flex justify-between items-center py-20 px-30 border-bottom-light">
       <div style={{ textAlign: "center", margin: "auto" }}>
         <h3
-          className="text-16 lh-1 fw-500 text-dark-1 mb-10"
-          style={{ textAlign: "center" }}
+          className="lh-1 fw-500 text-dark-1 mb-10"
+          style={{ textAlign: "center", fontSize: "1rem" }}
         >
-          Attendance rate
+          {dashboardText.Attendance}
         </h3>
       </div>
 

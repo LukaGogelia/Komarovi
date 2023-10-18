@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import QuizPerformanceDropdown from "./QuizPerformanceDropdown";
 import Charts from "./Charts";
 
-export default function QuizPerformance({ options, arr }) {
+export default function QuizPerformance({ options, arr, dashboardText }) {
   const [selectedValue, setSelectedValue] = useState("2021-2022");
 
   if (selectedValue === "All") {
@@ -27,6 +27,7 @@ export default function QuizPerformance({ options, arr }) {
           options={options}
           selectedValue={selectedValue}
           setSelectedValue={setSelectedValue}
+          dashboardText={dashboardText}
         />
         <Charts arr={arr} />
       </div>

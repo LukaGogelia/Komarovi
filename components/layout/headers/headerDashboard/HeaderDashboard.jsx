@@ -71,7 +71,7 @@ export default function HeaderDashboard({ profilePictureUrl }) {
       document?.msExitFullscreen();
     }
   };
-  const handleResize = () => { };
+  const handleResize = () => {};
   useEffect(() => {
     if (window.innerWidth < 990) {
       document
@@ -253,7 +253,7 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                     </a>
                   </div>
 
-                  <div
+                  {/* <div
                     className="relative"
                     onClick={() => setIsOnNotification((pre) => !pre)}
                   >
@@ -266,8 +266,9 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                     </a>
 
                     <div
-                      className={`toggle-element js-notif-toggle  ${isOnNotification ? "-is-el-visible" : ""
-                        } -`}
+                      className={`toggle-element js-notif-toggle  ${
+                        isOnNotification ? "-is-el-visible" : ""
+                      } -`}
                     >
                       <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
                         <div className="py-30 px-30">
@@ -275,10 +276,11 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                             {notifications.map((elm, i) => (
                               <div
                                 key={i}
-                                className={`d-flex items-center  ${i !== 0
-                                  ? "border-top-light -dark-border-top-light-5"
-                                  : ""
-                                  } `}
+                                className={`d-flex items-center  ${
+                                  i !== 0
+                                    ? "border-top-light -dark-border-top-light-5"
+                                    : ""
+                                } `}
                               >
                                 <div className="shrink-0">
                                   <Image
@@ -302,30 +304,32 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
-
 
                 <div
                   className="relative d-flex items-center ml-10"
                   onClick={() => setIsOnProfile((pre) => !pre)}
                 >
                   <a href="#" data-el-toggle=".js-profile-toggle">
-
                     <Image
                       width={50}
                       height={50}
                       className="size-50"
                       src={profilePictureUrl}
                       alt="image"
-                      style={{ objectFit: "cover", overflow: "hidden", borderRadius: "10px" }}
+                      style={{
+                        objectFit: "cover",
+                        overflow: "hidden",
+                        borderRadius: "10px",
+                      }}
                     />
-
                   </a>
 
                   <div
-                    className={`toggle-element js-profile-toggle ${isOnProfile ? "-is-el-visible" : ""
-                      } -`}
+                    className={`toggle-element js-profile-toggle ${
+                      isOnProfile ? "-is-el-visible" : ""
+                    } -`}
                   >
                     <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
                       <div className="px-30 py-30">
@@ -333,8 +337,9 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                           {sidebarItems.map((elm, i) => (
                             <div
                               key={i}
-                              className={`sidebar__item ${elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
-                                }`}
+                              className={`sidebar__item ${
+                                elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
+                              }`}
                             >
                               <a
                                 href={elm.href}
