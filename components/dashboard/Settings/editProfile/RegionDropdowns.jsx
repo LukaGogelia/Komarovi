@@ -16,6 +16,7 @@ function RegionDropdowns({
   onUnitChange,
   onAddressChange,
   addressState,
+  w,
 }) {
   const [selectedRegion, setSelectedRegion] = useState(addressState.region);
   const [adminUnits, setAdminUnits] = useState([]);
@@ -55,7 +56,7 @@ function RegionDropdowns({
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <label>
-          {type === "registration" ? "Registration Address" : "Actual Address"}
+          {type === "registration" ? w.registrationAddress : w.actualAddress}
         </label>
       </Grid>
 
@@ -66,14 +67,14 @@ function RegionDropdowns({
       >
         <FormControl fullWidth variant="outlined" className="new-input">
           <InputLabel id={`${type}-region-select-label`}>
-            {type.charAt(0).toUpperCase() + type.slice(1)} Region
+            {(type === "registration" ? w.registration : w.actual) + ' ' + w.region}
           </InputLabel>
           <Select
             labelId={`${type}-region-select-label`}
             id={`${type}-region-select`}
             value={selectedRegion}
             onChange={handleRegionChange}
-            label={`${type.charAt(0).toUpperCase() + type.slice(1)} Region`}
+            label={(type === "registration" ? w.registration : w.actual) + ' ' + w.region}
           >
             {Object.keys(georgiaRegions).map((region) => (
               <MenuItem key={region} value={region}>
@@ -92,7 +93,7 @@ function RegionDropdowns({
         >
           <FormControl fullWidth variant="outlined" className="new-input">
             <InputLabel id={`${type}-unit-select-label`}>
-              {type.charAt(0).toUpperCase() + type.slice(1)} Administrative Unit
+              {(type === "registration" ? w.registration : w.actual) + ' ' + w.adminUnit}
             </InputLabel>
             <Select
               labelId={`${type}-unit-select-label`}
@@ -100,9 +101,7 @@ function RegionDropdowns({
               value={selectedAdminUnit}
               required
               onChange={handleAdminUnitChange}
-              label={`${
-                type.charAt(0).toUpperCase() + type.slice(1)
-              } Administrative Unit`}
+              label={(type === "registration" ? w.registration : w.actual) + ' ' + w.adminUnit}
             >
               {adminUnits.map((unit) => (
                 <MenuItem key={unit} value={unit}>
@@ -112,21 +111,24 @@ function RegionDropdowns({
             </Select>
           </FormControl>
         </Grid>
-      )}
+      )
+      }
 
-      {selectedAdminUnit && (
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Address"
-            value={address}
-            onChange={handleAddressChange}
-            className="new-input"
-          />
-        </Grid>
-      )}
-    </Grid>
+      {
+        selectedAdminUnit && (
+          <Grid item xs={12} sm={4}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label={w.address}
+              value={address}
+              onChange={handleAddressChange}
+              className="new-input"
+            />
+          </Grid>
+        )
+      }
+    </Grid >
   );
 }
 

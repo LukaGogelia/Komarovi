@@ -7,28 +7,29 @@ import SocialProfiles from "./socialProfiles/SocialProfiles";
 import CloseAccount from "./CloseAccount";
 import FooterNine from "@/components/layout/footers/FooterNine";
 import Notification from "./Notifications";
-import { useSession } from "next-auth/react";
 
-const buttons = [
-  "Edit Profile",
-  "Password",
-  "Social Profiles",
-  "Notifications",
-  "Close Account",
-];
 
-export default function Settings({ editProfileProps, socialProfilesProps }) {
+
+
+export default function Settings({ editProfileProps, socialProfilesProps, words }) {
   const [activeTab, setActiveTab] = useState(1);
-  // const { status, data: session } = useSession();
-  // console.log(editProfileProps);
+
+  const w = JSON.parse(words);
+  const buttons = [
+    w.editProfile,
+    w.password,
+    w.socialProfiles,
+    w.notifications,
+    w.closeAccount,
+  ];
   return (
     <div className="dashboard__main">
       <div className="dashboard__content bg-light-4">
         <div className="row pb-50 mb-10">
           <div className="col-auto">
-            <h1 className="text-30 lh-12 fw-700">Settings</h1>
+            <h1 className="text-30 lh-12 fw-700">{w.h1}</h1>
             <div className="mt-10">
-              Lorem ipsum dolor sit amet, consectetur.
+              {w.h2}
             </div>
           </div>
         </div>
@@ -55,14 +56,16 @@ export default function Settings({ editProfileProps, socialProfilesProps }) {
                   <EditProfile
                     activeTab={activeTab}
                     editProfileProps={editProfileProps}
+                    w={w}
                   />
-                  <Password activeTab={activeTab} />
+                  <Password activeTab={activeTab} w={w} />
                   <SocialProfiles
                     activeTab={activeTab}
                     socialProfilesProps={socialProfilesProps}
+                    w={w}
                   />
-                  <Notification activeTab={activeTab} />
-                  <CloseAccount activeTab={activeTab} />
+                  <Notification activeTab={activeTab} w={w} />
+                  <CloseAccount activeTab={activeTab} w={w} />
                 </div>
               </div>
             </div>

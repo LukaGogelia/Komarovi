@@ -78,14 +78,14 @@ export default function HeaderNine({ setIsSidebarClosed, setMessageOpen }) {
                     width={140}
                     height={50}
                     className="-light-d-none"
-                    src="/assets/img/general/logo.svg"
+                    src="/assets/img/general/logo-white.png"
                     alt="logo"
                   />
                   <Image
                     width={140}
                     height={50}
                     className="-dark-d-none"
-                    src="/assets/img/general/logo-dark.svg"
+                    src="/assets/img/general/logo-black.png"
                     alt="logo"
                   />
                 </Link>
@@ -159,9 +159,8 @@ export default function HeaderNine({ setIsSidebarClosed, setMessageOpen }) {
                   </a>
 
                   <div
-                    className={`toggle-element js-notif-toggle  ${
-                      isOnNotification ? "-is-el-visible" : ""
-                    } -`}
+                    className={`toggle-element js-notif-toggle  ${isOnNotification ? "-is-el-visible" : ""
+                      } -`}
                   >
                     <div className="toggle-bottom -notifications bg-white shadow-4 border-light rounded-8 mt-10">
                       <div className="py-30 px-30">
@@ -169,11 +168,10 @@ export default function HeaderNine({ setIsSidebarClosed, setMessageOpen }) {
                           {notifications.map((elm, i) => (
                             <div
                               key={i}
-                              className={`d-flex items-center  ${
-                                i !== 0
-                                  ? "border-top-light -dark-border-top-light-5"
-                                  : ""
-                              } `}
+                              className={`d-flex items-center  ${i !== 0
+                                ? "border-top-light -dark-border-top-light-5"
+                                : ""
+                                } `}
                             >
                               <div className="shrink-0">
                                 <Image
@@ -215,9 +213,8 @@ export default function HeaderNine({ setIsSidebarClosed, setMessageOpen }) {
                 </a>
 
                 <div
-                  className={`toggle-element js-profile-toggle ${
-                    isOnProfile ? "-is-el-visible" : ""
-                  } -`}
+                  className={`toggle-element js-profile-toggle ${isOnProfile ? "-is-el-visible" : ""
+                    } -`}
                 >
                   <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
                     <div className="px-30 py-30">
@@ -225,9 +222,8 @@ export default function HeaderNine({ setIsSidebarClosed, setMessageOpen }) {
                         {sidebarItems.map((elm, i) => (
                           <div
                             key={i}
-                            className={`sidebar__item ${
-                              elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
-                            }`}
+                            className={`sidebar__item ${elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
+                              }`}
                           >
                             <a
                               href={elm.href}

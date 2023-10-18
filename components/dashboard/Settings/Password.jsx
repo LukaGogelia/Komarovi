@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import TextField from '@mui/material/TextField';
 
-export default function Password({ activeTab }) {
+export default function Password({ activeTab, w }) {
 
   const initialPasswordState = {
     currentPassword: '',
@@ -27,20 +27,20 @@ export default function Password({ activeTab }) {
     };
 
     if (!passwordFields.currentPassword) {
-      newErrors.currentPassword = 'Current password is required';
+      newErrors.currentPassword = w.currentPasswordRequired;
       isValid = false;
     }
 
     if (!passwordFields.newPassword) {
-      newErrors.newPassword = 'New password is required';
+      newErrors.newPassword = w.newPasswordRequired;
       isValid = false;
     } else if (passwordFields.newPassword.length < 8) { // Assume a minimum length of 8
-      newErrors.newPassword = 'Password must be at least 8 characters long';
+      newErrors.newPassword = w.passwordLength;
       isValid = false;
     }
 
     if (passwordFields.newPassword !== passwordFields.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = w.passwordDoNotMatch;
       isValid = false;
     }
 
@@ -78,7 +78,7 @@ export default function Password({ activeTab }) {
       console.error('Error during fetch: ', error);
       setErrors({
         ...errors,
-        global: 'An unexpected error occurred. Please try again later.',
+        global: w.unexpectedError,
       });
     }
   };
@@ -112,13 +112,13 @@ export default function Password({ activeTab }) {
               },
             }}
             id="current-password"
-            label="Current password"
+            label={w.currentPassword}
             variant="outlined"
             fullWidth
             type="password"
             value={passwordFields.currentPassword}
             onChange={handleInputChange('currentPassword')}
-            placeholder="Current password"
+            placeholder={w.newPassword}
           />
         </div>
         <div className="col-md-7">
@@ -131,13 +131,13 @@ export default function Password({ activeTab }) {
               },
             }}
             id="new-password"
-            label="New password"
+            label={w.newPassword}
             variant="outlined"
             fullWidth
             type="password"
             value={passwordFields.newPassword}
             onChange={handleInputChange('newPassword')}
-            placeholder="New password"
+            placeholder={w.newPassword}
           />
         </div>
         <div className="col-md-7">
@@ -150,13 +150,13 @@ export default function Password({ activeTab }) {
               },
             }}
             id="confirm-password"
-            label="Confirm New Password"
+            label={w.confirmNewPassword}
             variant="outlined"
             fullWidth
             type="password"
             value={passwordFields.confirmPassword}
             onChange={handleInputChange('confirmPassword')}
-            placeholder="Confirm New Password"
+            placeholder={w.confirmNewPassword}
           />
         </div>
 
@@ -164,7 +164,7 @@ export default function Password({ activeTab }) {
           <button
             className={`button -md ${hasChanges() ? '-purple-1 text-white' : '-purple-3 text-purple-1 btn-disabled'}`}
             disabled={!hasChanges()}>
-            Save Password
+            {w.savePassword}
           </button>
         </div>
       </form>

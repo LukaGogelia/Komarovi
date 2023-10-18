@@ -134,14 +134,14 @@ export default function HeaderDashboard({ profilePictureUrl }) {
                       width={140}
                       height={50}
                       className="-light-d-none"
-                      src="/assets/img/general/logo.svg"
+                      src="/assets/img/general/logo-white.png"
                       alt="logo"
                     />
                     <Image
                       width={140}
                       height={50}
                       className="-dark-d-none"
-                      src="/assets/img/general/logo-dark.svg"
+                      src="/assets/img/general/logo-black.png"
                       alt="logo"
                     />
                   </Link>

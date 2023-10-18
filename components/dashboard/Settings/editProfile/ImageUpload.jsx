@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-const ImageUpload = ({ previewImage, handleImageChange, handleImageClear }) => {
+const ImageUpload = ({ previewImage, handleImageChange, handleImageClear, w }) => {
     return (
         <div className="row y-gap-20 x-gap-20 items-center">
             <label
@@ -27,9 +27,9 @@ const ImageUpload = ({ previewImage, handleImageChange, handleImageClear }) => {
             </label>
 
             <div className="col-auto">
-                <div className="text-16 fw-500 text-dark-1">Your avatar</div>
+                <div className="text-16 fw-500 text-dark-1">{w.yourAvatar}</div>
                 <div className="text-14 lh-1 mt-10">
-                    PNG or JPG no bigger than 800px wide and tall.
+                    {w.imageRequirementDescription}
                 </div>
 
                 <div className="d-flex x-gap-10 y-gap-10 flex-wrap pt-15">

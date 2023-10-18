@@ -97,7 +97,7 @@ export default async function page() {
         <InatractorsTwo
           teamMembers={teamMembers}
           subjects={subjects}
-          // PaginationTwo={<PaginationTwo />}
+        // PaginationTwo={<PaginationTwo />}
         />
         <FooterThree />
       </div>

@@ -1,3 +1,4 @@
+import ServerHomeHero from "@/components/homes/heros/ServerHomeHero";
 import dynamic from "next/dynamic";
 
 const Statictis = dynamic(() =>
@@ -30,6 +31,7 @@ export const metadata = {
   description:
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
+
 
 export default function page() {
   const t = useTranslations("/");
@@ -127,10 +129,13 @@ export default function page() {
     Evening: t("Evening"),
     Projects: t("Projects"),
   };
+
+export default function page({ params: { locale } }) {
+
   return (
     <div className="main-content">
       <Preloader />
-      <HeaderSeven />
+      <HeaderSeven locale={locale} />
       <div className="content-wrapper  js-content-wrapper overflow-hidden">
         <HeroSeven heroText={heroText} />
         <TestimonialsSix testimonialsText={testimonialsText} />
@@ -138,9 +143,11 @@ export default function page() {
 
         <BlogsFive coursesSliderText={coursesSliderText} />
 
+
         <EventsSeven eventsText={eventsText} />
         <Pricing pricingText={pricingText} />
         <HomeHero homeHeroText={homeHeroText} />
+
         <div
           style={{ backgroundColor: "white", height: "4rem", width: "100%" }}
         />

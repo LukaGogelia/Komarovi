@@ -7,7 +7,7 @@ import ConfirmModal from "./ConfirmModal";
 import Grid from "@mui/material/Grid";
 import RegionDropdowns from "./RegionDropdowns";
 
-export default function EditProfile({ activeTab, editProfileProps: data }) {
+export default function EditProfile({ activeTab, editProfileProps: data, w }) {
   console.log(data);
 
   const initialState = { ...data.initialState };
@@ -70,7 +70,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
     const value = e.target.value;
     handleInputChange("email", value);
     if (!isValidEmail(value)) {
-      setEmailError("Invalid email format");
+      setEmailError(w.invalidEmailFormat);
     } else {
       setEmailError("");
     }
@@ -80,7 +80,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
     const value = e.target.value;
     handleInputChange("phone", value);
     if (!isValidPhone(value)) {
-      setPhoneError("Invalid phone format");
+      setPhoneError(w.invalidPhoneFormat);
     } else {
       setPhoneError("");
     }
@@ -205,6 +205,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
         handleImageChange={handleImageChange}
         handleImageClear={handleImageClear}
         previewImage={state.previewImage}
+        w={w}
       />
 
       <div className="border-top-light pt-30 mt-30">
@@ -215,7 +216,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             <Grid item xs={12} md={6}>
               <TextField
                 id="first-name"
-                label="First Name"
+                label={w.firstName}
                 variant="outlined"
                 fullWidth
                 className="new-disabled-input"
@@ -226,7 +227,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             <Grid item xs={12} md={6}>
               <TextField
                 id="last-name"
-                label="Last Name"
+                label={w.lastName}
                 variant="outlined"
                 fullWidth
                 className="new-disabled-input"
@@ -237,7 +238,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             <Grid item xs={12} md={6}>
               <TextField
                 id="national-id"
-                label="National ID Number"
+                label={w.nationalIdNumber}
                 variant="outlined"
                 fullWidth
                 className="new-disabled-input"
@@ -248,7 +249,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             <Grid item xs={12} md={6}>
               <TextField
                 id="birthday"
-                label="Birthday"
+                label={w.birthday}
                 variant="outlined"
                 fullWidth
                 className="new-disabled-input"
@@ -264,8 +265,8 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
                   },
                 }}
                 id="telephone-number"
-                label="Telephone Number"
-                placeholder="Enter your primary phone number"
+                label={w.telephoneNumber}
+                placeholder={w.enterPrimaryPhone}
                 variant="outlined"
                 fullWidth
                 value={state.phone}
@@ -282,8 +283,8 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
                   },
                 }}
                 id="email"
-                label="Email"
-                placeholder="Enter your active email address"
+                label={w.email}
+                placeholder={w.enterActiveEmail}
                 variant="outlined"
                 fullWidth
                 value={state.email}
@@ -296,6 +297,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             </Grid>
             <Grid item xs={12}>
               <RegionDropdowns
+                w={w}
                 type="registration"
                 onRegionChange={handleRegionSelection}
                 onUnitChange={handleUnitSelection}
@@ -309,6 +311,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
             </Grid>
             <Grid item xs={12}>
               <RegionDropdowns
+                w={w}
                 type="actual"
                 onRegionChange={handleRegionSelection}
                 onUnitChange={handleUnitSelection}
@@ -328,7 +331,7 @@ export default function EditProfile({ activeTab, editProfileProps: data }) {
                   }`}
                 disabled={!hasStateChanged()}
               >
-                Update Profile
+                {w.updateProfile}
               </button>
             </Grid>
           </Grid>{" "}

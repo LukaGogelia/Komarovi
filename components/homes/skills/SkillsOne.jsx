@@ -11,10 +11,13 @@ import { skillsOne } from "../../../data/skills";
 import dynamic from "next/dynamic";
 const Image = dynamic(() => import("next/image"));
 
-export default function SkillsOne({ homeHeroText }) {
+
+export default function SkillsOne({ clubWords, homeHeroText }) {
+
   const [showSlider, setShowSlider] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
 
+  const w = JSON.parse(clubWords);
   useEffect(() => {
     setShowSlider(true);
   }, []);
@@ -71,9 +74,8 @@ export default function SkillsOne({ homeHeroText }) {
                     <SwiperSlide key={i}>
                       <div className="swiper-slide h-100 overflow-visible">
                         <div
-                          className={`infoCard -type-1  ${
-                            darkMode ? "-dark-bg-dark-2 " : ""
-                          }`}
+                          className={`infoCard -type-1  ${darkMode ? "-dark-bg-dark-2 " : ""
+                            }`}
                           data-aos="fade-left"
                           data-aos-duration={(i + 1) * 300}
                         >
@@ -86,8 +88,8 @@ export default function SkillsOne({ homeHeroText }) {
                               alt="image"
                             />
                           </div>
-                          <h5 className="infoCard__title text-17 lh-15 mt-10">
-                            {elm.skill}
+                          <h5 className="infoCard__title text-13 lh-15 mt-10">
+                            {w[elm.skill]}
                           </h5>
                         </div>
                       </div>
