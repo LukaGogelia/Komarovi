@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { brands } from "@/data/brands";
 export default function BrandsTwo() {
   return (
@@ -12,14 +13,16 @@ export default function BrandsTwo() {
           {brands.map((elm, i) => (
             <div key={i} className="col-lg-auto col-md-2 col-sm-3 col-4">
               <div className="d-flex justify-center items-center px-4">
-                <Image
-                  width={140}
-                  height={90}
-                  style={{ objectFit: "contain" }}
-                  className="w-1/1"
-                  src={elm}
-                  alt="clients image"
-                />
+                <Link target="_blank" href={elm.url}>
+                  <Image
+                    width={140}
+                    height={90}
+                    style={{ objectFit: "contain", cursor: "pointer" }}
+                    className="w-1/1"
+                    src={elm.svg}
+                    alt="clients image"
+                  />
+                </Link>
               </div>
             </div>
           ))}

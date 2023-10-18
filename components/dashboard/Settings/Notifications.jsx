@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function Notifications({ activeTab }) {
+export default function Notifications({ activeTab, w }) {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -14,10 +14,10 @@ export default function Notifications({ activeTab }) {
         <div className="row">
           <div className="col-12">
             <div className="text-16 fw-500 text-dark-1">
-              Notifications - Choose when and how to be notified
+              {w.notificationsTitle}
             </div>
             <p className="text-14 lh-13 mt-5">
-              Select push and email notifications you'd like to receive
+              {w.selectPushEmail}
             </p>
           </div>
         </div>
@@ -26,7 +26,7 @@ export default function Notifications({ activeTab }) {
           <div className="row y-gap-20 justify-between">
             <div className="col-auto">
               <div className="text-16 fw-500 text-dark-1">
-                Choose when and how to be notified
+                {w.chooseNotificationPreference}
               </div>
             </div>
           </div>
@@ -34,9 +34,9 @@ export default function Notifications({ activeTab }) {
           <div className="pt-30">
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
-                <div className="text-16 fw-500 text-dark-1">Subscriptions</div>
+                <div className="text-16 fw-500 text-dark-1">{w.clubs}</div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  {w.notifyClubs}
                 </p>
               </div>
               <div className="col-auto">
@@ -54,10 +54,10 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Recommended Courses
+                  {w.recommendedClubs}
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  {w.notifyRecommendedClubs}
                 </p>
               </div>
               <div className="col-auto">
@@ -75,10 +75,10 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Replies to my comments
+                  {w.gradesAndHousePoints}
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  {w.notifyGrades}
                 </p>
               </div>
               <div className="col-auto">
@@ -96,10 +96,10 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Activity on my comments
+                  {w.activityOnMyComments}
                 </div>
                 <p className="text-14 lh-13 mt-5">
-                  Notify me about activity from the profiles I'm subscribed to
+                  {w.notifyConnemts}
                 </p>
               </div>
               <div className="col-auto">
@@ -118,7 +118,7 @@ export default function Notifications({ activeTab }) {
           <div className="row y-gap-20 justify-between">
             <div className="col-auto">
               <div className="text-16 fw-500 text-dark-1">
-                Email notifications
+                {w.emailNotifications}
               </div>
             </div>
           </div>
@@ -127,12 +127,11 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Send me emails about my Cursus activity and updates I
-                  requested
+                  {w.emailAboutCurriculum}
                 </div>
-                <p className="text-14 lh-13 mt-5">
+                {/* <p className="text-14 lh-13 mt-5">
                   Notify me about activity from the profiles I'm subscribed to
-                </p>
+                </p> */}
               </div>
               <div className="col-auto">
                 <div className="form-switch">
@@ -149,12 +148,11 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Promotions, course recommendations, and helpful resources from
-                  Cursus.
+                  {w.emailAboutChallenges}
                 </div>
-                <p className="text-14 lh-13 mt-5">
+                {/* <p className="text-14 lh-13 mt-5">
                   Notify me about activity from the profiles I'm subscribed to
-                </p>
+                </p> */}
               </div>
               <div className="col-auto">
                 <div className="form-switch">
@@ -171,12 +169,11 @@ export default function Notifications({ activeTab }) {
             <div className="row y-gap-20 justify-between">
               <div className="col-auto">
                 <div className="text-16 fw-500 text-dark-1">
-                  Announcements from instructors whose course(s) I’m enrolled
-                  in.
+                  {w.emailAboutNews}
                 </div>
-                <p className="text-14 lh-13 mt-5">
+                {/* <p className="text-14 lh-13 mt-5">
                   Notify me about activity from the profiles I'm subscribed to
-                </p>
+                </p> */}
               </div>
               <div className="col-auto">
                 <div className="form-switch">
@@ -193,7 +190,7 @@ export default function Notifications({ activeTab }) {
         <div className="row pt-30">
           <div className="col-12">
             <button className="button -md -purple-1 text-white">
-              Save Changes
+              {w.saveChanges}
             </button>
           </div>
         </div>

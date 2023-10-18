@@ -30,12 +30,13 @@ async function getData(props) {
   }
 
   const newsItems = await News.find(
-    query,
-    "_id title imageSmall datePosted category"
+    // query,
+    {},
+    "_id title imageLarge datePosted category content"
   )
-    .populate("category", "name")
-    .exec();
 
+
+  console.log();
   return { categories, newsItems };
 }
 
@@ -119,18 +120,16 @@ export default async function BlogsOne({ searchParams, t }) {
                     <div key={i} className="col-lg-4 col-md-6">
                       <div className="blogCard -type-1">
                         <div className="blogCard__image">
-                          <Image
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                            }}
-                            cover
-                            width="410"
-                            height="350"
-                            className="w-1/1 rounded-8"
-                            src={elm.imageSmall}
-                            alt="image"
-                          />
+                          <div style={{ position: 'relative', width: '410px', height: '300px' }}>
+                            <Image
+                              layout="fill"
+                              objectFit="cover"
+                              className="w-1/1 rounded-8"
+                              src={elm.imageLarge}
+                              alt="image"
+                            />
+                          </div>
+
                         </div>
                         <div className="blogCard__content mt-20">
                           <div className="blogCard__category">

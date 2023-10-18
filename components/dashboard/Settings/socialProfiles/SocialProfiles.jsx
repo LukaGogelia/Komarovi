@@ -7,7 +7,7 @@ import isEqual from "lodash/isEqual";
 
 export default function SocialProfiles({
   activeTab,
-  socialProfilesProps: data,
+  socialProfilesProps: data, w
 }) {
   console.log(data);
   const initialProfileState = { ...data };
@@ -23,7 +23,7 @@ export default function SocialProfiles({
     const initialErrors = {};
     for (const profile in profiles) {
       if (profiles[profile] && !isValidURL(profiles[profile])) {
-        initialErrors[profile] = "Invalid URL";
+        initialErrors[profile] = w.invalidURL;
       }
     }
     setErrors(initialErrors);
@@ -47,7 +47,7 @@ export default function SocialProfiles({
     let error = "";
 
     if (value && !isValidURL(value)) {
-      error = "Invalid URL";
+      error = w.invalidURL;
     }
 
     setProfiles((prev) => ({ ...prev, [field]: value }));
@@ -94,12 +94,12 @@ export default function SocialProfiles({
               },
             }}
             id="x-profile"
-            label="X (formerly Twitter)"
+            label={w.formerTwitter}
             variant="outlined"
             fullWidth
             value={profiles.x}
             onChange={handleInputChange("x")}
-            placeholder="X Profile URL"
+            placeholder={w.xProfileURL}
             error={Boolean(errors.x)}
             helperText={errors.x}
           />
@@ -112,12 +112,12 @@ export default function SocialProfiles({
               },
             }}
             id="facebook-profile"
-            label="Facebook"
+            label={w.facebook}
             variant="outlined"
             fullWidth
             value={profiles.facebook}
             onChange={handleInputChange("facebook")}
-            placeholder="Facebook Profile URL"
+            placeholder={w.facebookProfileURL}
             error={Boolean(errors.facebook)}
             helperText={errors.facebook}
           />
@@ -130,12 +130,12 @@ export default function SocialProfiles({
               },
             }}
             id="instagram-profile"
-            label="Instagram"
+            label={w.instagram}
             variant="outlined"
             fullWidth
             value={profiles.instagram}
             onChange={handleInputChange("instagram")}
-            placeholder="Instagram Profile URL"
+            placeholder={w.instagramProfileURL}
             error={Boolean(errors.instagram)}
             helperText={errors.instagram}
           />
@@ -148,12 +148,12 @@ export default function SocialProfiles({
               },
             }}
             id="linkedin-profile"
-            label="LinkedIn"
+            label={w.linkedin}
             variant="outlined"
             fullWidth
             value={profiles.linkedIn}
             onChange={handleInputChange("linkedIn")}
-            placeholder="LinkedIn Profile URL"
+            placeholder={w.linkedinProfileURL}
             error={Boolean(errors.linkedIn)}
             helperText={errors.linkedIn}
           />
@@ -166,7 +166,7 @@ export default function SocialProfiles({
               }`}
             disabled={!hasChanges}
           >
-            Save Social Profile
+            {w.saveSocialProfile}
           </button>
         </div>
       </form>

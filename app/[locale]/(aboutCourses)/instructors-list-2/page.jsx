@@ -7,7 +7,7 @@ import React from "react";
 // import { teamMembers } from "@/data/instractors";
 import PaginationTwo from "@/components/common/PaginationTwo";
 import Teacher from "@/data/mongoDb/models/teacher";
-import { Person } from "@/data/mongoDb/models/person";
+import Person from "@/data/mongoDb/models/person";
 import Subject from "@/data/mongoDb/models/subject";
 import dbConnect from "@/data/mongoDb/utils/database";
 
@@ -97,7 +97,7 @@ export default async function page() {
         <InatractorsTwo
           teamMembers={teamMembers}
           subjects={subjects}
-          // PaginationTwo={<PaginationTwo />}
+        // PaginationTwo={<PaginationTwo />}
         />
         <FooterThree />
       </div>

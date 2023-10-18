@@ -5,16 +5,19 @@ const CartToggle = dynamic(() => import("../component/CartToggle"));
 import { HeaderExplore } from "../component/header-explore";
 const Menu = dynamic(() => import("../component/Menu"));
 const MobileMenu = dynamic(() => import("../component/MobileMenu"));
+// import FormControl from "@mui/material";
+
 const SearchToggle = dynamic(() => import("../component/SearchToggle"));
 import Image from "next/image";
 import Link from "next/link";
 import I18nLink from "next-intl/link"
-import { Select, MenuItem } from "@mui/material";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import dynamic from "next/dynamic";
 import Socials from "@/components/common/Socials";
-export default function HeaderSeven() {
+export default function HeaderSeven({ locale }) {
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [newLocale, setNewLocale] = useState(locale);
 
   const handleDarkmode = () => {
     if (document) {
@@ -25,6 +28,11 @@ export default function HeaderSeven() {
       const event = new Event("darkmodechange");
       window.dispatchEvent(event);
     }
+  };
+
+  const handleLocaleChange = (event) => {
+    const newLocale = event.target.value;
+    setNewLocale(newLocale)
   };
 
   useEffect(() => {
@@ -53,7 +61,7 @@ export default function HeaderSeven() {
                   <Image
                     width={140}
                     height={50}
-                    src="/assets/img/general/logo-dark.svg"
+                    src="/assets/img/general/logo-black.png"
                     alt="logo"
                   />
                 </Link>
@@ -84,6 +92,7 @@ export default function HeaderSeven() {
 
                 <SearchToggle />
 
+
                 <CartToggle
                   parentClassess={"relative pl-30 sm:pl-15"}
                   allClasses={"d-flex items-center "}
@@ -99,19 +108,42 @@ export default function HeaderSeven() {
                   </button>
                 </div>
               </div>
+              {/* <Link
+                  href="/signup"
+                  className="button h-50 px-30 -purple-3 -rounded text-purple-1 ml-15"
+                >
+                  Sign up
+                </Link> */}
 
               <div className="header-right__buttons d-flex items-center ml-30 xl:ml-20 lg:d-none">
                 <Link href="/login" className="button -underline text-purple-1">
                   Log in
                 </Link>
-                <Select className="new-input">
-                  <MenuItem>
-                    <I18nLink href="/" locale="en">England</I18nLink>
-                  </MenuItem>
-                  <MenuItem>
-                    <I18nLink href="/" locale="ge">Georgia</I18nLink>
-                  </MenuItem>
-                </Select>
+
+                <div style={{ width: "9rem" }}>
+                  <FormControl fullWidth variant="outlined" className="new-input">
+                    <InputLabel id={'locale'}>Language</InputLabel>
+                    <Select value={locale} label={"Language"} onChange={handleLocaleChange}>
+                      <MenuItem key="english" value="en">
+                        <div className="flex items-center">
+
+                          <I18nLink href="/" locale="en" className="ml-2">🇺🇸 English</I18nLink>
+                        </div>
+                      </MenuItem>
+                      <MenuItem key="georgian" value="ge">
+                        <div className="flex items-center">
+
+                          <I18nLink href="/" locale="ge" className="ml-2">🇬🇪 Georgia</I18nLink>
+                        </div>
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+
+
+
+                </div>
+
+
               </div>
             </div>
           </div>

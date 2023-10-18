@@ -1,9 +1,12 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Preloader from "@/components/common/Preloader";
-import Settings from "@/components/dashboard/Settings/Settings";
+import ServerSettings from "@/components/dashboard/Settings/ServerSettings";
+
 import Sidebar from "@/components/dashboard/Sidebar";
 import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
+
 import getPersonById from "@/data/mongoDb/getPersonById";
+
 import extractDate from "@/utils/extractDate";
 import { getServerSession } from "next-auth";
 import React from "react";
@@ -13,7 +16,10 @@ export const metadata = {
   description:
     "Elevate your e-learning content with Educrat, the most impressive LMS template for online courses, education and LMS platforms.",
 };
+
 export default async function page() {
+
+
   const session = await getServerSession(authOptions);
   let editProfileProps, socialProfilesProps;
   if (session) {
@@ -64,7 +70,7 @@ export default async function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar />
             </div>
-            <Settings
+            <ServerSettings
               editProfileProps={editProfileProps}
               socialProfilesProps={socialProfilesProps}
             />

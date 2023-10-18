@@ -28,9 +28,8 @@ export default function HeaderEight() {
   return (
     <header
       data-add-bg="bg-white"
-      className={`header -type-5 js-header ${
-        scrollPosition > 50 ? "bg-white" : ""
-      }`}
+      className={`header -type-5 js-header ${scrollPosition > 50 ? "bg-white" : ""
+        }`}
     >
       <div className="d-flex items-center bg-white py-10 border-bottom-light">
         <div className="header__container">
@@ -74,7 +73,7 @@ export default function HeaderEight() {
                   <Image
                     width={140}
                     height={50}
-                    src="/assets/img/general/logo-dark.svg"
+                    src="/assets/img/general/logo-black.png"
                     alt="logo"
                   />
                 </Link>

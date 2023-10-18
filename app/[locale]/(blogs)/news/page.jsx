@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 export default function page({ searchParams }) {
-  const t = useTranslations('Index');
+  const t = useTranslations('news');
   return (
     <div className="main-content  ">
       <Preloader />

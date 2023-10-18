@@ -16,7 +16,7 @@ const masthead_icon_2 = dynamic(() =>
 const masthead_icon_3 = dynamic(() =>
   import("../../../public/assets/img/masthead/icons/3.svg")
 );
-const SkillsOne = dynamic(() => import("../skills/SkillsOne"));
+import SkillsOne from "../skills/SkillsOne";
 import dynamic from "next/dynamic";
 
 const masthead_info = [
@@ -56,7 +56,7 @@ const hero_content = {
 };
 const { title, text_underline, info_hero, starts } = hero_content;
 
-const HomeHero = () => {
+const HomeHero = ({ clubWords }) => {
   useEffect(() => {
     const parallaxIt = () => {
       const target = document.querySelectorAll(".js-mouse-move-container");
@@ -99,7 +99,7 @@ const HomeHero = () => {
         </div>
         <div className="container">
           <div className="row y-gap-30 justify-between items-end">
-            <SkillsOne />
+            <SkillsOne clubWords={clubWords} />
 
             <div
               className="col-xl-6 col-lg-6"

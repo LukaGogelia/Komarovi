@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 
-export default function LoginForm() {
+export default function LoginForm({ words }) {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
@@ -32,14 +32,14 @@ export default function LoginForm() {
       console.log(error);
     }
   };
-
+  const w = JSON.parse(words);
   return (
     <div className="form-page__content lg:py-50">
       <div className="container">
         <div className="row justify-center items-center">
           <div className="col-xl-6 col-lg-8">
             <div className="px-50 py-50 md:px-25 md:py-25 bg-white shadow-1 rounded-16">
-              <h3 className="text-30 lh-13">Login</h3>
+              <h3 className="text-30 lh-13">{w.login}</h3>
 
               {errorMessage && <p className="text-red-500">{errorMessage}</p>}
               {successMessage && (
@@ -55,7 +55,7 @@ export default function LoginForm() {
                     type="text"
                     name="username"
                     id="username"
-                    placeholder="Email, Phone or ID number"
+                    placeholder={w.identifier}
                     autoComplete="username"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
@@ -66,7 +66,7 @@ export default function LoginForm() {
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="Password"
+                    placeholder={w.password}
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -79,7 +79,7 @@ export default function LoginForm() {
                     id="submit"
                     className="button -md -green-1 text-dark-1 fw-500 w-1/1"
                   >
-                    Login
+                    {w.login}
                   </button>
                 </div>
                 <div className="col-12">
@@ -92,7 +92,7 @@ export default function LoginForm() {
                     onChange={(e) => setStayLoggedIn(e.target.checked)}
                   />
                   <label htmlFor="stayLoggedIn" className="custom-label">
-                    Stay logged in for 30 days
+                    {w.stayLoggedIn}
                   </label>
                 </div>
               </form>

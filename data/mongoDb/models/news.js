@@ -10,9 +10,8 @@ const NewsSchema = new Schema({
   authorId: { type: Schema.Types.ObjectId, ref: "User" },
   datePosted: { type: Date, default: Date.now },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
-  // bookmarksCount: { type: Number, default: 0 },
-  // bookmarkedBy: [{ type: Schema.Types.ObjectId, ref: "User" }],
   isDeleted: { type: Boolean, default: false },
+  oldId: String
 });
 
 export const News = mongoose.models.News || mongoose.model("News", NewsSchema);

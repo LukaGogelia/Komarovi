@@ -5,7 +5,7 @@ import FooterOne from "@/components/layout/footers/FooterOne";
 import Header from "@/components/layout/headers/Header";
 import HeaderAuth from "@/components/layout/headers/HeaderAuth";
 import AuthImageMove from "@/components/others/AuthImageMove";
-import LoginForm from "@/components/others/LoginForm";
+import ServerLoginForm from "@/components/others/ServerLoginForm";
 import Terms from "@/components/terms/Terms";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -31,7 +31,7 @@ export default async function page() {
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <section className="form-page js-mouse-move-container">
           <AuthImageMove />
-          <LoginForm />
+          <ServerLoginForm />
         </section>
       </div>
     </div>

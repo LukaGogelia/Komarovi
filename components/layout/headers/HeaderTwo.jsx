@@ -27,9 +27,8 @@ export default function HeaderTwo() {
   }, []);
   return (
     <header
-      className={`header -type-5 js-header ${
-        scrollPosition > 40 ? "bg-dark-1" : ""
-      } `}
+      className={`header -type-5 js-header ${scrollPosition > 40 ? "bg-dark-1" : ""
+        } `}
     >
       <div className="d-flex items-center bg-purple-1 py-10">
         <div className="container">
@@ -73,7 +72,7 @@ export default function HeaderTwo() {
                   <Image
                     width={140}
                     height={40}
-                    src="/assets/img/general/logo.svg"
+                    src="/assets/img/general/logo-white.png"
                     alt="logo"
                   />
                 </Link>

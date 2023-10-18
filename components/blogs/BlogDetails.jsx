@@ -2,24 +2,27 @@ import React from "react";
 import { tags } from "@/data/blog";
 import Image from "next/image";
 import { News } from "@/data/mongoDb/models/news";
-import mongoose from "mongoose";
+
+import OldPostData from "./OldPostData";
 import dbConnect from "@/data/mongoDb/utils/database";
 
-async function getData(id) {
-  await dbConnect();
-
-  const query = {};
-  query._id = id;
-
-  const newsItems = await News.findOne(
-    query,
-    "_id title imageSmall datePosted category"
-  )
-
-  return newsItems;
-}
 
 export default async function BlogDetails({ id }) {
+  async function getData(id) {
+    await dbConnect();
+
+    const query = {};
+    query._id = id;
+
+    const newsItems = await News.findOne(
+      query,
+
+      "_id title imageLarge datePosted category content"
+    )
+
+    return newsItems;
+  }
+
   const data = await getData(id);
   return (
     <>
@@ -34,13 +37,14 @@ export default async function BlogDetails({ id }) {
                   </div>
 
                   <h1 className="page-header__title lh-14">
-                    {data.title.split(" ").slice(0, 4).join(" ")}
+                    {data.title}
+                    {/* .split(" ").slice(0, 4).join(" ")}
                     <br />
-                    {data.title.split(" ").slice(4, -1).join(" ")}
+                    {data.title.split(" ").slice(4, -1).join(" ")} */}
                   </h1>
 
                   <p className="page-header__text">
-                    {data.datePosted.toISOString()}
+                    {data.datePosted.toLocaleDateString()}
                   </p>
                 </div>
               </div>
@@ -53,35 +57,30 @@ export default async function BlogDetails({ id }) {
         <div className="container">
           <div
             className="ratio ratio-16:9 rounded-8 bg-image js-lazy"
-            style={{ backgroundImage: `url(${data.imageSmall})` }}
+            style={{ backgroundImage: `url(${data.imageLarge})` }}
             data-bg="img/blog/blog-single/images.png"
           ></div>
         </div>
       </section>
 
       <section className="layout-pt-md layout-pb-lg">
+
+
         <div className="container">
           <div className="blogSection">
             <div className="blogCard">
               <div className="row justify-center">
                 <div className="col-xl-8 col-lg-9 col-md-11">
                   <div className="blogCard__content">
-                    <h4 className="text-18 fw-500">
-                      What makes a good brand book?
-                    </h4>
-                    <p className="mt-30">
-                      Sed viverra ipsum nunc aliquet bibendum enim facilisis
-                      gravida. Diam phasellus vestibulum lorem sed risus
-                      ultricies. Magna sit amet purus gravida quis blandit. Arcu
-                      cursus vitae congue mauris. Nunc mattis enim ut tellus
-                      elementum sagittis vitae et leo. Semper risus in hendrerit
-                      gravida rutrum quisque non. At urna condimentum mattis
-                      pellentesque id nibh tortor. A erat nam at lectus urna
-                      duis convallis convallis tellus. Sit amet mauris commodo
-                      quis imperdiet massa. Vitae congue eu consequat ac felis.
-                    </p>
 
-                    <ul className="ul-list y-gap-10 mt-30">
+                    {/* <h4 className="text-18 fw-500">
+                        What makes a good brand book?
+                      </h4> */}
+                    <OldPostData content={data.content} className="blogCard__content " />
+
+
+
+                    {/* <ul className="ul-list y-gap-10 mt-30">
                       <li>
                         Sed viverra ipsum nunc aliquet bibendum enim facilisis
                         gravida.
@@ -97,16 +96,15 @@ export default async function BlogDetails({ id }) {
                       </li>
                     </ul>
 
-                    {/* <!-- <div className="py-25 pl-90 lg:pl-80 md:px-32 border-left-2-accent text-center mt-30 lg:mt-40">
-                  <div className="">
-                    <i className="icon icon-quote"></i>
-                  </div>
+                    <div className="py-25 pl-90 lg:pl-80 md:px-32 border-left-2-accent text-center mt-30 lg:mt-40">
+                      <div className="">
+                        <i className="icon icon-quote"></i>
+                      </div>
 
-                  <div className="text-dark-1 fw-500 italic text-2xl lh-17">
-                    “Sed viverra ipsum nunc aliquet bibendum enim facilisis gravida. Diam phasellus vestibulum lorem sed risus ultricies. Magna sit amet purus gravida quis blandit. Arcu cursus vitae congue mauris.“
-                  </div>
-                </div> --> */}
-
+                      <div className="text-dark-1 fw-500 italic text-2xl lh-17">
+                        “Sed viverra ipsum nunc aliquet bibendum enim facilisis gravida. Diam phasellus vestibulum lorem sed risus ultricies. Magna sit amet purus gravida quis blandit. Arcu cursus vitae congue mauris.“
+                      </div>
+                    </div>
                     <p className="mt-30">
                       Donec purus posuere nullam lacus aliquam egestas arcu. A
                       egestas a, tellus massa, ornare vulputate. Erat enim eget
@@ -176,7 +174,7 @@ export default async function BlogDetails({ id }) {
                       Consectetur eleifend aenean eu neque euismod amet
                       parturient turpis vitae. Faucibus ipsum felis et duis
                       fames.
-                    </p>
+                    </p>*/}
                   </div>
                 </div>
               </div>
@@ -330,12 +328,12 @@ export default async function BlogDetails({ id }) {
             </div>
 
             {/* <div className="row justify-center pt-30">
-              <div className="col-xl-8 col-lg-9 col-md-11">
-                <div className="blogPost -comments">
-                     <div className="blogPost__content">
-                    <h2 className="text-20 fw-500">Reviews</h2>
+              <div className="col-xl-8 col-lg-9 col-md-11"> */}
+            {/* <div className="blogPost -comments">
+                  <div className="blogPost__content">
+                    <h2 className="text-20 fw-500">Reviews</h2> */}
 
-                    <ul className="comments__list mt-30">
+            {/* <ul className="comments__list mt-30">
                       <li className="comments__item">
                         <div className="comments__item-inner md:direction-column">
                           <div className="comments__img mr-20">
@@ -457,9 +455,9 @@ export default async function BlogDetails({ id }) {
                       <div className="icon-star text-14 text-yellow-1"></div>
                       <div className="icon-star text-14 text-yellow-1"></div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <form
+            {/* <form
                     className="contact-form respondForm__form row y-gap-30 pt-30"
                     onSubmit={handleSubmit}
                   >
@@ -495,13 +493,13 @@ export default async function BlogDetails({ id }) {
                         Submit Review
                       </button>
                     </div>
-                    </form>
-                </div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </section>
+                  </form> */}
+            {/* </div> */}
+            {/* </div> */}
+            {/* </div>*/}
+          </div >
+        </div >
+      </section >
     </>
   );
 }

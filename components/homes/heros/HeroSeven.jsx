@@ -87,7 +87,7 @@ export default function HeroSeven() {
                 <Image
                   width={780}
                   height={765}
-                  src="/assets/img/home-7/hero/image.png"
+                  src="/assets/img/home-7/hero/zip.png"
                   alt="image"
                 />
                 <div
@@ -109,7 +109,7 @@ export default function HeroSeven() {
       </section>
 
       <ModalVideo
-        videoId={"LlCwHnp3kL4"}
+        videoId={"rp-VprEOaWk"}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />

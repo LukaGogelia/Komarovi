@@ -14,7 +14,7 @@ export default function FooterEight() {
               <Image
                 width={140}
                 height={50}
-                src="/assets/img/footer/footer-logo.svg"
+                src="/assets/img/footer/footer-logo-white.png"
                 alt="logo"
               />
             </div>
