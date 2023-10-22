@@ -18,6 +18,7 @@ export const metadata = {
 export default function page({ searchParams }) {
   const t = useTranslations("/");
   const t1 = useTranslations('news');
+  const categoryT = useTranslations('news.categories');
   const foooterText = {
     CallUs: t("CallUs"),
     Address: t("Address"),
@@ -53,7 +54,7 @@ export default function page({ searchParams }) {
       <div className="content-wrapper js-content-wrapper overflow-hidden">
         <PageLinks />
 
-        <BlogsOne searchParams={searchParams} t={t1} />
+        <BlogsOne searchParams={searchParams} t={t1} categoryT={categoryT} />
 
         <FooterThree foooterText={foooterText} />
       </div>

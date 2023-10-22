@@ -1,49 +1,50 @@
 import Image from "next/image";
-import React from "react";
-import mongoose from "mongoose";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-import { News } from "@/data/mongoDb/models/news";
 import { Category } from "@/data/mongoDb/models/category";
+import { News } from "@/data/mongoDb/models/news";
+import { newsCategories } from "@/data/newscategories";
 import dbConnect from "@/data/mongoDb/utils/database";
 
-async function getData(props) {
+async function getData(t, props) {
   await dbConnect();
 
-  const categories = await Category.find({});
+  const categories = newsCategories.map(elm => ({
+    slug: elm.slug === "all" ? "" : elm.slug,
+    name: t(elm.slug)
+  }));
+
 
   const query = { isDeleted: false };
 
-  let categoryId;
-
+  let category;
   if (props) {
     const { selectedCategory } = props;
-    const category = await Category.findOne({ slug: selectedCategory });
-    if (category) {
-      categoryId = category._id;
-    }
+    category = selectedCategory;
+  }
+  else {
+    category = '';
   }
 
-  if (categoryId) {
-    query.category = categoryId;
+  if (category) {
+    query.category = category;
   }
 
   const newsItems = await News.find(
-    // query,
-    {},
+    query,
+    // {},
     "_id title imageLarge datePosted category content"
   )
 
 
-  console.log();
+  console.log(query);
   return { categories, newsItems };
 }
 
-export default async function BlogsOne({ searchParams, t }) {
+export default async function BlogsOne({ searchParams, t, categoryT }) {
 
 
-  const { categories, newsItems } = await getData(
+  const { categories, newsItems } = await getData(categoryT,
     searchParams && searchParams.category
       ? { selectedCategory: searchParams.category }
       : null
@@ -120,7 +121,7 @@ export default async function BlogsOne({ searchParams, t }) {
                     <div key={i} className="col-lg-4 col-md-6">
                       <div className="blogCard -type-1">
                         <div className="blogCard__image">
-                          <div style={{ position: 'relative', width: '410px', height: '300px' }}>
+                          <div style={{ position: 'relative', width: '410px', height: '350px' }}>
                             <Image
                               layout="fill"
                               objectFit="cover"

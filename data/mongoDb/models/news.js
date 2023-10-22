@@ -9,9 +9,11 @@ const NewsSchema = new Schema({
   imageLarge: String,
   authorId: { type: Schema.Types.ObjectId, ref: "User" },
   datePosted: { type: Date, default: Date.now },
-  category: { type: Schema.Types.ObjectId, ref: "Category" },
+  category: String,
   isDeleted: { type: Boolean, default: false },
   oldId: String
 });
 
-export const News = mongoose.models.News || mongoose.model("News", NewsSchema);
+const News = mongoose.models.News || mongoose.model("News", NewsSchema);
+module.exports = { News };
+

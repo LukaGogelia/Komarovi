@@ -1,7 +1,9 @@
 {
     "Index": {
         "title1": "ახალი",
-        "title2": "ამბები"
+        "title2": "ამბები",
+        "dim": "kaliana",
+        "hello": "kitty"
     },
     "/": {
         "drama-club": "დრამის კლუბი",
@@ -162,7 +164,17 @@
     },
     "news": {
         "title1": "ახალი",
-        "title2": "ამბები"
+        "title2": "ამბები",
+        "categories": {
+            "all": "ყველა სიახლე",
+            "weekend": "შაბთის სკოლა",
+            "evening": "საღამოს სკოლა",
+            "stem": "STEM სკოლა",
+            "houses": "ჰაუსები",
+            "school": "სკოლა",
+            "exams": "გამოცდები",
+            "successes": "წარმატებები"
+        }
     },
     "login": {
         "login": "შესვლა",

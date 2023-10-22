@@ -1,7 +1,19 @@
 {
   "news": {
     "title1": "Latest",
-    "title2": "News"
+    "title2": "News",
+    "dim": "kaliana",
+    "hello": "kitty",
+    "categories": {
+      "all": "All News",
+      "weekend": "Weekend School",
+      "evening": "Evening School",
+      "stem": "STEM School",
+      "houses": "Houses",
+      "school": "School",
+      "exams": "Exams",
+      "successes": "Successes"
+    }
   },
   "/": {
     "drama-club": "Drama Club",
