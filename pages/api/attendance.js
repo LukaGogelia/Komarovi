@@ -2,6 +2,7 @@ import dbConnect from "@/data/mongoDb/utils/database";
 import Attendance from "@/data/mongoDb/models/attendance";
 import mongoose from "mongoose";
 import Student from "@/data/mongoDb/models/student";
+import TimeTable from "@/data/mongoDb/models/timeTable";
 import autoFillAttendanceForDate from "@/data/autoFillAttendance";
 export default async function handler(req, res) {
   const { method } = req;
@@ -59,78 +60,80 @@ export default async function handler(req, res) {
       try {
         const {
           studentId,
-          attendance: key,
+          attendance: key = "yes",
           date = new Date(),
           subjectId,
+          day, // Assuming day is part of the request
         } = req.body;
 
-        console.log("Request body:", req.body); // Logging the request body for debugging
-
-        if (!studentId) {
+        if (!studentId || !subjectId || !day) {
           return res.status(400).json({
             success: false,
-            error: "studentId missing in the request body.",
+            error:
+              "Required parameters (studentId, subjectId, or day) missing in the request body.",
           });
         }
 
-        if (!subjectId) {
-          return res.status(400).json({
-            success: false,
-            error: "subjectId missing or undefined in the request body.",
-          });
-        }
-
-        const student = await Student.findById(studentId, "classIds");
+        const student = await Student.findById(studentId);
         if (!student) {
           return res
             .status(404)
             .json({ success: false, error: "Student not found." });
         }
 
-        const existingAttendance = await Attendance.findOne({
-          student: studentId,
-          date: new Date(date).toISOString().split("T")[0],
-        });
+        const targetDate = new Date(date).toISOString().split("T")[0];
 
-        if (existingAttendance) {
-          return res.status(400).json({
+        const timetable = await TimeTable.findOne({ day: day });
+        if (!timetable) {
+          return res.status(404).json({
             success: false,
-            error:
-              "Attendance record already exists for the given student and date.",
+            error: "Timetable not found for the specified day.",
           });
         }
 
-        const yesterday = new Date(date);
-        yesterday.setDate(yesterday.getDate() - 1);
-        await autoFillAttendanceForDate(yesterday);
+        // Calculate the number of lessons of that subject on that day
+        const lessonsCount = timetable.lessons.filter(
+          (lesson) => String(lesson.subject) === String(subjectId)
+        ).length;
 
-        const attendanceKey = key !== undefined ? key : "yes";
+        // Debugging logs
+        console.log("Number of lessons for subject on this day:", lessonsCount);
 
-        const newAttendance = await Attendance.create({
-          key: attendanceKey,
-          date: date,
+        // Calculate how many attendance records already exist for that student, on that date, for that subject
+        const existingAttendancesCount = await Attendance.countDocuments({
+          student: studentId,
+          date: targetDate,
           subject: subjectId,
         });
 
-        const updatedStudent = await Student.findByIdAndUpdate(
-          studentId,
-          { $push: { attendanceIds: newAttendance._id } },
-          { new: true }
-        );
+        // Debugging logs
+        console.log("Existing attendance entries:", existingAttendancesCount);
 
-        if (!updatedStudent) {
+        // Compare lessonsCount with existingAttendancesCount
+        if (existingAttendancesCount >= lessonsCount) {
           return res.status(400).json({
             success: false,
-            error: "Error updating student data with new attendance record.",
+            error:
+              "Maximum attendance entries for this subject on this day have already been made.",
           });
         }
 
+        let newAttendance = new Attendance({
+          key: key,
+          date: targetDate,
+          subject: subjectId,
+          student: studentId,
+        });
+
+        await newAttendance.save({ validateBeforeSave: false });
+
+        await Student.findByIdAndUpdate(studentId, {
+          $push: { attendanceIds: newAttendance._id },
+        });
+
         return res.status(200).json({
           success: true,
-          data: {
-            attendance: newAttendance,
-            updatedStudent,
-          },
+          message: "Attendance recorded successfully.",
         });
       } catch (error) {
         console.error("Error:", error);

@@ -1,17 +1,10 @@
 import mongoose from "mongoose";
-import { CurrentClass } from "../../data/mongoDb/models"; // Adjust this import path accordingly
-
+import CurrentClass from "@/data/mongoDb/models/currentClass";
 // Connect to the MongoDB database
-const connectDb = async () => {
-  if (mongoose.connections[0].readyState) return;
-  await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-};
+import dbConnect from "@/data/mongoDb/utils/database";
 
 export default async (req, res) => {
-  await connectDb();
+  await dbConnect();
 
   const { academicYear } = req.query;
 

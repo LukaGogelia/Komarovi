@@ -466,63 +466,65 @@ export default function Grades({ studentInfoArray }) {
   // add attendance
 
   const handleAddAttendance = async (student) => {
-    const currentDate =
-      selectedDates[student.studentId] ||
-      new Date().toISOString().split("T")[0];
-    const dayOfWeek = getDayOfWeek(currentDate);
-
-    const studentTimeTable = student.timeTables.find(
-      (tt) => tt.day === dayOfWeek
-    );
-
-    if (!studentTimeTable) {
-      showToast(`No timetable found for the student on ${dayOfWeek}.`, "error");
-      return;
-    }
-
-    const lessonsForTheDay = studentTimeTable.lessons;
-    if (!lessonsForTheDay || lessonsForTheDay.length === 0) {
-      showToast(`No lessons scheduled for ${dayOfWeek}.`, "error");
-      return;
-    }
-
-    const selectedSubjectName = student.subjectName;
-    const lessonsForSelectedSubject = lessonsForTheDay.filter(
-      (lesson) => String(lesson.subject) === selectedSubjectName
-    );
-
-    if (lessonsForSelectedSubject.length === 0) {
-      showToast(
-        `No lessons on ${dayOfWeek} for the selected subject.`,
-        "error"
-      );
-      return;
-    }
+    let optimisticAttendanceEntry; // Declare it outside the try block
 
     try {
-      // Fetch the existing attendance data for the given student, subject, and date
-      const response = await fetch(
-        `http://localhost:3000/api/attendance?studentId=${student.studentId}&date=${currentDate}`
+      // Extracting necessary data
+      const currentDate =
+        selectedDates[student.studentId] ||
+        new Date().toISOString().split("T")[0];
+      const dayOfWeek = getDayOfWeek(currentDate);
+      const studentTimeTable = student.timeTables.find(
+        (tt) => tt.day === dayOfWeek
       );
-      const responseData = await response.json();
 
-      if (
-        responseData.data &&
-        responseData.data.length >= lessonsForSelectedSubject.length
-      ) {
-        showToast(
-          `Attendance already recorded for all lessons of the subject on ${dayOfWeek}.`,
+      if (!studentTimeTable) {
+        return showToast(
+          `No timetable found for the student on ${dayOfWeek}.`,
           "error"
         );
-        return;
       }
+
+      const lessonsForTheDay = studentTimeTable.lessons;
+      if (!lessonsForTheDay || lessonsForTheDay.length === 0) {
+        return showToast(`No lessons scheduled for ${dayOfWeek}.`, "error");
+      }
+
+      const selectedSubjectName = student.subjectName;
+      const lessonsForSelectedSubject = lessonsForTheDay.filter(
+        (lesson) => String(lesson.subject) === selectedSubjectName
+      );
+
+      if (lessonsForSelectedSubject.length === 0) {
+        return showToast(
+          `No lessons on ${dayOfWeek} for the selected subject.`,
+          "error"
+        );
+      }
+
+      // const response = await fetch(
+      //   `http://localhost:3000/api/attendance?studentId=${student.studentId}&date=${currentDate}`
+      // );
+      // const responseData = await response.json();
+
+      // if (
+      //   responseData.data &&
+      //   responseData.data.length >= lessonsForSelectedSubject.length
+      // ) {
+      //   showToast(
+      //     `Attendance already recorded for all lessons of the subject on ${dayOfWeek}.`,
+      //     "error"
+      //   );
 
       const attendanceData = {
         studentId: student.studentId,
+        subject: student.subjectName, // Sending the subject name as the 'subject'
         subjectId: student.subjectId,
         attendance: tempAttendance,
         date: currentDate,
       };
+
+      console.log("About to send attendance data:", attendanceData);
 
       const optimisticID = Math.random().toString();
       const optimisticAttendanceEntry = {
@@ -540,10 +542,12 @@ export default function Grades({ studentInfoArray }) {
       replaceOptimisticUpdateWithRealData(attendanceData, student.studentId);
     } catch (error) {
       showToast(`Error: ${error.message}`, "error");
-      rollbackOptimisticUpdate(
-        optimisticAttendanceEntry._id,
-        student.studentId
-      );
+      if (optimisticAttendanceEntry) {
+        rollbackOptimisticUpdate(
+          optimisticAttendanceEntry._id,
+          student.studentId
+        );
+      }
     }
   };
 
@@ -555,16 +559,11 @@ export default function Grades({ studentInfoArray }) {
       },
       body: JSON.stringify(data),
     });
-
-    // Check for OK status but don't read the body here
     if (!response.ok) {
-      // Optionally clone the response if you think it's being read elsewhere
-      const clonedResponse = response.clone();
-      const errorData = await clonedResponse.json();
+      const errorData = await response.json();
       throw new Error(errorData.message || "Failed to add attendance.");
     }
-
-    return response; // Return the raw response, don't convert it to JSON here
+    return response;
   };
 
   const updateAttendanceData = (entry, studentId) => {

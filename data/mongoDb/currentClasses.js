@@ -1,4 +1,4 @@
-import { CurrentClass } from "./models/currentClass";
+import CurrentClass from "./models/currentClass";
 import dbConnect from "./utils/database";
 
 const isValidAcademicYear = (year) => {

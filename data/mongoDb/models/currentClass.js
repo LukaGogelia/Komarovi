@@ -37,4 +37,5 @@ const CurrentClassSchema = new Schema({
 const CurrentClass =
   mongoose.models.CurrentClass ||
   mongoose.model("CurrentClass", CurrentClassSchema);
-module.exports = CurrentClass;
+
+export default CurrentClass;

@@ -4,12 +4,12 @@ import Grades from "@/components/dashboard/Grades";
 import Sidebar from "@/components/dashboard/Sidebar";
 import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import React from "react";
-
+import Subject from "@/data/mongoDb/models/subject";
 import { fetchClasses } from "../../dshb-grades-list/page";
 import Student from "@/data/mongoDb/models/student";
 import CurrentClass from "@/data/mongoDb/models/currentClass";
 import TimeTable from "@/data/mongoDb/models/timeTable";
-import { Person } from "@/data/mongoDb/models/person";
+import Person from "@/data/mongoDb/models/person";
 import TimeSlot from "@/data/mongoDb/models/timeSlot";
 import { useTranslations } from "next-intl";
 // Utility functions:
@@ -22,18 +22,27 @@ function countLessonsUpToDate(timeTable, subject, targetDate) {
     );
   }).length;
 }
-const fetchStudentInfo = async (classId, subjectName, subjectId) => {
-  // await dbConnect();
-  // 1. Fetch the associated timetable IDs for the class
+const fetchStudentInfo = async (classId, _, subjectId) => {
+  // _ represents an unused parameter
+  // Fetch the subject name using subjectId
+  const subjectDoc = await Subject.findById(subjectId).lean();
+  console.log("Fetched Subject Document:", subjectDoc);
+
+  if (!subjectDoc) {
+    throw new Error(
+      `No subject found for the provided subjectId: ${subjectId}`
+    );
+  }
+  const actualSubjectName = subjectDoc.subject || "Unknown Subject";
+
+  // Fetch the associated timetable IDs for the class
   const currentClass = await CurrentClass.findById(classId).lean();
-
   const timetableIds = currentClass.timeTableIds;
-
   if (!timetableIds || timetableIds.length === 0) {
     throw new Error("No timetables associated with this class.");
   }
 
-  // 2. Fetch the timetable details for all associated timetables
+  // Fetch timetable details for associated timetables
   const timeTables = await TimeTable.find({ _id: { $in: timetableIds } })
     .populate({
       path: "lessons.subject",
@@ -47,6 +56,7 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
     })
     .lean();
 
+  // Error handling for missing subjects
   for (const timeTable of timeTables) {
     for (const lesson of timeTable.lessons) {
       if (!lesson.subject) {
@@ -57,13 +67,9 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
 
   // Fetch all students associated with the classId
   const students = await Student.find({ classIds: classId });
-  // Extract student _id's to fetch corresponding persons
   const studentIds = students.map((student) => student._id);
-  // let people = await Person.find({});
 
-  // console.log("people", people);
-
-  // Fetch persons with role type 'Student' and whose refId matches any of the studentIds
+  // Fetch persons with role type 'Student'
   const studentsInClass = await Person.find({
     roles: {
       $elemMatch: {
@@ -72,8 +78,6 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
       },
     },
   });
-
-  // console.log("students in class", studentsInClass);
 
   const today = new Date();
 
@@ -95,7 +99,7 @@ const fetchStudentInfo = async (classId, subjectName, subjectId) => {
       studentId: studentRefId,
       fullName: `${student.firstName} ${student.lastName}`,
       email: student.email,
-      subjectName: subjectName,
+      subjectName: actualSubjectName, // Use the fetched subject name
       subjectId: subjectId,
       timeTables: studentTimeTables,
     };
@@ -134,58 +138,7 @@ export default async function page({ params }) {
     classObj.subjectId
   );
 
-  const t = useTranslations("Dashboard");
-  const dashboardText = {
-    ClassesList: t("ClassesList"),
-    ObtainedPoints: t("ObtainedPoints"),
-    PersonalPoints: t("PersonalPoints"),
-    TotalStudents: t("TotalStudents"),
-    TotalInstructors: t("TotalInstructors"),
-    Attendance: t("Attendance"),
-    ThisWeek: t("ThisWeek"),
-    QuizPerformance: t("QuizPerformance"),
-    Grades: t("Grades"),
-    Grade: t("Grade"),
-    AverageGrade: t("AverageGrade"),
-    ten: t("ten"),
-    nine: t("nine"),
-    eight: t("eight"),
-    seven: t("seven"),
-    six: t("six"),
-    five: t("five"),
-    four: t("four"),
-    three: t("three"),
-    two: t("two"),
-    one: t("one"),
-    Count: t("Count"),
-    Subject: t("Subject"),
-    Classes: t("Classes"),
-    Instructors: t("Instructors"),
-    RecentPoints: t("RecentPoints"),
-    ViewAll: t("ViewAll"),
-    Points: t("Points"),
-    Status: t("Status"),
-    Notification: t("Notification"),
-    Notification1: t("Notification1"),
-    Notification2: t("Notification2"),
-    Notification3: t("Notification3"),
-    Hours: t("Hours"),
-    Dashboard: t("Dashboard"),
-    MyCourses: t("MyCourses"),
-    Bookmarks: t("Bookmarks"),
-    Messages: t("Messages"),
-    Reviews: t("Reviews"),
-    Settings: t("Settings"),
-    Administration: t("Administration"),
-    Assignment: t("Assignment"),
-    Calendar: t("Calendar"),
-    Dictionary: t("Dictionary"),
-    Quiz: t("Quiz"),
-    LogOut: t("LogOut"),
-    CreateCourse: t("CreateCourse"),
-  };
-
-  // console.log("student info array", studentInfoArray);
+  console.log("student info array", studentInfoArray);
 
   return (
     <div className="barba-container" data-barba="container">
@@ -198,7 +151,7 @@ export default async function page({ params }) {
             className="dashboard -home-9 js-dashboard-home-9"
           >
             <div className="dashboard__sidebar scroll-bar-1">
-              <Sidebar dashboardText={dashboardText} />
+              <Sidebar />
             </div>
             <Grades studentInfoArray={studentInfoArray} />
           </div>
