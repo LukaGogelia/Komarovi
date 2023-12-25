@@ -28,9 +28,8 @@ export default function TestimonialsSix({ testimonialsText }) {
 
   return (
     <section
-      className={`layout-pt-lg bg-dark-2  ${
-        darkMode ? "-dark-bg-dark-2 " : ""
-      }`}
+      className={`layout-pt-lg bg-dark-2  ${darkMode ? "-dark-bg-dark-2 " : ""
+        }`}
       style={{ backgroundColor: "#6440FB" }}
     >
       <div className="container">
@@ -101,6 +100,7 @@ export default function TestimonialsSix({ testimonialsText }) {
                             <div className="testimonials-footer">
                               <div className="testimonials-footer__image">
                                 <Image
+                                  style={{ objectFit: 'cover' }}
                                   width={60}
                                   height={60}
                                   src={elm.imageSrc}

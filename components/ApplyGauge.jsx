@@ -5,7 +5,7 @@ import SelectSubject from "./SelectSubject";
 import Gauge from "./Gauge";
 
 const ApplyGauge = ({ attendances, dashboardText }) => {
-  const [value, setValue] = useState(50); // default value
+  const [value, setValue] = useState(90); // default value
 
   const handleRateChange = (selectedSubject) => {
     // Find the attendance data for the selected subject
@@ -30,7 +30,7 @@ const ApplyGauge = ({ attendances, dashboardText }) => {
       <div className="rounded-16 bg-white -dark-bg-dark-1 shadow-4 h-100 ">
         <div
           style={{ display: "flex", flexDirection: "column" }}
-          // className="d-flex justify-between items-center py-20 px-30 border-bottom-light"
+        // className="d-flex justify-between items-center py-20 px-30 border-bottom-light"
         >
           <SelectSubject
             onRateChange={handleRateChange}

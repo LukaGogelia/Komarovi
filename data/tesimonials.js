@@ -3,10 +3,10 @@ export function getTranslatedTestimonials(testimonialsText) {
     testimonials: [
       {
         id: 0,
-        imageSrc: "/assets/img/testimonials/1.png",
+        imageSrc: "/assets/img/testimonials/a1.jpg",
         name: "ივანე კვიტაშვილი",
         position: testimonialsText.Principal,
-        comment: "Great Work",
+        comment: "მაგარი სკოლაა",
         description: testimonialsText.note1,
       },
       {

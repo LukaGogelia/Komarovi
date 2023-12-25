@@ -29,7 +29,7 @@ export default function QuizPerformance({ options, arr, dashboardText }) {
           setSelectedValue={setSelectedValue}
           dashboardText={dashboardText}
         />
-        <Charts arr={arr} />
+        <Charts arr={arr} year={selectedValue} />
       </div>
     </div>
   );

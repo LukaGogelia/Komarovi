@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import NewsPagination from "./NewsPagination";
 import { Category } from "@/data/mongoDb/models/category";
 import { News } from "@/data/mongoDb/models/news";
 import { newsCategories } from "@/data/newscategories";
 import dbConnect from "@/data/mongoDb/utils/database";
+
+const POSTS_ON_THE_PAGE = 9;
 
 async function getData(t, props) {
   await dbConnect();
@@ -14,11 +16,22 @@ async function getData(t, props) {
     name: t(elm.slug)
   }));
 
+  let page;
+  if (props.page) {
+    page = parseInt(props.page);
+  }
+  else {
+    page = 1;
+  }
+
+  const skip = (page - 1) * 9;
+
+  const limit = 9;
 
   const query = { isDeleted: false };
 
   let category;
-  if (props) {
+  if (props.selectedCategory) {
     const { selectedCategory } = props;
     category = selectedCategory;
   }
@@ -29,28 +42,47 @@ async function getData(t, props) {
   if (category) {
     query.category = category;
   }
+  const totalItemCount = await News.countDocuments(query);
 
   const newsItems = await News.find(
     query,
     // {},
     "_id title imageLarge datePosted category content"
   )
+    .skip(skip)
+    .limit(limit);
+
+  const totalPageCount = Math.ceil(totalItemCount / POSTS_ON_THE_PAGE);
 
 
-  console.log(query);
-  return { categories, newsItems };
+  return { categories, newsItems, totalPageCount };
 }
 
 export default async function BlogsOne({ searchParams, t, categoryT }) {
 
 
-  const { categories, newsItems } = await getData(categoryT,
-    searchParams && searchParams.category
-      ? { selectedCategory: searchParams.category }
-      : null
-  );
-  console.log(searchParams);
 
+  const { categories, newsItems, totalPageCount } = await getData(categoryT,
+    searchParams && searchParams.category
+      ? { selectedCategory: searchParams.category, page: searchParams.page }
+      : { page: searchParams.page }
+  );
+
+  console.log('total', totalPageCount);
+  let currentPage = '';
+  let currentCategory = '';
+  if (searchParams.page) {
+    currentPage = parseInt(searchParams.page);
+  }
+  else {
+    currentPage = 1;
+  }
+
+  if (searchParams.category) {
+    currentCategory = searchParams.category;
+  }
+
+  console.log(currentCategory, currentPage);
   return (
     <>
       <section className="page-header -type-1">
@@ -121,15 +153,20 @@ export default async function BlogsOne({ searchParams, t, categoryT }) {
                     <div key={i} className="col-lg-4 col-md-6">
                       <div className="blogCard -type-1">
                         <div className="blogCard__image">
-                          <div style={{ position: 'relative', width: '410px', height: '350px' }}>
-                            <Image
-                              layout="fill"
-                              objectFit="cover"
-                              className="w-1/1 rounded-8"
-                              src={elm.imageLarge}
-                              alt="image"
-                            />
-                          </div>
+                          {/* <div style={{ , width: '410px', height: '350px' }}> */}
+                          <Image
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                            }}
+                            cover
+                            width="410"
+                            height="350"
+                            className="w-1/1 rounded-8"
+                            src={elm.imageLarge}
+                            alt="image"
+                          />
+                          {/* </div> */}
 
                         </div>
                         <div className="blogCard__content mt-20">
@@ -153,29 +190,8 @@ export default async function BlogsOne({ searchParams, t, categoryT }) {
                   ))}
                 </div>
 
-                <div className="row justify-center pt-60 lg:pt-40">
-                  <div className="col-auto">
-                    <div className="pagination -buttons">
-                      <button className="pagination__button -prev">
-                        <i className="icon icon-chevron-left"></i>
-                      </button>
+                {totalPageCount > 1 && <NewsPagination currentPage={currentPage} totalPageCount={totalPageCount} baseUrl={`/news${currentCategory ? `?category=${currentCategory}` : '?'}`} />}
 
-                      <div className="pagination__count">
-                        <a href="#">1</a>
-                        <a className="-count-is-active" href="#">
-                          2
-                        </a>
-                        <a href="#">3</a>
-                        <span>...</span>
-                        <a href="#">67</a>
-                      </div>
-
-                      <button className="pagination__button -next">
-                        <i className="icon icon-chevron-right"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

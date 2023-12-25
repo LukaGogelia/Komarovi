@@ -2,6 +2,7 @@ const Preloader = dynamic(() => import("@/components/common/Preloader"));
 const DashboardOne = dynamic(() =>
   import("@/components/dashboard/DashboardOne")
 );
+import P1_DashboardOne from "@/components/dashboard/p1/P1_DashboardOne";
 const Sidebar = dynamic(() => import("@/components/dashboard/Sidebar"));
 import ServerHeaderDashboard from "@/components/layout/headers/headerDashboard/ServerDashboardHeader";
 import { useTranslations } from "next-intl";
@@ -80,7 +81,7 @@ export default function page() {
             <div className="dashboard__sidebar scroll-bar-1">
               <Sidebar dashboardText={dashboardText} />
             </div>
-            <DashboardOne dashboardText={dashboardText} />
+            <P1_DashboardOne dashboardText={dashboardText} />
           </div>
         </div>
       </main>

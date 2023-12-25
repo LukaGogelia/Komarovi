@@ -150,3 +150,22 @@ export function getTranslatedFeatures(testimonialsText) {
     statictisEight,
   };
 }
+
+export const featureOne = [
+  {
+    id: 1,
+    title: "Hand-picked authors",
+  },
+  {
+    id: 2,
+    title: "Easy to follow curriculum",
+  },
+  {
+    id: 3,
+    title: "Free courses",
+  },
+  {
+    id: 4,
+    title: "Money-back guarantee",
+  },
+];
